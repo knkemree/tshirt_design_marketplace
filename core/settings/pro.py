@@ -18,7 +18,7 @@ DEBUG_TOOLBAR_CONFIG = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'ccDB',
+        'NAME': 'ccdb',
         'USER': 'emre',
         'PASSWORD': 'Ziy@emre1992',
         'HOST': 'localhost',
