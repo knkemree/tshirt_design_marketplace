@@ -1,0 +1,24 @@
+<input type="hidden" name="size" id="size" value="{{ size_id }}">
+ {% for rs in colors %}
+    <input type="radio" name="variantid" id="variantid" value="{{ rs.id }}" onchange="this.form.submit();">
+    <a>{{ rs.color }}</a> 
+{% endfor %}
+
+
+<!-- <input type="hidden" name="size" id="size" value="{{ size_id }}">
+<div class="font-size-sm mb-4"><span class="text-heading font-weight-medium mr-1">Color:</span><span class="text-muted" id="colorOption">{{ variant.color }}</span></div>
+    <div class="custom-control custom-option custom-control-inline mb-2">
+        {% for rs in colors %}
+        <input class="custom-control-input" type="radio" name="{{ rs.color }}" id="{{ rs.color.id }}" data-label="colorOption" value="{{ rs.color.id }}" checked>
+        <label data-toggle="tooltip" data-placement="bottom" title="{{ rs.color }}" class="custom-option-label rounded-circle" for="{{ rs.color.id }}"><span class="custom-option-color rounded-circle" style="background-image: url( {{ rs.color.color_tag.url }} )"></span></label>
+        {% endfor %}
+    </div>
+<div class="product-badge product-available mt-n1"><i class="czi-security-check"></i>Product available</div> -->
+
+<!-- <input type="hidden" name="size" id="size" value="{{ size_id }}">
+<span class="text-uppercase">Color :</span>
+<select name="variantid" id="variantid">
+    {% for rs in colors %}
+    <option {% if variant.id == rs.id %} checked {% endif %} value="{{ rs.id }}">{{ rs.price}} {{ rs.color }}</option>
+    {% endfor %}
+</select> -->

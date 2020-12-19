@@ -1,0 +1,238 @@
+{% load static %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Sign in / sign up modal-->
+<!-- {{form}}
+{{ form.errors }} -->
+<div class="modal fade" id="signin-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <ul class="nav nav-tabs card-header-tabs" role="tablist">
+            <li class="nav-item"><a class="nav-link active" href="#signin-tab" data-toggle="tab" role="tab" aria-selected="true"><i class="czi-unlocked mr-2 mt-n1"></i>Sign in</a></li>
+            <li class="nav-item"><a class="nav-link" href="#signup-tab" data-toggle="tab" role="tab" aria-selected="false"><i class="czi-user mr-2 mt-n1"></i>Sign up</a></li>
+          </ul>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body tab-content py-4">
+          <form action="{% url 'login' %}"  method="POST" class="tab-pane fade show active" autocomplete="on" id="signin-tab">
+            <!-- Danger alert -->
+            <div id="error" style="display: none;" class="alert alert-danger alert-with-icon" role="alert">
+              <div class="alert-icon-box">
+                <i class="alert-icon czi-close-circle"></i>
+              </div>
+              Invalid email or password.
+            </div>
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="id_username">Email address</label>
+              <input class="form-control" style='background-image: none;' type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="255" required id="id_username" placeholder="johndoe@example.com">
+              <div class="invalid-feedback" id='error'></div>
+              <div class="valid-feedback">Looks Good!</div>
+            </div>
+            <div class="form-group">
+              <label for="id_password">Password:</label>
+              <div class="password-toggle">
+                <input class="form-control" type="password" style='background-image: none;' name="password" autocomplete="current-password" required id="id_password">
+                <label class="password-toggle-btn">
+                  <input class="custom-control-input" type="checkbox"><i class="czi-eye password-toggle-indicator"></i><span class="sr-only">Show password</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-group d-flex flex-wrap justify-content-between">
+              <div class="custom-control custom-checkbox mb-2">
+                <input class="custom-control-input" type="checkbox" id="id_remember_me" name="remember_me">
+                <label class="custom-control-label" for="id_remember_me">Remember me</label>
+              </div><a class="font-size-sm" href="{% url 'password_reset' %}">Forgot password?</a>
+            </div>
+            <button class="btn btn-primary btn-block btn-shadow" type="submit">Sign in</button>
+          </form>
+          
+          <form action="{% url 'signup' %}" method="POST" class="tab-pane fade" autocomplete="off" id="signup-tab">
+            {% csrf_token %}
+            <div class='form-group'>
+              <label for="id_fullname">Fullname</label>
+              <input type="text" class="form-control" name="fullname" id="id_fullname" placeholder="John Doe" required maxlength="60">
+            </div>
+            <!-- <div class="form-group">
+              <label for="id_first_name">First name</label>
+              <input type='text' class="form-control" name="first_name" maxlength="30" id="id_first_name" placeholder="John" required>
+              <div class="invalid-feedback">Please fill in your first name.</div>
+            </div>
+            <div class="form-group">
+              <label for="id_last_name">Last name</label>
+              <input type="text" class="form-control" name="last_name" maxlength="30" id="id_last_name" placeholder="Doe" required>
+              <div class="invalid-feedback">Please fill in your last name.</div>
+            </div> -->
+            <div class="form-group">
+              <label for="id_email">Email address</label>
+              <input class="form-control" type="email" name="email" maxlength="255" required="" id="id_email" placeholder="johndoe@example.com">
+              <div id="signup_form_email_error" class="invalid-feedback"></div>
+            </div>  
+            <div class="form-group">
+              <label for="id_password1">Password</label>
+              <div class="password-toggle">
+                <input class="form-control" type="password" name="password1" required="" id="id_password1">
+                <label class="password-toggle-btn">
+                  <input class="custom-control-input" type="checkbox"><i class="czi-eye password-toggle-indicator"></i><span class="sr-only">Show password</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="id_password2">Confirm Password</label>
+              <div class="password-toggle">
+                <input class="form-control" type="password" name="password2" required="" id="id_password2">
+                <label class="password-toggle-btn">
+                  <input class="custom-control-input" type="checkbox"><i class="czi-eye password-toggle-indicator"></i><span class="sr-only">Show password</span>
+                </label>
+              </div>
+              <div id="signup_form_password2_error" class="invalid-feedback"></div>
+            </div>
+            <!-- <div class="form-group d-flex flex-wrap justify-content-between">
+              <div class="custom-control custom-checkbox mb-2">
+                <input type="checkbox" name="seller" id="id_seller">
+                <label for="id_seller">Are you a seller?</label>
+              </div>
+            </div> -->
+            <div class="form-group d-flex flex-wrap justify-content-between">
+              <div class="custom-control custom-checkbox mb-2">
+                <input class="custom-control-input" type="checkbox" id="id_seller" name="seller">
+                <label class="custom-control-label" for="id_seller">Are you a seller?</label>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-block btn-shadow" type="submit">
+              <a id="signup_button_signup_text">Sign up</a>
+              <span style="display: none" id="signup_button_spinner" class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
+              <a style="display: none" id="signup_button_submitting_text">Submitting...</a>
+            </button>
+          </form>
+          <script>
+            $(document).on('submit', '#signup-tab', function(e){
+              e.preventDefault();
+              var signup = $('#signup-tab');
+              var signup_form_data = signup.serialize();
+              var method = signup.attr('method');
+              var action = signup.attr('action');
+              $("body").css("cursor", "wait");  
+              $('#signup_button_submitting_text').show();
+              $('#signup_button_spinner').show();
+              $('#signup_button_signup_text').hide();
+              
+              $.ajax({
+                type:method,
+                url:action,
+                data: signup_form_data,
+                success: function(data, status, response){
+                  console.log(data);
+                  if (data.signup_error) {
+                    console.log(data.signup_error.email);
+                    if (data.signup_error.email){
+                      $('#signup_form_email_error').show().html(data.signup_error.email);
+                     
+                    };
+
+                    if (data.signup_error.password2){
+                      $('#signup_form_password2_error').show().html(data.signup_error.password2)
+                    };
+
+                    $("body").css("cursor", "default");
+                    $( "#modal_signup_error" ).show();
+                    $('#signup_button_signup_text').show();
+                    $('#signup_button_submitting_text').hide();
+                    $('#signup_button_spinner').hide();
+                    // window.location.href = '/account_activation_sent/';
+                    
+                  }else{
+                    // $('#signup-modal').addClass('show');
+                    // console.log('hey');
+                    console.log(data);
+                    $("body").css("cursor", "default");
+                    window.location.href = '/account_activation_sent/';
+                    
+                    // console.log(status);
+                    // console.log(response.status);
+                    // console.log(data);
+                  };                  
+                },
+              })
+
+            });
+
+            
+          </script>
+          <script>
+
+            $("#id_email").on("keyup", function() {
+              $('#signup_form_email_error').hide();
+            });
+
+            $("#id_password2").on("keyup", function() {
+              $('#signup_form_password2_error').hide();
+            });
+          </script>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+<script>
+$("#id_username").on("click", function() {
+  console.log('clicked')
+  if ($('#id_username').hasClass('is-invalid')) {
+    $('#id_username').removeClass("is-invalid");
+  };
+  if ($('#id_password').hasClass('is-invalid')) {
+    $('#id_password').removeClass("is-invalid");
+  };
+});
+
+$('#id_username').keyup(function() {
+  var currentVal = $(this).val();
+  console.log('current email value');
+  console.log(currentVal); 
+});  
+
+$(document).on('submit','#signin-tab', function(e){
+  e.preventDefault();
+  var signin = $('#signin-tab');
+  var form_data = signin.serialize()
+  var method = signin.attr('method');
+  var action = signin.attr('action');
+
+  $.ajax({
+      type:method,
+      url:action,
+      data: form_data,
+      success: function(data, status){
+
+          if (data.success) {
+              window.location.href = '/';
+              $('#id_username').addClass("is-valid");
+              $('#id_password').addClass("is-valid");
+              // console.log('succes')
+              // alert(data[error]);
+          }else{
+            console.log(data.error.__all__[0]);
+            $( "#error" ).show()
+            $('#id_username').addClass("is-invalid");
+            $('#id_password').addClass("is-invalid");
+            // $( "#error" ).show().html(data.error.__all__[0]);
+            // $( "#id_username" ).html($( this ).attr( "invalid" ));
+            // $('#error').show().html(data.error.__all__[0]);
+
+              // window.location.href = '/signup/'; 
+              // location.reload(true);
+          };
+      },      
+  });
+});
+</script>
+
+<script>
+  
+  
+</script>

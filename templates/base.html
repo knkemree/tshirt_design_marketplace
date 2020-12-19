@@ -1,0 +1,438 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock%}</title>
+    <!-- SEO Meta Tags-->
+    <meta name="description" content="cONTEXT CUSTOM | Customized print and embroidered products">
+    <meta name="keywords" content="tshirt, shop, e-commerce, market, custom tshirt">
+    <!-- Viewport-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Favicon and Touch Icons-->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img\illustrations\contextFavicon.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img\illustrations\contextFavicon.png' %}">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+    <link rel="mask-icon" color="#fe6a6a" href="{% static 'safari-pinned-tab.svg">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Vendor Styles including: Font Icons, Plugins, etc.-->
+    <link rel="stylesheet" media="screen" href="{% static 'vendor/simplebar/dist/simplebar.min.css' %}"/>
+    <link rel="stylesheet" media="screen" href="{% static 'vendor/tiny-slider/dist/tiny-slider.css' %}"/>
+    <!-- Main Theme Styles + Bootstrap-->
+    <link rel="stylesheet" media="screen" href="{% static 'css/theme.min.css' %}">
+  </head>
+  <!-- Body-->
+  <body class="toolbar-enabled">
+    {% include 'registration/signin_signup_modal.html' %}
+    <!-- Navbar-->
+    <!-- Navbar 3 Level (Light)-->
+
+    <header class="bg-light box-shadow-sm navbar-sticky">
+      <div class="navbar navbar-expand-lg navbar-light">
+        <div class="container"><a class="navbar-brand d-none d-sm-block mr-4 order-lg-1" href="{% url 'home' %}" style="min-width: 7rem;"><img width="220" src="{% static 'img\illustrations\CONTEX (1).png' %}" alt="Context Custom"/></a><a class="navbar-brand d-sm-none mr-2 order-lg-1" href="{% url 'home' %}" style="min-width: 4.625rem;"><img width="74" src="{% static 'img/logo-icon.png' %}" alt="Cartzilla"/></a>
+          <!-- Toolbar-->
+          <div class="navbar-toolbar d-flex align-items-center order-lg-3">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"><span class="navbar-toggler-icon"></span></button><a class="navbar-tool d-none d-lg-flex" href="#searchBox" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="searchBox"><span class="navbar-tool-tooltip">Search</span>
+              <div class="navbar-tool-icon-box"><i class="navbar-tool-icon czi-search"></i></div></a><a class="navbar-tool d-none d-lg-flex" href="dashboard-favorites.html"><span class="navbar-tool-tooltip">Favorites</span>
+              <div class="navbar-tool-icon-box"><i class="navbar-tool-icon czi-heart"></i></div></a>
+              {% if request.user.is_authenticated %}
+              <div class="navbar-tool dropdown ml-2"><a class="navbar-tool-icon-box border dropdown-toggle" href="#"><img width="32" src="{% static 'img/marketplace/account/avatar-sm.png' %}" alt="Createx Studio"/></a><a class="navbar-tool-text ml-n1" href="#"><small>{{ request.user.first_name }}</small>$1,375.00</a>
+                <div class="dropdown-menu dropdown-menu-right" style="min-width: 14rem;">
+                  <h6 class="dropdown-header">Account</h6>
+                  {% if request.user.is_staff %}<a class="dropdown-item d-flex align-items-center" href="/admin/"><i class="czi-settings opacity-60 mr-2"></i>Control Panel</a>{% endif %}
+                  <a class="dropdown-item d-flex align-items-center" href="dashboard-settings.html"><i class="czi-settings opacity-60 mr-2"></i>Settings</a>
+                  <a class="dropdown-item d-flex align-items-center" href="dashboard-purchases.html"><i class="czi-basket opacity-60 mr-2"></i>Purchases</a>
+                  <a class="dropdown-item d-flex align-items-center" href="dashboard-favorites.html"><i class="czi-heart opacity-60 mr-2"></i>Favorites<span class="font-size-xs text-muted ml-auto">4</span></a>
+                  <div class="dropdown-divider"></div>
+                  <h6 class="dropdown-header">Seller Dashboard</h6><a class="dropdown-item d-flex align-items-center" href="#"><i class="czi-dollar opacity-60 mr-2"></i>Sales<span class="font-size-xs text-muted ml-auto">$1,375.00</span></a><a class="dropdown-item d-flex align-items-center" href="dashboard-products.html"><i class="czi-package opacity-60 mr-2"></i>Products<span class="font-size-xs text-muted ml-auto">5</span></a><a class="dropdown-item d-flex align-items-center" href="dashboard-add-new-product.html"><i class="czi-cloud-upload opacity-60 mr-2"></i>Add New Product</a><a class="dropdown-item d-flex align-items-center" href="dashboard-payouts.html"><i class="czi-currency-exchange opacity-60 mr-2"></i>Payouts</a>
+                  <div class="dropdown-divider"></div><a class="dropdown-item d-flex align-items-center" href="{% url 'logout' %}"><i class="czi-sign-out opacity-60 mr-2"></i>Sign Out</a>
+                </div>
+              </div>
+              {% else %}
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"><span class="navbar-toggler-icon"></span></button><a class="navbar-tool navbar-stuck-toggler" href="#"><span class="navbar-tool-tooltip">Expand menu</span>
+                <div class="navbar-tool-icon-box"><i class="navbar-tool-icon czi-heart"></i></div></a><a class="navbar-tool ml-1 ml-lg-0 mr-n1 mr-lg-2" href="#signin-modal" data-toggle="modal">
+                <div class="navbar-tool-icon-box"><i class="navbar-tool-icon czi-user"></i></div>
+                <div class="navbar-tool-text ml-n3"><small>Hello, Sign in</small>My Account</div></a>
+              {% endif %}
+
+            
+              <!-- <div class="navbar-tool ml-4"><a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="marketplace-cart.html"><span class="navbar-tool-label">3</span><i class="navbar-tool-icon czi-cart"></i></a></div> -->
+              {% with total_items=cart|length %}
+                {% if total_items > 0 %}
+                <div class="navbar-tool dropdown ml-3"><a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="{% url 'cart:cart_detail' %}"><span class="navbar-tool-label">{{ total_items }}</span><i class="navbar-tool-icon czi-cart"></i></a><a class="navbar-tool-text" href="{% url 'cart:cart_detail' %}"><small>My Cart</small>${{ cart.get_total_price }}</a>
+                {% else %}
+                <div class="navbar-tool dropdown ml-3"><a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="{% url 'cart:cart_detail' %}"><span class="navbar-tool-label">0</span><i class="navbar-tool-icon czi-cart"></i></a><a class="navbar-tool-text" href="{% url 'cart:cart_detail' %}"><small>My Cart</small>$0.00</a>
+                {% endif %}
+              {% endwith %}  
+              <!-- Cart dropdown-->
+                <div class="dropdown-menu dropdown-menu-right" style="width: 20rem;">
+                  <div class="widget widget-cart px-3 pt-2 pb-3">
+                    <div style="height: 15rem;" data-simplebar data-simplebar-auto-hide="false">
+                      <div class="widget-cart-item pb-2 border-bottom">
+                        <button class="close text-danger" type="button" aria-label="Remove"><span aria-hidden="true">&times;</span></button>
+                        <div class="media align-items-center"><a class="d-block mr-2" href="shop-single-v1.html"><img width="64" src="{% static 'img/shop/cart/widget/01.jpg' %}" alt="Product"/></a>
+                          <div class="media-body">
+                            <h6 class="widget-product-title"><a href="shop-single-v1.html">Women Colorblock Sneakers</a></h6>
+                            <div class="widget-product-meta"><span class="text-accent mr-2">$150.<small>00</small></span><span class="text-muted">x 1</span></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="widget-cart-item py-2 border-bottom">
+                        <button class="close text-danger" type="button" aria-label="Remove"><span aria-hidden="true">&times;</span></button>
+                        <div class="media align-items-center"><a class="d-block mr-2" href="shop-single-v1.html"><img width="64" src="{% static 'img/shop/cart/widget/02.jpg' %}" alt="Product"/></a>
+                          <div class="media-body">
+                            <h6 class="widget-product-title"><a href="shop-single-v1.html">TH Jeans City Backpack</a></h6>
+                            <div class="widget-product-meta"><span class="text-accent mr-2">$79.<small>50</small></span><span class="text-muted">x 1</span></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="widget-cart-item py-2 border-bottom">
+                        <button class="close text-danger" type="button" aria-label="Remove"><span aria-hidden="true">&times;</span></button>
+                        <div class="media align-items-center"><a class="d-block mr-2" href="shop-single-v1.html"><img width="64" src="{% static 'img/shop/cart/widget/03.jpg' %}" alt="Product"/></a>
+                          <div class="media-body">
+                            <h6 class="widget-product-title"><a href="shop-single-v1.html">3-Color Sun Stash Hat</a></h6>
+                            <div class="widget-product-meta"><span class="text-accent mr-2">$22.<small>50</small></span><span class="text-muted">x 1</span></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="widget-cart-item py-2 border-bottom">
+                        <button class="close text-danger" type="button" aria-label="Remove"><span aria-hidden="true">&times;</span></button>
+                        <div class="media align-items-center"><a class="d-block mr-2" href="shop-single-v1.html"><img width="64" src="{% static 'img/shop/cart/widget/04.jpg' %}" alt="Product"/></a>
+                          <div class="media-body">
+                            <h6 class="widget-product-title"><a href="shop-single-v1.html">Cotton Polo Regular Fit</a></h6>
+                            <div class="widget-product-meta"><span class="text-accent mr-2">$9.<small>00</small></span><span class="text-muted">x 1</span></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="d-flex flex-wrap justify-content-between align-items-center py-3">
+                      <div class="font-size-sm mr-2 py-2"><span class="text-muted">Subtotal:</span><span class="text-accent font-size-base ml-1">$265.<small>00</small></span></div><a class="btn btn-outline-secondary btn-sm" href="shop-cart.html">Expand cart<i class="czi-arrow-right ml-1 mr-n1"></i></a>
+                    </div><a class="btn btn-primary btn-sm btn-block" href="checkout-details.html"><i class="czi-card mr-2 font-size-base align-middle"></i>Checkout</a>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="collapse navbar-collapse mr-auto order-lg-2" id="navbarCollapse">
+            <!-- Search-->
+            <div class="input-group-overlay d-lg-none my-3">
+              <div class="input-group-prepend-overlay"><span class="input-group-text"><i class="czi-search"></i></span></div>
+              <input class="form-control prepended-form-control" type="text" placeholder="Search marketplace">
+            </div>
+            <!-- Categories dropdown-->
+            <ul class="navbar-nav mega-nav pr-lg-2 mr-lg-2">
+              <li class="nav-item dropdown"><a class="nav-link dropdown-toggle pl-0" href="#" data-toggle="dropdown"><i class="czi-menu align-middle mt-n1 mr-2"></i>Categories</a>
+                <ul class="dropdown-menu py-1">
+                  <li class="dropdown"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Photos</a>
+                    <ul class="dropdown-menu">
+                      <li class="dropdown-item product-title font-weight-medium"><a href="#">All Photos<i class="czi-arrow-right font-size-xs ml-1"></i></a></li>
+                      <li class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="#">Abstract</a></li>
+                      <li><a class="dropdown-item" href="#">Animals</a></li>
+                      <li><a class="dropdown-item" href="#">Architecture</a></li>
+                      <li><a class="dropdown-item" href="#">Beauty &amp; Fashion</a></li>
+                      <li><a class="dropdown-item" href="#">Business</a></li>
+                      <li><a class="dropdown-item" href="#">Education</a></li>
+                      <li><a class="dropdown-item" href="#">Food &amp; Drink</a></li>
+                      <li><a class="dropdown-item" href="#">Holidays</a></li>
+                      <li><a class="dropdown-item" href="#">Industrial</a></li>
+                      <li><a class="dropdown-item" href="#">People</a></li>
+                      <li><a class="dropdown-item" href="#">Sports</a></li>
+                      <li><a class="dropdown-item" href="#">Technology</a></li>
+                    </ul>
+                  </li>
+                  <li class="dropdown"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Graphics</a>
+                    <ul class="dropdown-menu">
+                      <li class="dropdown-item product-title font-weight-medium"><a href="#">All Graphics<i class="czi-arrow-right font-size-xs ml-1"></i></a></li>
+                      <li class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="#">Icons</a></li>
+                      <li><a class="dropdown-item" href="#">Illustartions</a></li>
+                      <li><a class="dropdown-item" href="#">Patterns</a></li>
+                      <li><a class="dropdown-item" href="#">Textures</a></li>
+                      <li><a class="dropdown-item" href="#">Web Elements</a></li>
+                    </ul>
+                  </li>
+                  <li class="dropdown"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">UI Design</a>
+                    <ul class="dropdown-menu">
+                      <li class="dropdown-item product-title font-weight-medium"><a href="#">All UI Design<i class="czi-arrow-right font-size-xs ml-1"></i></a></li>
+                      <li class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="#">PSD Templates</a></li>
+                      <li><a class="dropdown-item" href="#">Sketch Templates</a></li>
+                      <li><a class="dropdown-item" href="#">Adobe XD Templates</a></li>
+                      <li><a class="dropdown-item" href="#">Figma Templates</a></li>
+                    </ul>
+                  </li>
+                  <li class="dropdown"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Web Themes</a>
+                    <ul class="dropdown-menu">
+                      <li class="dropdown-item product-title font-weight-medium"><a href="#">All Web Themes<i class="czi-arrow-right font-size-xs ml-1"></i></a></li>
+                      <li class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="#">WordPress Themes</a></li>
+                      <li><a class="dropdown-item" href="#">Bootstrap Themes</a></li>
+                      <li><a class="dropdown-item" href="#">eCommerce Templates</a></li>
+                      <li><a class="dropdown-item" href="#">Muse Templates</a></li>
+                      <li><a class="dropdown-item" href="#">Plugins</a></li>
+                    </ul>
+                  </li>
+                  <li class="dropdown"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Fonts</a>
+                    <ul class="dropdown-menu">
+                      <li class="dropdown-item product-title font-weight-medium"><a href="#">All Fonts<i class="czi-arrow-right font-size-xs ml-1"></i></a></li>
+                      <li class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="#">Blackletter</a></li>
+                      <li><a class="dropdown-item" href="#">Display</a></li>
+                      <li><a class="dropdown-item" href="#">Non Western</a></li>
+                      <li><a class="dropdown-item" href="#">Sans Serif</a></li>
+                      <li><a class="dropdown-item" href="#">Script</a></li>
+                      <li><a class="dropdown-item" href="#">Serif</a></li>
+                      <li><a class="dropdown-item" href="#">Slab Serif</a></li>
+                      <li><a class="dropdown-item" href="#">Symbols</a></li>
+                    </ul>
+                  </li>
+                  <li class="dropdown"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Add-Ons</a>
+                    <ul class="dropdown-menu">
+                      <li class="dropdown-item product-title font-weight-medium"><a href="#">All Add-Ons<i class="czi-arrow-right font-size-xs ml-1"></i></a></li>
+                      <li class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="#">Photoshop Add-Ons</a></li>
+                      <li><a class="dropdown-item" href="#">Illustrator Add-Ons</a></li>
+                      <li><a class="dropdown-item" href="#">Sketch Plugins</a></li>
+                      <li><a class="dropdown-item" href="#">Procreate Brushes</a></li>
+                      <li><a class="dropdown-item" href="#">InDesign Palettes</a></li>
+                      <li><a class="dropdown-item" href="#">Lightroom Presets</a></li>
+                      <li><a class="dropdown-item" href="#">Other Software</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+            <!-- Primary menu-->
+            <ul class="navbar-nav">
+              <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Back to main demo</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- Search collapse-->
+      <div class="search-box collapse" id="searchBox">
+        <div class="card pt-2 pb-4 border-0 rounded-0">
+          <div class="container">
+            <div class="input-group-overlay">
+              <div class="input-group-prepend-overlay"><span class="input-group-text"><i class="czi-search"></i></span></div>
+              <input class="form-control prepended-form-control" type="text" placeholder="Search marketplace">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+      {% block css %}
+      {% endblock %}
+    </header>
+    <!-- Page title-->
+    <!-- Page Content-->
+    {% block blank %}
+    {% endblock %}
+    <div class="container py-5">
+        
+        {% block main_text %}
+        {% endblock %}
+
+        
+    
+        {% block banner %}
+        {% endblock %}
+        
+        {% block shop_categories %}
+        {% endblock %}
+        
+        {% block shop_list_ls %}
+        {% endblock %}
+    </div>
+    
+    <!-- Footer-->
+    <!-- Footer-->
+    <footer class="bg-dark pt-5">
+      <div class="container">
+        <div class="row pb-2">
+          <div class="col-md-4 col-sm-6">
+            <div class="widget widget-links widget-light pb-2 mb-4">
+              <h3 class="widget-title text-light">Shop departments</h3>
+              <ul class="widget-list">
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Sneakers &amp; Athletic</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Athletic Apparel</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Sandals</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Jeans</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Shirts &amp; Tops</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Shorts</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">T-Shirts</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Swimwear</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Clogs &amp; Mules</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Bags &amp; Wallets</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Accessories</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Sunglasses &amp; Eyewear</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Watches</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-6">
+            <div class="widget widget-links widget-light pb-2 mb-4">
+              <h3 class="widget-title text-light">Account &amp; shipping info</h3>
+              <ul class="widget-list">
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Your account</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Shipping rates &amp; policies</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Refunds &amp; replacements</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Order tracking</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Delivery info</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Taxes &amp; fees</a></li>
+              </ul>
+            </div>
+            <div class="widget widget-links widget-light pb-2 mb-4">
+              <h3 class="widget-title text-light">About us</h3>
+              <ul class="widget-list">
+                <li class="widget-list-item"><a class="widget-list-link" href="#">About company</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Our team</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">Careers</a></li>
+                <li class="widget-list-item"><a class="widget-list-link" href="#">News</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="widget pb-2 mb-4">
+              <h3 class="widget-title text-light pb-1">Stay informed</h3>
+              <form class="cz-subscribe-form validate" action="https://studio.us12.list-manage.com/subscribe/post?u=c7103e2c981361a6639545bd5&amp;amp;id=29ca296126" method="post" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+                <div class="input-group input-group-overlay flex-nowrap">
+                  <div class="input-group-prepend-overlay"><span class="input-group-text text-muted font-size-base"><i class="czi-mail"></i></span></div>
+                  <input class="form-control prepended-form-control" type="email" name="EMAIL" placeholder="Your email" required>
+                  <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit" name="subscribe">Subscribe*</button>
+                  </div>
+                </div>
+                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                  <input class="cz-subscribe-form-antispam" type="text" name="b_c7103e2c981361a6639545bd5_29ca296126" tabindex="-1">
+                </div><small class="form-text text-light opacity-50">*Subscribe to our newsletter to receive early discount offers, updates and new products info.</small>
+                <div class="subscribe-status"></div>
+              </form>
+            </div>
+            <div class="widget pb-2 mb-4">
+              <h3 class="widget-title text-light pb-1">Download our app</h3>
+              <div class="d-flex flex-wrap">
+                <div class="mr-2 mb-2"><a class="btn-market btn-apple" href="#" role="button"><span class="btn-market-subtitle">Download on the</span><span class="btn-market-title">App Store</span></a></div>
+                <div class="mb-2"><a class="btn-market btn-google" href="#" role="button"><span class="btn-market-subtitle">Download on the</span><span class="btn-market-title">Google Play</span></a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pt-5 bg-darker">
+        <div class="container">
+          <div class="row pb-3">
+            <div class="col-md-3 col-sm-6 mb-4">
+              <div class="media"><i class="czi-rocket text-primary" style="font-size: 2.25rem;"></i>
+                <div class="media-body pl-3">
+                  <h6 class="font-size-base text-light mb-1">Fast and free delivery</h6>
+                  <p class="mb-0 font-size-ms text-light opacity-50">Free delivery for all orders over $200</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+              <div class="media"><i class="czi-currency-exchange text-primary" style="font-size: 2.25rem;"></i>
+                <div class="media-body pl-3">
+                  <h6 class="font-size-base text-light mb-1">Money back guarantee</h6>
+                  <p class="mb-0 font-size-ms text-light opacity-50">We return money within 30 days</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+              <div class="media"><i class="czi-support text-primary" style="font-size: 2.25rem;"></i>
+                <div class="media-body pl-3">
+                  <h6 class="font-size-base text-light mb-1">24/7 customer support</h6>
+                  <p class="mb-0 font-size-ms text-light opacity-50">Friendly 24/7 customer support</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+              <div class="media"><i class="czi-card text-primary" style="font-size: 2.25rem;"></i>
+                <div class="media-body pl-3">
+                  <h6 class="font-size-base text-light mb-1">Secure online payment</h6>
+                  <p class="mb-0 font-size-ms text-light opacity-50">We possess SSL / Secure сertificate</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr class="hr-light pb-4 mb-3">
+          <div class="row pb-2">
+            <div class="col-md-6 text-center text-md-left mb-4">
+              <div class="text-nowrap mb-4"><a class="d-inline-block align-middle mt-n1 mr-3" href="#"><img class="d-block" width="300" src="{% static 'img\illustrations\CONTEX (1).png' %}" alt="CONTEXT CUSTOM"/></a>
+                <div class="btn-group dropdown disable-autohide">
+                  <button class="btn btn-outline-light border-light btn-sm dropdown-toggle px-2" type="button" data-toggle="dropdown"><img class="mr-2" width="20" src="{% static 'img/flags/en.png' %}" alt="English"/>Eng / $
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li class="dropdown-item">
+                      <select class="custom-select custom-select-sm">
+                        <option value="usd">$ USD</option>
+                        <option value="eur">€ EUR</option>
+                        <option value="ukp">£ UKP</option>
+                        <option value="jpy">¥ JPY</option>
+                      </select>
+                    </li>
+                    <li><a class="dropdown-item pb-1" href="#"><img class="mr-2" width="20" src="{% static 'img/flags/fr.png' %}" alt="Français"/>Français</a></li>
+                    <li><a class="dropdown-item pb-1" href="#"><img class="mr-2" width="20" src="{% static 'img/flags/de.png' %}" alt="Deutsch"/>Deutsch</a></li>
+                    <li><a class="dropdown-item" href="#"><img class="mr-2" width="20" src="{% static 'img/flags/it.png' %}" alt="Italiano"/>Italiano</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="widget widget-links widget-light">
+                <ul class="widget-list d-flex flex-wrap justify-content-center justify-content-md-start">
+                  <li class="widget-list-item mr-4"><a class="widget-list-link" href="#">Outlets</a></li>
+                  <li class="widget-list-item mr-4"><a class="widget-list-link" href="#">Affiliates</a></li>
+                  <li class="widget-list-item mr-4"><a class="widget-list-link" href="#">Support</a></li>
+                  <li class="widget-list-item mr-4"><a class="widget-list-link" href="#">Privacy</a></li>
+                  <li class="widget-list-item mr-4"><a class="widget-list-link" href="#">Terms of use</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-6 text-center text-md-right mb-4">
+              <div class="mb-3"><a class="social-btn sb-light sb-twitter ml-2 mb-2" href="#"><i class="czi-twitter"></i></a><a class="social-btn sb-light sb-facebook ml-2 mb-2" href="#"><i class="czi-facebook"></i></a><a class="social-btn sb-light sb-instagram ml-2 mb-2" href="#"><i class="czi-instagram"></i></a><a class="social-btn sb-light sb-pinterest ml-2 mb-2" href="#"><i class="czi-pinterest"></i></a><a class="social-btn sb-light sb-youtube ml-2 mb-2" href="#"><i class="czi-youtube"></i></a></div><img class="d-inline-block" width="187" src="{% static 'img/cards-alt.png' %}" alt="Payment methods"/>
+            </div>
+          </div>
+          <div class="pb-4 font-size-xs text-light opacity-50 text-center text-md-left">© All rights reserved. Made by <a class="text-light" href="https://createx.studio/" target="_blank" rel="noopener">Createx Studio</a></div>
+        </div>
+      </div>
+    </footer>
+    <!-- Toolbar for handheld devices-->
+    <div class="cz-handheld-toolbar">
+      <div class="d-table table-fixed w-100"><a class="d-table-cell cz-handheld-toolbar-item" href="account-wishlist.html"><span class="cz-handheld-toolbar-icon"><i class="czi-heart"></i></span><span class="cz-handheld-toolbar-label">Wishlist</span></a><a class="d-table-cell cz-handheld-toolbar-item" href="#navbarCollapse" data-toggle="collapse" onclick="window.scrollTo(0, 0)"><span class="cz-handheld-toolbar-icon"><i class="czi-menu"></i></span><span class="cz-handheld-toolbar-label">Menu</span></a><a class="d-table-cell cz-handheld-toolbar-item" href="shop-cart.html"><span class="cz-handheld-toolbar-icon"><i class="czi-cart"></i><span class="badge badge-primary badge-pill ml-1">4</span></span><span class="cz-handheld-toolbar-label">$265.00</span></a>
+      </div>
+    </div>
+    <!-- Back To Top Button--><a class="btn-scroll-top" href="#top" data-scroll><span class="btn-scroll-top-tooltip text-muted font-size-sm mr-2">Top</span><i class="btn-scroll-top-icon czi-arrow-up">   </i></a>
+    <!-- jquery -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+    <!-- Vendor scrits: js libraries and plugins-->
+    <!-- <script src="{% static 'vendor/jquery/dist/jquery.slim.min.js' %}"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{% static 'vendor/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'vendor/bs-custom-file-input/dist/bs-custom-file-input.min.js' %}"></script>
+    <script src="{% static 'vendor/simplebar/dist/simplebar.min.js' %}"></script>
+    <script src="{% static 'vendor/tiny-slider/dist/min/tiny-slider.js' %}"></script>
+    <script src="{% static 'vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js' %}"></script>
+    <!-- Include Fabric.js and other requirements in the page -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.1.0/fabric.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fontfaceobserver/2.1.0/fontfaceobserver.js"></script>
+    <!-- Main theme script-->
+    <script src="{% static 'js/theme.min.js' %}"></script>
+
+    
+    {% block javascript %}
+      <script>
+        if(typeof jQuery!=='undefined'){
+        console.log('jQuery Loaded');
+        }
+        else{
+            console.log('not loaded yet');
+        }
+      </script>
+    {% endblock %}
+  </body>
+</html>

@@ -1,0 +1,34 @@
+{% load static %}
+<div class="row">
+    <!-- Banners-->
+    <section class="container pb-4 mb-md-3">
+        <div class="row my-4">
+            <div class="col-md-6 mb-4">
+                <div class="d-sm-flex justify-content-between align-items-center bg-secondary overflow-hidden rounded-lg box-shadow">
+                <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                    <h4 class="font-size-lg font-weight-light mb-2">Customize for yourself or for your customers</h4>
+                    <h3 class="mb-4">We'll print & ship it for you!</h3><a class="btn btn-success btn-shadow" href="{% url 'essentials:seller_product_catalog' %}">Make an Order</a>
+                </div><img class="d-block ml-auto" src="{% static 'img\illustrations\undraw_printing_invoices_5r4r (1).svg' %}" alt="Shop Converse" style="height:200px">
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="d-sm-flex justify-content-between align-items-center bg-secondary overflow-hidden rounded-lg box-shadow">
+                <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                    <h4 class="font-size-lg font-weight-light mb-2">From Etsy's bestsellers</h4>
+                    <h3 class="mb-4">Pick the best design!</h3><a class="btn btn-dark btn-shadow" href="#">Shop Now</a>
+                </div ><img class="d-block ml-auto" src="{% static 'img\illustrations\undraw_web_shopping_dd4l.svg' %}" alt="Shop Converse" style="height:260px">
+                </div>
+            </div>
+            <!-- <div class="col-md-6 mb-4">
+                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg" style="background-image: url(img/blog/banner-bg.jpg);">
+                <div class="py-4 my-2 px-4 text-center">
+                    <div class="py-1">
+                    <h5 class="mb-2">Your Add Banner Here</h5>
+                    <p class="font-size-sm text-muted">Hurry up to reserve your spot</p><a class="btn btn-primary btn-shadow btn-sm" href="#">Contact us</a>
+                    </div>
+                </div>
+                </div>
+            </div> -->
+        </div>
+    </section>
+</div>

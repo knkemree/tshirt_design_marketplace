@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+  {% if category %}{{ category.name }}{% else %}Products{% endif %}
+{% endblock %}
+{% block blank %}
+  
+{% endblock %}
+
+{% block shop_list_ls %}
+    {% include "shop_grid_ls.html" %}
+{% endblock %}

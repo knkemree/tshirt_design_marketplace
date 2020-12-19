@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block javascript %}
+  <!-- <script>
+    $(document).on('submit','#login_form', function(e){
+
+    e.preventDefault();
+    var login_form = $('#login_form');
+    var action = login_form.attr('action');
+    var method = login_form.attr('method');
+    var data_ = login_form.serialize();
+
+    $.ajax({
+        type: method,
+        url: action,
+        data: data_,
+        success: function(data, status) {
+
+            if ($(data).find('.alert-primary').length > 0) {
+                $('#signin-modal').html(data);
+                // console.log(data)
+
+            }else{
+
+                console.log('Log In Form Successfuly Summited')
+                $('#signin-modal').modal('hide')
+                location.reload(); //Reload the current document page on success
+
+            }
+        }
+    });
+
+    return false;
+    });
+  </script> -->
+{% endblock %}
+
+{% block blank %}
+<!-- Page Content-->
+
+<div class="container py-4 py-lg-5 my-4">
+  <!-- <div class="row">
+    <div class="col-md-6">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert {% if message.tags == 'error' %} alert-primary {% endif %}" role="alert">
+            {{ message|safe }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div> -->
+  <div class="row">
+    <div class="col-md-6">
+      {% if login_form.errors %}
+          {% for field in login_form %}
+              {% for error in field.errors %}
+                  <div class="alert alert-danger">
+                      <strong>{{ error|escape }}</strong>
+                  </div>
+              {% endfor %}
+          {% endfor %}
+          {% for error in login_form.non_field_errors %}
+              <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
+              </div>
+          {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card border-0 box-shadow">
+        <div class="card-body">
+          <h2 class="h4 mb-1">Sign in</h2>
+          <div class="py-3">
+            <h3 class="d-inline-block align-middle font-size-base font-weight-semibold mb-2 mr-2">With social account:</h3>
+            <div class="d-inline-block align-middle"><a class="social-btn sb-google mr-2 mb-2" href="#" data-toggle="tooltip" title="Sign in with Google"><i class="czi-google"></i></a><a class="social-btn sb-facebook mr-2 mb-2" href="#" data-toggle="tooltip" title="Sign in with Facebook"><i class="czi-facebook"></i></a><a class="social-btn sb-twitter mr-2 mb-2" href="#" data-toggle="tooltip" title="Sign in with Twitter"><i class="czi-twitter"></i></a></div>
+          </div>
+          <hr>
+          <h3 class="font-size-base pt-4 pb-2">Or using form below</h3>
+          
+          <form id="login_form" action="{% url 'login' %}" method="POST">
+              {% csrf_token %}   
+              {% for field in login_form.fields  %}
+                  {% if field == 'username' %}
+                      <div class="input-group-overlay form-group">
+                        <div class="input-group-prepend-overlay"><span class="input-group-text"><i class="czi-mail"></i></span></div>
+                        <input class="form-control prepended-form-control" type="text" name="username" maxlength="255" required="" id="id_username"  placeholder="Email" autofocus="" autocapitalize="none" autocomplete="email">                       
+                      </div>
+                  {% elif field == 'password' %}
+                      <div class="input-group-overlay form-group">
+                        <div class="input-group-prepend-overlay"><span class="input-group-text"><i class="czi-locked"></i></span></div>
+                        <div class="password-toggle">
+                          <input class="form-control prepended-form-control" placeholder="Password" type="password" name="password" autocomplete="current-password" required="" id="id_password">
+                          <label class="password-toggle-btn">
+                            <input class="custom-control-input" type="checkbox"><i class="czi-eye password-toggle-indicator"></i><span class="sr-only">Show password</span>
+                          </label>
+                        </div>
+                      </div>                
+                  {% else %}
+                      <div class="form-group d-flex flex-wrap justify-content-between">
+                        <div class="custom-control custom-checkbox mb-2">
+                          <input class="custom-control-input" type="checkbox" id="id_remember_me" name="remember_me">
+                          <label class="custom-control-label" for="id_remember_me">Remember me</label>
+                        </div><a class="font-size-sm" href="{% url 'password_reset' %}">Forgot password?</a>
+                      </div>
+                  {% endif %}
+              {% endfor %}
+              <hr class="mt-4">
+              <div class="text-right pt-4">
+                <button class="btn btn-primary" type="submit"><i class="czi-sign-in mr-2 ml-n21"></i>Sign In</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 pt-4 mt-3 mt-md-0">
+      <h2 class="h4 mb-3">No account? Sign up</h2>
+      <p class="font-size-sm text-muted mb-4">Registration takes less than a minute but gives you full control over your orders.</p>
+      <form class="needs-validation" novalidate>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="reg-fn">First Name</label>
+              <input class="form-control" type="text" required id="reg-fn">
+              <div class="invalid-feedback">Please enter your first name!</div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="reg-ln">Last Name</label>
+              <input class="form-control" type="text" required id="reg-ln">
+              <div class="invalid-feedback">Please enter your last name!</div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="reg-email">E-mail Address</label>
+              <input class="form-control" type="email" required id="reg-email">
+              <div class="invalid-feedback">Please enter valid email address!</div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="reg-phone">Phone Number</label>
+              <input class="form-control" type="text" required id="reg-phone">
+              <div class="invalid-feedback">Please enter your phone number!</div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="reg-password">Password</label>
+              <input class="form-control" type="password" required id="reg-password">
+              <div class="invalid-feedback">Please enter password!</div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="reg-password-confirm">Confirm Password</label>
+              <input class="form-control" type="password" required id="reg-password-confirm">
+              <div class="invalid-feedback">Passwords do not match!</div>
+            </div>
+          </div>
+        </div>
+        <div class="text-right">
+          <button class="btn btn-primary" type="submit"><i class="czi-user mr-2 ml-n1"></i>Sign Up</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+  
+{% endblock %}
