@@ -35,7 +35,7 @@ AWS_S3_ENDPOINT_URL = 'https://fra1.digitaloceanspaces.com'
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
-AWS_LOCATION = 'contextcustom-static'
+AWS_LOCATION = 'contextcustom-static2'
 AWS_DEFAULT_ACL = 'public-read'
 
 
