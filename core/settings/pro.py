@@ -28,20 +28,26 @@ DATABASES = {
     }
 }
 
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/2.1/howto/static-files/
+
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+
 AWS_STORAGE_BUCKET_NAME = 'contextcustom'
-AWS_S3_ENDPOINT_URL = 'fra1.digitaloceanspaces.com'
+AWS_S3_ENDPOINT_URL = 'https://fra1.digitaloceanspaces.com'
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
-AWS_LOCATION = 'contextcustom-static2'
+AWS_LOCATION = 'static'
 AWS_DEFAULT_ACL = 'public-read'
 
-
-STATIC_URL = 'https://%s/%s/' % (AWS_S3_ENDPOINT_URL, AWS_LOCATION)
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+STATIC_URL = '{}/{}/'.format(AWS_S3_ENDPOINT_URL, AWS_LOCATION)
+STATIC_ROOT = 'static/'
 
 CELERY_BROKER_URL='amqp://localhost'
 CELERY_RESULT_BACKEND='amqp://localhost'
