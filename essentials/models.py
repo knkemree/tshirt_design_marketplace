@@ -146,7 +146,7 @@ class Mockup(models.Model):
 
     def __str__(self):
 
-        return str(self.item_color)+" "+"(image id:"+str(self.id)+")"
+        return 'image-id-'+str(self.id)
 
     def image_tag(self):
         img = self.image
