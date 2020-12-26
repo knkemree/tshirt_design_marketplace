@@ -606,7 +606,7 @@ function hideBg() {
           <div class="cz-thumblist order-sm-1">
             <!-- cz-thumblist-item active -->
             {% for mockup in variant.color.mockups.all %}
-            <a class="cz-thumblist-item" href="#{{ variant.product.slug }}{{mockup.id}}"><img id="cover_image" src="{{ mockup.image.url }}" alt="Product thumb"></a>
+            <a class="cz-thumblist-item" href="#{{ variant.product.slug }}{{mockup.id}}"><img id="{{ variant.product.slug }}{{mockup.id}}" src="{{ mockup.image.url }}" alt="Product thumb"></a>
             {% endfor %}
             <a class="cz-thumblist-item video-item" href="https://www.youtube.com/watch?v=nrQevwouWn0"><div class="cz-thumblist-item-text"><i class="czi-video"></i>Video</div></a>
           </div>
