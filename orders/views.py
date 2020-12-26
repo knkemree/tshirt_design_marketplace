@@ -23,7 +23,7 @@ import weasyprint
 @staff_member_required
 def admin_order_pdf(request, order_id):
     order = get_object_or_404(Order, id=order_id)
-    html = render_to_string('orders/order/pdf.html',
+    html = render_to_string('pdf.html',
                             {'order': order})
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'filename=order_{order.id}.pdf'
