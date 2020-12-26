@@ -18,6 +18,7 @@ from . tasks import order_created
 from cart.cart import Cart
 from django.utils.safestring import mark_safe
 import weasyprint
+from account.models import Seller
 
 
 @staff_member_required
@@ -70,10 +71,13 @@ def get_image_from_data_url( data_url, resize=True, base_width=600 ):
 def order_create(request):
     cart = Cart(request)
     if request.method == 'POST':
-        print('post request')
         form = OrderCreateForm(request.POST, request.FILES)
         if form.is_valid():
-            order = form.save()
+            order = form.save(commit=False)
+            email = Seller.objects.get(seller=request.user)
+            order.ordered_by = email 
+            order.total = cart.get_total_price()
+            order.save()
             for item in cart:
                 end_product_img = get_image_from_data_url(item['end_product_img'])[0]
                 image = get_image_from_data_url(item['design'])[0]
@@ -91,11 +95,7 @@ def order_create(request):
             request.session['order_id'] = order.id
             # redirect for payment
             return redirect(reverse('payment:process'))
-            # return render(request,
-            #               'created.html',
-            #               {'order': order})
     else:
-        
         form = OrderCreateForm()
     return render(request,
                   'create.html',
