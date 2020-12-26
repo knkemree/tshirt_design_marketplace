@@ -17,6 +17,7 @@ from . tasks import order_created
 
 from cart.cart import Cart
 from django.utils.safestring import mark_safe
+import weasyprint
 
 
 @staff_member_required
