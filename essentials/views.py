@@ -2,11 +2,13 @@ from django.shortcuts import render
 from django.db.models import Q, Avg, Count
 from django.views.generic.list import ListView
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 from cart.forms import CartAddProductForm
 from .models import Category, Product, Variant
 from account.mixins import SellerAccountMixin
-from django.http import JsonResponse
-from django.template.loader import render_to_string
+
 
 
 # Create your views here.
@@ -26,7 +28,7 @@ class SellerProductListView(SellerAccountMixin, ListView):
 		return qs
 
 
-
+@login_required(login_url='/signup/')
 def product_list(request, category_slug=None):
     category = None
     categories = Category.objects.all()
