@@ -1,6 +1,6 @@
 from .base import *
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['64.225.8.100', 'contextcustom.com', 'www.contextcustom.com']
 
@@ -33,23 +33,25 @@ DATABASES = {
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-...
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.11/howto/static-files/
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn', 'static_root')
 
-AWS_ACCESS_KEY_ID = 'SQOWXRXUG533D4DSUHJD'
-AWS_SECRET_ACCESS_KEY = '/UCd/CzPtnf5IdNDoOd6L/ZH1QN7VXSRZDV2L8iDAaM'
-AWS_STORAGE_BUCKET_NAME = 'contextcustom-space'
-AWS_S3_ENDPOINT_URL = 'https://nyc3.digitaloceanspaces.com'
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
-}
-AWS_LOCATION = 'static'
-AWS_DEFAULT_ACL = None
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static_cdn', 'media_root')
+
+# AWS_ACCESS_KEY_ID = 'SQOWXRXUG533D4DSUHJD'
+# AWS_SECRET_ACCESS_KEY = '/UCd/CzPtnf5IdNDoOd6L/ZH1QN7VXSRZDV2L8iDAaM'
+# AWS_STORAGE_BUCKET_NAME = 'contextcustom-space'
+# AWS_S3_ENDPOINT_URL = 'https://nyc3.digitaloceanspaces.com'
+# AWS_S3_OBJECT_PARAMETERS = {
+#     'CacheControl': 'max-age=86400',
+# }
+# AWS_LOCATION = 'static'
+# AWS_DEFAULT_ACL = None
 
 
-STATIC_URL = 'https://%s/%s/' % (AWS_S3_ENDPOINT_URL, AWS_LOCATION)
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATIC_URL = 'https://%s/%s/' % (AWS_S3_ENDPOINT_URL, AWS_LOCATION)
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 CELERY_BROKER_URL='amqp://localhost'
 CELERY_RESULT_BACKEND='amqp://localhost'
