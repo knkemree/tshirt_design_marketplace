@@ -583,7 +583,7 @@ function hideBg() {
             -->
             {% for mockup in variant.color.mockups.all %}
             
-            <div class="cz-preview-item" id="{{ variant.product.slug }}{{mockup.id}}"><img id="tshirt-backgroundpicture" class="cz-image-zoom" src="{{ mockup.image.url }}" data-zoom="{{ mockup.image.url }}" alt="Product image">
+            <div class="cz-preview-item" id="{{mockup.id}}"><img id="tshirt-backgroundpicture" class="cz-image-zoom" src="{{ mockup.image.url }}" data-zoom="{{ mockup.image.url }}" alt="Product image">
               <input type="hidden" value="{{ mockup.id }}">
               <div class="cz-image-zoom-pane"></div>
             </div>
@@ -600,13 +600,10 @@ function hideBg() {
             </div>
           </div>
 
-
-
-
           <div class="cz-thumblist order-sm-1">
             <!-- cz-thumblist-item active -->
             {% for mockup in variant.color.mockups.all %}
-            <a class="cz-thumblist-item" href="#{{ variant.product.slug }}{{mockup.id}}"><img  src="{{ mockup.image.url }}" alt="Product thumb"></a>
+            <a class="cz-thumblist-item" href="#{{mockup.id}}"><img  src="{{ mockup.image.url }}" alt="Product thumb"></a>
             {% endfor %}
             <a class="cz-thumblist-item video-item" href="https://www.youtube.com/watch?v=nrQevwouWn0"><div class="cz-thumblist-item-text"><i class="czi-video"></i>Video</div></a>
           </div>
