@@ -63,9 +63,9 @@ def product_detail(request, id, slug):
     else:
         variants = Variant.objects.filter(product_id=id)
         colors = Variant.objects.filter(product_id=id,size_id=variants[0].size_id )
-        sizes = Variant.objects.raw('SELECT id, size_id, product_id FROM  essentials_variant  WHERE product_id=%s GROUP BY size_id',[id])
-        # sizes = Variant.objects.values('size_id').distinct()
-        #sizes = Variant.objects.order_by('size__id').distinct('size__id')
+        #sizes = Variant.objects.raw('SELECT id, size_id, product_id FROM  essentials_variant  WHERE product_id=%s GROUP BY size_id',[id])
+        #sizes = Variant.objects.values('size_id').distinct()
+        sizes = Variant.objects.order_by('size__id').distinct('size__id')
         # try:
         #     sizes = Variant.objects.raw('SELECT * FROM  essentials_variant  WHERE product_id=%s GROUP BY size_id, id',[id])
         # except:
