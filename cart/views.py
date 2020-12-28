@@ -17,7 +17,7 @@ def cart_add(request, variant_id):
     print(variant)
     data['variant'] = variant.id
     if request.method == 'POST':
-        form = CartAddProductForm(request.POST)
+        form = CartAddProductForm(request.POST, request.FILES)
         if form.is_valid():
             cd = form.cleaned_data
             cart.add(variant=variant,

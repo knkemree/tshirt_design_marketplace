@@ -14,14 +14,6 @@ from django.utils.safestring import mark_safe
 from django.core.mail import send_mail
 from django.contrib.auth.models import Group, Permission, PermissionsMixin
 
-#from account.models import Customer
-
-
-#from account.models import Comment
-
-
-
-
 
 class Category(MPTTModel):
     parent = TreeForeignKey('self',blank=True, null=True ,related_name='children', on_delete=models.CASCADE)

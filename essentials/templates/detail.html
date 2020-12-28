@@ -92,14 +92,31 @@
       updateTshirtImage(this.value);
       console.log(this.value);
   }, false);
+
+
+  function readURL(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      
+      reader.onload = function(e) {
+        // $('#blah').attr('src', e.target.result);
+        $('#id_design').val(e.target.result);
+      }
+      
+      reader.readAsDataURL(input.files[0]); // convert to base64 string
+    }
+  }
+
+  $("#id_uploaded_image").change(function() {
+    readURL(this);
+  });
   // When the user clicks on upload a custom picture
-  document.getElementById('tshirt-custompicture').addEventListener("change", function(e){
+  document.getElementById('id_uploaded_image').addEventListener("change", function(e){
       var reader = new FileReader();
       
       reader.onload = function (event){
           var imgObj = new Image();
           imgObj.src = event.target.result;
-
           // When the picture loads, create the image in Fabric.js
           imgObj.onload = function () {
               var img = new fabric.Image(imgObj);
@@ -481,12 +498,12 @@ canvas.selection = false;
         var img1 = new Image();
         var options = {
         quality: 0.99, 
-        width: canvas.width,
-        height: canvas.height,
+        width: 2000,
+        height: 2000,
         };
         img1.src = dataUrl;
         document.body.appendChild(img1);
-        $('#id_design').val(dataUrl) 
+        // $('#id_design').val(dataUrl) 
     }).catch(function (error) {
       console.error('oops, something went wrong!', error);
     });
@@ -531,7 +548,7 @@ function hideBg() {
 <style>
   .drawing-area{
     position: absolute;
-    top: 190px;
+    top: 140px;
     left: 135px;
     z-index: 10;
     width: 200px;
@@ -822,7 +839,8 @@ function hideBg() {
 <div class="cz-file-drop-area">
   <div class="cz-file-drop-icon czi-cloud-upload"></div>
   <span class="cz-file-drop-message">Drag and drop here to upload</span>
-  <input id="tshirt-custompicture" type="file" class="cz-file-drop-input">
+  <input class="cz-file-drop-input" type="file" name="uploaded_image" accept="image/*" id="id_uploaded_image">
+  {% comment %} <input id="tshirt-custompicture" type="file" class="cz-file-drop-input"> {% endcomment %}
   <button type="button" class="cz-file-drop-btn btn btn-primary btn-sm">Or select file</button>
 </div>
           <div>
@@ -896,11 +914,12 @@ function hideBg() {
             {% endfor %}
             <div class="row mb-3 mt-3">
               <div class="col">
-                <form id="addtocartform" action="{% url 'cart:cart_add' variant.id %}" method="POST">
+                <form id="addtocartform" action="{% url 'cart:cart_add' variant.id %}" method="POST" enctype="multipart/form-data">
                   {{ cart_product_form.as_p }}
                   {% csrf_token %}
                   <!-- <button type="button" class="btn btn-primary">Add to Cart</button> -->
                   <input type="submit" class="btn btn-primary" value="Add to Cart">
+                  {% comment %} <img id="blah" src="#" alt="your image" /> {% endcomment %}
                 </form>
                 <br>
                 <small>Save your design before adding to cart!</small>
