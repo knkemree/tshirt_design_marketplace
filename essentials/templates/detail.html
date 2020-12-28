@@ -890,6 +890,7 @@ function hideBg() {
             </div>
             <div class="row mb-3 mt-3">
               <div class="col">
+              {{ varaint }} {{ varaint.id }}
                 <form id="addtocartform" action="{% url 'cart:cart_add' variant_id=variant.id %}" method="POST">
                   {{ cart_product_form.as_p }}
                   {% csrf_token %}
