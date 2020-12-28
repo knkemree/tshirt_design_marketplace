@@ -53,19 +53,23 @@ def product_detail(request, id, slug):
         variant = Variant.objects.get(id=variant_id) #selected product by click color radio
         colors = Variant.objects.filter(product_id=id,size_id=variant.size_id )
         #local'da postgrese gectikten sonra bunu kaldir
-        try:
-            sizes = Variant.objects.raw('SELECT * FROM  essentials_variant  WHERE product_id=%s GROUP BY size_id, id',[id])
-        except:
-            sizes = Variant.objects.distinct('size_id')
+        sizes = Variant.objects.raw('SELECT * FROM  essentials_variant  WHERE product_id=%s GROUP BY size_id',[id])
+        # try:
+        #     sizes = Variant.objects.raw('SELECT * FROM  essentials_variant  WHERE product_id=%s GROUP BY size_id, id',[id])
+        # except:
+        #     sizes = Variant.objects.values('size').distinct()
         query += variant.product.title+' Size:' +str(variant.size) +' Color:' +str(variant.color)
         print(query, 'queryde ne var')
     else:
         variants = Variant.objects.filter(product_id=id)
         colors = Variant.objects.filter(product_id=id,size_id=variants[0].size_id )
-        try:
-            sizes = Variant.objects.raw('SELECT * FROM  essentials_variant  WHERE product_id=%s GROUP BY size_id, id',[id])
-        except:
-            sizes = Variant.objects.distinct('size_id')
+        sizes = Variant.objects.raw('SELECT id, size_id, product_id FROM  essentials_variant  WHERE product_id=%s GROUP BY size_id',[id])
+        # sizes = Variant.objects.values('size_id').distinct()
+        #sizes = Variant.objects.order_by('size__id').distinct('size__id')
+        # try:
+        #     sizes = Variant.objects.raw('SELECT * FROM  essentials_variant  WHERE product_id=%s GROUP BY size_id, id',[id])
+        # except:
+        #     sizes = Variant.objects.values('size').distinct()
         variant =Variant.objects.get(id=variants[0].id)
 
     cart_product_form = CartAddProductForm()

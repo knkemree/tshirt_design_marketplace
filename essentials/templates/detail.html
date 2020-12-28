@@ -850,7 +850,7 @@ function hideBg() {
                   {% csrf_token %}
                   <select class="form-control custom-select" name="size" id="size" required>
                     {% for rs in sizes %}
-                    <option {% if variant.size_id == rs.size_id %} selected {% endif %} value="{{ rs.size_id }}">{{ rs.size.name }}</option>
+                    <option {% if variant.size_id == rs.size_id %} selected {% endif %} value="{{ rs.size_id }}">{{ rs.size }}</option>
                     {% endfor %}
                   </select>
                   <div class="invalid-feedback">Please provide a size.</div>
