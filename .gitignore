@@ -111,3 +111,5 @@ get-pip.py
 .mypy_cache/
 
 db.sqlite3
+
+static_cdn
