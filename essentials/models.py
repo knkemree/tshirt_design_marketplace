@@ -179,7 +179,7 @@ class Variant(models.Model):
     price = models.DecimalField(max_digits=12, decimal_places=2,default=0)
 
     def __str__(self):
-        return self.product.title
+        return self.product.title+str('-')+self.size.name+str('-')+self.color.name
 
     # def image(self):
     #     img = Image.objects.get(id=self.image_id)
