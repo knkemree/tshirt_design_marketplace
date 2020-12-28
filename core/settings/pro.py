@@ -2,11 +2,7 @@ from .base import *
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['64.225.8.100', 'contextcustom.com', 'www.contextcustom.com']
-
-INTERNAL_IPS = ['64.225.8.100', 'contextcustom.com']
-
-
+ALLOWED_HOSTS = ['contextcustom.com', 'www.contextcustom.com']
 
 def custom_show_toolbar(request):
     return False  # Always show toolbar, for example purposes only.
