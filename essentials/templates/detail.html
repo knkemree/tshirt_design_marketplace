@@ -452,11 +452,11 @@ canvas.selection = false;
 
 <script>
 
-  $('#addtocartform').on('submit', function(event){
+  {% comment %} $('#addtocartform').on('submit', function(event){
     event.preventDefault();
-    console.log("form submitted!"); // sanity check
+    console.log("form submitted!"); 
     add_to_cart();
-  });
+  }); {% endcomment %}
 
   $('#save').on('click', function(event){
     canvas.discardActiveObject();
@@ -896,7 +896,7 @@ function hideBg() {
             {% endfor %}
             <div class="row mb-3 mt-3">
               <div class="col">
-                <form id="addtocartform" action="{% url 'cart:cart_add' variant_id=variant.id %}" method="POST">
+                <form id="addtocartform" action="{% url 'cart:cart_add' variant.id %}" method="POST">
                   {{ cart_product_form.as_p }}
                   {% csrf_token %}
                   <!-- <button type="button" class="btn btn-primary">Add to Cart</button> -->

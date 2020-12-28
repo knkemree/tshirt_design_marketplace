@@ -23,13 +23,13 @@ class Cart(object):
         variant_id = str(variant.id)
         if variant_id not in self.cart:
             self.cart[variant_id] = {'quantity': 0,
-                                     'price': str(variant.price),
-                                     'size':str(variant.size),
+                                    'price': str(variant.price),
+                                    'size':str(variant.size),
                                     'color':str(variant.color),
                                     'end_product_img': end_product_img,
                                     'mockup': mockup,
                                     'design': design,
-                                     }
+                                    }
         if override_quantity:
             self.cart[variant_id]['quantity'] = quantity
         else:

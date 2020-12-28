@@ -13,6 +13,9 @@ def cart_add(request, variant_id):
     data = {}
     cart = Cart(request)
     variant = get_object_or_404(Variant, id=variant_id)
+    print('variant burda')
+    print(variant)
+    data['variant'] = variant.id
     if request.method == 'POST':
         form = CartAddProductForm(request.POST)
         if form.is_valid():
@@ -25,23 +28,13 @@ def cart_add(request, variant_id):
                     design = cd['design']
                     )
             data['result'] = "Added to cart"
-            return redirect('cart:cart_detail')
-            #return JsonResponse(data)
+            #return redirect('cart:cart_detail')
+            return JsonResponse(data)
         else:
             data['result'] = form.errors
             return redirect('cart:cart_detail')
             #return JsonResponse(data)
     data['result'] ='form not submitted yet' 
-
-    #print(request.session.get('cart'))
-    # cart = Cart(request)
-    # product = get_object_or_404(Variant, id=product_id)
-    # form = CartAddProductForm(request.POST)
-    # if form.is_valid():
-    #     cd = form.cleaned_data
-    #     cart.add(product=product,
-    #              quantity=cd['quantity'],
-    #              override_quantity=cd['override'])
     return redirect('cart:cart_detail')
     #return JsonResponse(data)
 
