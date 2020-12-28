@@ -65,7 +65,7 @@ def product_detail(request, id, slug):
         try:
             sizes = Variant.objects.raw('SELECT * FROM  essentials_variant  WHERE product_id=%s GROUP BY size_id, id',[id])
         except:
-            sizes = Variant.objects.distinct('size')
+            sizes = Variant.objects.distinct('size_id')
         variant =Variant.objects.get(id=variants[0].id)
 
     cart_product_form = CartAddProductForm()
