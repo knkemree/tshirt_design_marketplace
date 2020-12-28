@@ -15,9 +15,7 @@ def cart_add(request, variant_id):
     variant = get_object_or_404(Variant, id=variant_id)
     if request.method == 'POST':
         form = CartAddProductForm(request.POST)
-
         if form.is_valid():
-            
             cd = form.cleaned_data
             cart.add(variant=variant,
                     quantity=cd['quantity'],
@@ -56,7 +54,6 @@ def cart_remove(request, variant_id):
 
 def cart_detail(request):
     cart = Cart(request)
-    cart.clear()
     for item in cart:
         item['update_quantity_form'] = CartAddProductForm(initial={
                             'quantity': item['quantity'],

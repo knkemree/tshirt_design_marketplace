@@ -888,9 +888,14 @@ function hideBg() {
                 </form>
               </div>
             </div>
+            {% for rs in colors %}
+            <div class="custom-control custom-option custom-control-inline mb-2">
+                    <input class="custom-control-input" type="radio" name="color" id="{{ rs.color.id}}" data-label="colorOption" value="{{ rs.color.name }}" checked="">
+                    <label class="custom-option-label rounded-circle" for="{{ rs.color.id }}"><span class="custom-option-color rounded-circle" style="background-image: url({{ rs.color.color_tag.url }})"></span></label>
+            </div>
+            {% endfor %}
             <div class="row mb-3 mt-3">
               <div class="col">
-              {{ variant }} {{ variant.id }}
                 <form id="addtocartform" action="{% url 'cart:cart_add' variant_id=variant.id %}" method="POST">
                   {{ cart_product_form.as_p }}
                   {% csrf_token %}
