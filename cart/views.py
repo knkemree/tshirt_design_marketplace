@@ -54,3 +54,8 @@ def cart_detail(request):
     context = {'cart': cart}
     return render(request, 'cart.html', context)
     #return HttpResponse('hi')
+
+def cart_clear(request):
+    cart = Cart(request)
+    cart.clear()
+    return HttpResponse('Cart cleared!')
