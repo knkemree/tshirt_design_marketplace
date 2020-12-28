@@ -53,22 +53,14 @@ def product_detail(request, id, slug):
         variant = Variant.objects.get(id=variant_id) #selected product by click color radio
         colors = Variant.objects.filter(product_id=id,size_id=variant.size_id )
         #local'da postgrese gectikten sonra bunu kaldir
-        try:
-            sizes = Variant.objects.raw('SELECT * FROM  essentials_variant  WHERE product_id=%s GROUP BY size_id',[id])
-        except:
-            sizes = Variant.objects.order_by('size__id').distinct('size__id')
+        sizes = Variant.objects.order_by('size__id').distinct('size__id')
 
         query += variant.product.title+' Size:' +str(variant.size) +' Color:' +str(variant.color)
         print(query, 'queryde ne var')
     else:
         variants = Variant.objects.filter(product_id=id)
         colors = Variant.objects.filter(product_id=id,size_id=variants[0].size_id )
-
-        try:
-            sizes = Variant.objects.raw('SELECT * FROM  essentials_variant  WHERE product_id=%s GROUP BY size_id',[id])   
-        except:
-            sizes = Variant.objects.order_by('size__id').distinct('size__id')
-
+        sizes = Variant.objects.order_by('size__id').distinct('size__id')
         variant =Variant.objects.get(id=variants[0].id)
 
     cart_product_form = CartAddProductForm()
