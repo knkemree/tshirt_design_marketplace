@@ -28,8 +28,8 @@ def cart_add(request, variant_id):
                     design = cd['design']
                     )
             data['result'] = "Added to cart"
-            #return redirect('cart:cart_detail')
-            return JsonResponse(data)
+            return redirect('cart:cart_detail')
+            #return JsonResponse(data)
         else:
             data['result'] = form.errors
             return redirect('cart:cart_detail')
