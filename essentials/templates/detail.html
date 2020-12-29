@@ -865,6 +865,12 @@ function hideBg() {
             <div class="row mb-3">
             
               <div class="col-md-3 form-group">
+              {% comment %} {% for rs in colors %}
+                {% if variant.id == rs.id%}
+                  {{ rs.color.name}}
+                {% endif %}
+              {% endfor %}
+                {{ color }} {% endcomment %}
                 <form method="POST" id="post-form">
                   <input type="hidden" name="productid" id="productid" value="{{ product.id }}">
                   <label for="size">Size:</label>

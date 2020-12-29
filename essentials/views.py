@@ -51,18 +51,18 @@ def product_detail(request, id, slug):
         variant_id = request.POST.get('variantid')                                                                                                                                                  
         variant = Variant.objects.get(id=variant_id) #selected product by click color radio
         colors = Variant.objects.filter(product_id=id,size_id=variant.size_id )
+        color = colors[0].color.name
         sizes = Variant.objects.filter(product_id = variant.product_id).order_by('size__id').distinct('size__id')
         query += variant.product.title+' Size:' +str(variant.size) +' Color:' +str(variant.color)
-        print('queryde ne var')
-        print(query)
     else:
         variants = Variant.objects.filter(product_id=id)
         colors = Variant.objects.filter(product_id=id,size_id=variants[0].size_id )
+        color = colors[0].color.name
         variant = Variant.objects.get(id=variants[0].id)
         sizes = Variant.objects.filter(product_id = variant.product_id).order_by('size__id').distinct('size__id')
 
     cart_product_form = CartAddProductForm()
-    context = {'product': product,'cart_product_form': cart_product_form, 'sizes':sizes, 'colors':colors, 'query':query, 'variant':variant}
+    context = {'product': product,'cart_product_form': cart_product_form, 'sizes':sizes, 'colors':colors, 'color':color, 'query':query, 'variant':variant}
     return render(request,'detail.html',context)
 
 def ajaxcolor(request):
@@ -70,12 +70,16 @@ def ajaxcolor(request):
     if request.POST.get('action') == 'post':
         size_id = request.POST.get('size')
         productid = request.POST.get('productid')
-        colors = Variant.objects.filter(product_id=productid, size_id=size_id)
-        context = {
-            'size_id': size_id,
-            'productid': productid,
-            'colors': colors,
-        }
-        data = {'rendered_table': render_to_string('color_list.html', context=context)}
+        print('product id nedir')
+        print(productid)
+        # colors = Variant.objects.filter(product_id=productid.product_id, size_id=size_id)
+        # color = colors[0].color.name
+        # context = {
+        #     'size_id': size_id,
+        #     'productid': productid,
+        #     'colors': colors,
+        #     'color':color,
+        # }
+        # data = {'rendered_table': render_to_string('color_list.html', context=context)}
         return JsonResponse(data)
     return JsonResponse(data)
