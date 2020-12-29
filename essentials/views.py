@@ -53,6 +53,8 @@ def product_detail(request, id, slug):
         colors = Variant.objects.filter(product_id=id,size_id=variant.size_id )
         sizes = Variant.objects.filter(product_id = variant.product_id).order_by('size__id').distinct('size__id')
         query += variant.product.title+' Size:' +str(variant.size) +' Color:' +str(variant.color)
+        print('queryde ne var')
+        print(query)
     else:
         variants = Variant.objects.filter(product_id=id)
         colors = Variant.objects.filter(product_id=id,size_id=variants[0].size_id )

@@ -1,11 +1,11 @@
 <div class="custom-control custom-option custom-control-inline mb-2">
     <input type="hidden" name="size" id="size" value="{{ size_id }}">
     {% for rs in colors %}
-        <input class="custom-control-input" type="radio" name="variantid" id="variantid" value="{{ rs.id }}" onchange="this.form.submit();">
+        {% comment %} <input class="custom-control-input" type="radio" name="variantid" id="variantid" value="{{ rs.id }}" onchange="this.form.submit();">
          <label class="custom-option-label rounded-circle" for="variantid"><span class="custom-option-color rounded-circle" style="background-image: url({{ rs.color.color_tag.url }})"></span></label>
-        
-        {% comment %} <input type="radio" name="variantid" id="variantid" value="{{ rs.id }}" onchange="this.form.submit();">
-        <a>{{ rs.color }}</a>  {% endcomment %}
+         {% endcomment %}
+        <input type="radio" name="variantid" id="variantid" value="{{ rs.id }}" onchange="this.form.submit();">
+        <a>{{ rs.color }}</a>
     {% endfor %}
 </div>
 
