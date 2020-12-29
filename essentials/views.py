@@ -72,14 +72,14 @@ def ajaxcolor(request):
         productid = request.POST.get('productid')
         print('product id nedir')
         print(productid)
-        # colors = Variant.objects.filter(product_id=productid.product_id, size_id=size_id)
-        # color = colors[0].color.name
-        # context = {
-        #     'size_id': size_id,
-        #     'productid': productid,
-        #     'colors': colors,
-        #     'color':color,
-        # }
-        # data = {'rendered_table': render_to_string('color_list.html', context=context)}
+        colors = Variant.objects.filter(product_id=productid.product_id, size_id=size_id)
+        color = colors[0].color.name
+        context = {
+            'size_id': size_id,
+            'productid': productid,
+            'colors': colors,
+            'color':color,
+        }
+        data = {'rendered_table': render_to_string('color_list.html', context=context)}
         return JsonResponse(data)
     return JsonResponse(data)
