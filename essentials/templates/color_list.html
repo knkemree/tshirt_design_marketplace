@@ -1,7 +1,7 @@
 <div class="custom-control custom-option custom-control-inline mb-2">
     <input type="hidden" name="size" id="size" value="{{ size_id }}">
     {% for rs in colors %}
-        <input type="radio" name="variantid" id="variantid" value="{{ rs.id }}" onchange="this.form.submit();">
+        <input class="custom-control-input" type="radio" name="variantid" id="variantid" value="{{ rs.id }}" onchange="this.form.submit();">
         <a>{{ rs.color }}</a> 
     {% endfor %}
 </div>
