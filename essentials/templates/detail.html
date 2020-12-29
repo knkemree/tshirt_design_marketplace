@@ -903,20 +903,20 @@ function hideBg() {
                     <input type="hidden" name="size" id="size" value="{{ size_id }}">
                     {% for rs in colors %}
                         <div class="custom-control custom-option custom-control-inline mb-2">
-                    <input class="custom-control-input" type="radio" name="variantid" id="variantid" onchange="this.form.submit();" data-label="colorOption" value="{{ rs.color.name }}" {% if variant.id == rs.id %} checked {% endif %}>
-                    <label class="custom-option-label rounded-circle" for="{{ rs.color.id }}"><span class="custom-option-color rounded-circle" style="background-image: url({{ rs.color.color_tag.url }})"></span></label>
-            </div> 
+                                <input class="custom-control-input" type="radio" name="variantid" id="variantid" onchange="this.form.submit();" data-label="colorOption" value="{{ rs.color.name }}" {% if variant.id == rs.id %} checked {% endif %}>
+                                <label class="custom-option-label rounded-circle" for="{{ rs.color.id }}"><span class="custom-option-color rounded-circle" style="background-image: url({{ rs.color.color_tag.url }})"></span></label>
+                        </div> 
                     {% endfor %}
                   </div>
                 </form>
               </div>
             </div>
-            {% for rs in colors %}
+            {% comment %} {% for rs in colors %}
             <div class="custom-control custom-option custom-control-inline mb-2">
                     <input class="custom-control-input" type="radio" name="variantid" id="variantid" onchange="this.form.submit();" data-label="colorOption" value="{{ rs.color.name }}" {% if variant.id == rs.id %} checked {% endif %}>
                     <label class="custom-option-label rounded-circle" for="{{ rs.color.id }}"><span class="custom-option-color rounded-circle" style="background-image: url({{ rs.color.color_tag.url }})"></span></label>
             </div>
-            {% endfor %}
+            {% endfor %} {% endcomment %}
             <div class="row mb-3 mt-3">
               <div class="col">
                 <form id="addtocartform" action="{% url 'cart:cart_add' variant.id %}" method="POST" enctype="multipart/form-data">
