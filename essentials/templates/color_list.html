@@ -3,7 +3,9 @@
     {% for rs in colors %}
         <input class="custom-control-input" type="radio" name="variantid" id="variantid" value="{{ rs.id }}" onchange="this.form.submit();">
          <label class="custom-option-label rounded-circle" for="variantid"><span class="custom-option-color rounded-circle" style="background-image: url({{ rs.color.color_tag.url }})"></span></label>
-        <a>{{ rs.color }}</a> 
+        
+        {% comment %} <input type="radio" name="variantid" id="variantid" value="{{ rs.id }}" onchange="this.form.submit();">
+        <a>{{ rs.color }}</a>  {% endcomment %}
     {% endfor %}
 </div>
 
