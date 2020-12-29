@@ -903,7 +903,7 @@ function hideBg() {
                     <input type="hidden" name="size" id="size" value="{{ size_id }}">
                     {% for rs in colors %}
                         <div class="custom-control custom-option custom-control-inline mb-2">
-                                <input class="custom-control-input" type="radio" name="variantid" id="variantid" onchange="this.form.submit();" data-label="colorOption" value="{{ rs.color.id }}" {% if variant.id == rs.id %} checked {% endif %}>
+                                <input class="custom-control-input" type="radio" name="variantid" id="variantid" onchange="this.form.submit();" data-label="colorOption" value="{{ rs.id }}" {% if variant.id == rs.id %} checked {% endif %}>
                                 <label class="custom-option-label rounded-circle" for="variantid"><span class="custom-option-color rounded-circle" style="background-image: url({{ rs.color.color_tag.url }})"></span></label>
                         </div> 
                     {% endfor %}
