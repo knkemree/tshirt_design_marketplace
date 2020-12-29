@@ -43,7 +43,6 @@ def product_list(request, category_slug=None):
                    'categories': categories,
                    'products': products})
 
-
 def product_detail(request, id, slug):
     query = request.GET.get('q')
     product = get_object_or_404(Product,id=id,slug=slug,active=True)
@@ -52,16 +51,13 @@ def product_detail(request, id, slug):
         variant_id = request.POST.get('variantid')                                                                                                                                                  
         variant = Variant.objects.get(id=variant_id) #selected product by click color radio
         colors = Variant.objects.filter(product_id=id,size_id=variant.size_id )
-        #local'da postgrese gectikten sonra bunu kaldir
         sizes = Variant.objects.filter(product_id = variant.product_id).order_by('size__id').distinct('size__id')
         query += variant.product.title+' Size:' +str(variant.size) +' Color:' +str(variant.color)
-        print(query, 'queryde ne var')
     else:
         variants = Variant.objects.filter(product_id=id)
         colors = Variant.objects.filter(product_id=id,size_id=variants[0].size_id )
         variant = Variant.objects.get(id=variants[0].id)
         sizes = Variant.objects.filter(product_id = variant.product_id).order_by('size__id').distinct('size__id')
-        #sizes = Variant.objects.order_by('size__id').distinct('size__id')
 
     cart_product_form = CartAddProductForm()
     context = {'product': product,'cart_product_form': cart_product_form, 'sizes':sizes, 'colors':colors, 'query':query, 'variant':variant}
@@ -70,8 +66,6 @@ def product_detail(request, id, slug):
 def ajaxcolor(request):
     data = {}
     if request.POST.get('action') == 'post':
-        print('ne post edildi')
-        print(request.POST)
         size_id = request.POST.get('size')
         productid = request.POST.get('productid')
         colors = Variant.objects.filter(product_id=productid, size_id=size_id)
