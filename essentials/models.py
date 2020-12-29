@@ -13,6 +13,7 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.core.mail import send_mail
 from django.contrib.auth.models import Group, Permission, PermissionsMixin
+from django.db.models.aggregates import Min
 
 
 class Category(MPTTModel):
@@ -41,15 +42,6 @@ class Category(MPTTModel):
                        args=[self.slug])
 
 
-    # def __str__(self):                           # __str__ method elaborated later in
-    #     full_path = [self.title]                  # post.  use __unicode__ in place of
-    #     k = self.parent
-    #     while k is not None:
-    #         full_path.append(k.title)
-    #         k = k.parent
-    #     return ' / '.join(full_path[::-1])
-
-
 class Product(models.Model):
     VARIANTS = (
         ('None', 'None'),
@@ -58,7 +50,6 @@ class Product(models.Model):
         ('Size-Color', 'Size-Color'),
 
     )
-    #seller = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE) #many to one relation with Category
     title = models.CharField(max_length=150)
     slug = models.SlugField(null=False, unique=True)
@@ -75,6 +66,9 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def get_lowest_price(self):
+        return self.variants.all().aggregate(Min('price'))
 
 
     ## method to create a fake table field in read only mode
@@ -101,18 +95,8 @@ class Product(models.Model):
     #         cnt = int(reviews["count"])
     #     return cnt
 
-
-# class Image(models.Model):
-#     product=models.ForeignKey(Product,on_delete=models.CASCADE)
-#     title = models.CharField(max_length=50,blank=True)
-#     image = models.ImageField(blank=True, upload_to='images/')
-
-#     def __str__(self):
-#         return self.title
-
 class Size(models.Model):
     name = models.CharField(max_length=20)
-    #code = models.CharField(max_length=10, blank=True,null=True)
     def __str__(self):
         return self.name
 
@@ -123,13 +107,8 @@ class Color(models.Model):
     def __str__(self):
         return self.name
 
-    # def color_tag(self):
-    #     if self.code is not None:
-    #         return mark_safe('<p style="background-color:{}">Color </p>'.format(self.code))
-
 class Mockup(models.Model):
     item_color = models.ForeignKey(Color, on_delete=models.CASCADE,blank=True,null=True, related_name='mockups')
-    #item_color = models.CharField(max_length=50,blank=True)
     image = models.ImageField(blank=True, upload_to='images/')
     active = models.BooleanField(default=True)
 
@@ -137,7 +116,6 @@ class Mockup(models.Model):
         ordering = ('item_color',)
 
     def __str__(self):
-
         return 'image-id-'+str(self.id)
 
     def image_tag(self):
@@ -145,41 +123,15 @@ class Mockup(models.Model):
         if img is not None:
              return mark_safe('<img src="{}" height="150" />'.format(img.url,))
 
-
-# class Mockup_Group(models.Model):
-#     title = models.CharField(max_length=50,blank=True, help_text="name it by color. e.g. 'blue mockups'")
-#     group = models.ManyToManyField(Mockup)
-#     active = models.BooleanField(default=True)
-
-#     def __str__(self):
-#         return self.title
-
-#     class Meta:
-#         verbose_name = 'Mockup Group'
-#         verbose_name_plural = 'Mockup Groups'
-
-
-
 class Variant(models.Model):
-    #title = models.CharField(max_length=100, blank=True,null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants")
     color = models.ForeignKey(Color, on_delete=models.CASCADE,blank=True,null=True)
     size = models.ForeignKey(Size, on_delete=models.CASCADE,blank=True,null=True)
-    #mockup_group = models.ForeignKey(Mockup_Group, on_delete=models.CASCADE,blank=True,null=True)
-    #image_id = models.IntegerField(blank=True,null=True,default=0)
     quantity = models.IntegerField(default=1)
     price = models.DecimalField(max_digits=12, decimal_places=2,default=0)
 
     def __str__(self):
         return self.product.title+str('-')+self.size.name+str('-')+self.color.name
-
-    # def image(self):
-    #     img = Image.objects.get(id=self.image_id)
-    #     if img.id is not None:
-    #          varimage=img.image.url
-    #     else:
-    #         varimage=""
-    #     return varimage
 
     def image_tag(self):
         img = self.product.image
@@ -189,7 +141,6 @@ class Variant(models.Model):
         else:
             return ""
 
-
 class Design(models.Model):
     variant = models.ForeignKey(Variant, on_delete=models.PROTECT, related_name="designs")
     email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="designs")
@@ -198,14 +149,6 @@ class Design(models.Model):
 
     def __str__(self):
         return 'Art #'+str(self.id)
-
-    # def image(self):
-    #     img = Image.objects.get(id=self.image_id)
-    #     if img.id is not None:
-    #          varimage=img.image.url
-    #     else:
-    #         varimage=""
-    #     return varimage
 
     def image_tag(self):
         img = self.product.image
