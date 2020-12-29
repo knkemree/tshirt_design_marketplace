@@ -10,6 +10,7 @@
 <script>
       $(document).on('change', '#post-form',function(e){
           e.preventDefault();
+          $(document.body).css({'cursor' : 'wait'});
           $.ajax({
               type:'POST',
               url:'{% url "ajaxcolor" %}',
@@ -23,8 +24,10 @@
               success: function (data) {
                   console.log("success");
                   $('#appendHere').html(data.rendered_table);
+                  $(document.body).css({'cursor' : 'default'});
               },
               error: function (data) {
+                  $(document.body).css({'cursor' : 'default'});
                   alert("Got an error dude " + data);
               }
           });
