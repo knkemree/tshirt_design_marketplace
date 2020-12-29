@@ -52,7 +52,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'ordered_by', 'recipient', 'shipping_label',
                     'discount', 'shipping_fee', 'profit', 'paid',
                     'created', 'updated',order_detail,
-                    order_pdf,
+                    #order_pdf,
                     ]
     list_filter = ['ordered_by','paid', 'created', 'updated']
     inlines = [OrderItemInline]
