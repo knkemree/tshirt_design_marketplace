@@ -71,6 +71,7 @@ class Product(models.Model):
         return self.variants.all().aggregate(Min('price'))
 
 
+
     ## method to create a fake table field in read only mode
     # def cover_image(self):
     #     if self.image.url is not None:
