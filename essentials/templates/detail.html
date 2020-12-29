@@ -223,9 +223,9 @@
       canvas.on('text:changed', function(opt) {
           
           var iTextSample = opt.target;
-          if ( iTextSample.width >  200) {
-                  iTextSample.fontSize *=  200 / ( iTextSample.width + 1);
-                  iTextSample.width =  200;
+          if ( iTextSample.width >  250) {
+                  iTextSample.fontSize *=  250 / ( iTextSample.width + 1);
+                  iTextSample.width =  250;
           }
           });
       
@@ -551,12 +551,12 @@ function hideBg() {
     top: 90px;
     left: 135px;
     z-index: 10;
-    width: 200px;
+    width: 250px;
     height: 500px;
 }
 
 .canvas-container{
-    width: 200px; 
+    width: 250px; 
     height: 500px; 
     position: relative; 
     user-select: none;
@@ -571,7 +571,7 @@ function hideBg() {
 
 #canvas{
     position: absolute;
-    width: 200px;
+    width: 250px;
     height: 500px; 
     left: 0px; 
     top: 0px; 
@@ -612,7 +612,7 @@ function hideBg() {
             <!-- <div id="drawingArea" class="drawing-area" style="border: 1px dashed #B2CCFF;" > -->
             <div id="drawingArea" class="drawing-area">
               <div class="canvas-container" >
-                  <canvas id="tshirt-canvas" width="200" height="500"></canvas>
+                  <canvas id="tshirt-canvas" width="250" height="500"></canvas>
               </div> 
             </div>
           </div>
