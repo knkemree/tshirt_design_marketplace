@@ -18,7 +18,7 @@ class CustomerAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Personal info', {'fields': ('first_name','last_name','phone')}),
-        ('Permissions', {'fields': ('user_permissions','groups','admin','staff','seller',
+        ('Permissions', {'fields': ('user_permissions','groups','stripe_id','admin','staff','seller',
         )}),
         (('Important dates'), {'fields': ('last_login', 'date_joined')}),
         
@@ -34,7 +34,7 @@ class CustomerAdmin(BaseUserAdmin):
     search_fields = ('email',)
     ordering = ('date_joined',)
     filter_horizontal = ()
-    readonly_fields = ('seller','last_login','date_joined')
+    readonly_fields = ('stripe_id','seller','last_login','date_joined')
 
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['subject','comment', 'active','create_at']

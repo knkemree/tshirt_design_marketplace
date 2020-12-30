@@ -1,3 +1,7 @@
+from nameparser import HumanName
+import stripe
+import json
+
 from django.shortcuts import render
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth import authenticate, login
@@ -11,9 +15,8 @@ from django.http.response import HttpResponse, JsonResponse
 from .tokens import account_activation_token
 from .forms import UserAdminCreationForm, CustomAuthenticationForm, AuthenticationForm
 from .models import Customer, Seller
-import json
 from core.tasks import send_activation_email
-from nameparser import HumanName
+
 
 # Create your views here.
 def signup(request):
@@ -32,7 +35,13 @@ def signup(request):
             user.active = False
             user.buyer = True
             user.save()
-
+            customer = Customer.objects.get(email=user.email)
+            created_customer = stripe.Customer.create(
+                description=user.email,
+                email=user.email
+            )
+            customer.stripe_id = created_customer.id
+            customer.save()
             current_site = get_current_site(request)
             subject = 'Activate Your Context Custom Account'
             message = render_to_string('account_activation_email.html', {
@@ -65,10 +74,6 @@ def signup(request):
                 messages.error(request, "User not found!")
 
         else:
-            print('signup view | signup errors')
-            print(signup_form.errors.as_json())
-            print(signup_form.errors.get_json_data())
-            print(signup_form.errors)
             data['login_error'] = login_form.errors
             data['signup_error'] = signup_form.errors
             #messages.error(request, "None of the forms are valid!")
