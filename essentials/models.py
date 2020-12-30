@@ -103,10 +103,12 @@ class Size(models.Model):
 
 class Color(models.Model):
     name = models.CharField(max_length=40)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL,blank=True,null=True, related_name='colors')
     color_tag = models.ImageField(upload_to='color_tags/', blank=True)
+    
 
     def __str__(self):
-        return self.name
+        return self.name+str(' for ')+self.product.title
 
 class Mockup(models.Model):
     item_color = models.ForeignKey(Color, on_delete=models.CASCADE,blank=True,null=True, related_name='mockups')
