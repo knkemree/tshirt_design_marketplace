@@ -23,6 +23,7 @@
               data_type : 'html',
               success: function (data) {
                   console.log("success");
+                  console.log(data)
                   $('#appendHere').html(data.rendered_table);
                   $(document.body).css({'cursor' : 'default'});
               },
@@ -903,6 +904,7 @@ function hideBg() {
     
             <div class="row mb-3">
               <div class="col">
+                
                 <form method="post" action="?q=selectvariant" id="post-color">
                   {% csrf_token %}
                   <div id="appendHere">

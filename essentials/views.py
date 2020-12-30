@@ -54,6 +54,7 @@ def product_detail(request, id, slug):
         color = colors[0].color.name
         sizes = Variant.objects.filter(product_id = variant.product_id).order_by('size__id').distinct('size__id')
         query += variant.product.title+' Size:' +str(variant.size) +' Color:' +str(variant.color)
+        
     else:
         variants = Variant.objects.filter(product_id=id)
         colors = Variant.objects.filter(product_id=id,size_id=variants[0].size_id )
@@ -72,14 +73,16 @@ def ajaxcolor(request):
         productid = request.POST.get('productid')
         print('product id nedir')
         print(productid)
+        print(size_id)
         colors = Variant.objects.filter(product_id=productid, size_id=size_id)
-        color = colors[0].color.name
+        ajax_variant = colors[0]
         context = {
             'size_id': size_id,
             'productid': productid,
             'colors': colors,
-            'color':color,
+            'ajax_variant':ajax_variant,
         }
-        data = {'rendered_table': render_to_string('color_list.html', context=context)}
+        data = {'rendered_table': render_to_string('color_list.html', context=context),
+                }
         return JsonResponse(data)
     return JsonResponse(data)
