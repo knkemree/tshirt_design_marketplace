@@ -907,6 +907,7 @@ function hideBg() {
                 
                 <form method="post" action="?q=selectvariant" id="post-color">
                   {% csrf_token %}
+                  <label for="appendHere">Color:</label>
                   <div id="appendHere">
                     <input type="hidden" name="size" id="size" value="{{ size_id }}">
                     {% for rs in colors %}
