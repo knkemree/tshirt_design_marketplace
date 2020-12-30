@@ -108,7 +108,7 @@ class Color(models.Model):
     
 
     def __str__(self):
-        return self.name+str(' for ')+self.product.title
+        return self.name
 
 class Mockup(models.Model):
     item_color = models.ForeignKey(Color, on_delete=models.CASCADE,blank=True,null=True, related_name='mockups')
