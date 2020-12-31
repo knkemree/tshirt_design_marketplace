@@ -25,6 +25,9 @@ class Order(models.Model):
     def __str__(self):
         return f'Order {self.id}'
 
+    def customer_name(self):
+        return self.ordered_by.get_customer_name()
+
     def get_total_cost(self):
         total_cost = sum(item.get_customer_cost() for item in self.items.all())
         return total_cost

@@ -49,12 +49,12 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'ordered_by', 'recipient', 'shipping_label',
+    list_display = ['id', 'customer_name', 'recipient', 'shipping_label',
                     'discount', 'shipping_fee', 'profit', 'paid', 'fulfillment',
                     'created', 'updated',order_detail,
                     #order_pdf,
                     ]
-    list_display_links =['ordered_by']
-    list_filter = ['ordered_by','paid', 'fulfillment','created', 'updated']
+    list_display_links =['customer_name']
+    list_filter = ['paid', 'fulfillment','created', 'updated']
     inlines = [OrderItemInline]
     actions = [export_to_csv]
