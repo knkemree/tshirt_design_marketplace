@@ -60,7 +60,7 @@ class MockupInline(admin.TabularInline):
 
 @admin_thumbnails.thumbnail('image')
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['title','category', 'active']
+    list_display = ['title','category', 'active','image_tag']
     list_filter = ['category']
     #readonly_fields = ('image_tag',)
     inlines = [VariantInline]
@@ -69,7 +69,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 class ColorAdmin(admin.ModelAdmin):
-    list_display = ['name','group','color_tag']
+    list_display = ['name','group','image_tag']
     list_filter = ['name']
     list_editable = ['group']
     inlines = [MockupInline]

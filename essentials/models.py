@@ -70,6 +70,11 @@ class Product(models.Model):
     def get_lowest_price(self):
         return self.variants.all().aggregate(Min('price'))
 
+    def image_tag(self):
+        img = self.image
+        if img is not None:
+                return mark_safe('<img src="{}" height="150" />'.format(img.url,))
+
 
 
     ## method to create a fake table field in read only mode
@@ -115,6 +120,11 @@ class Color(models.Model):
 
     class Meta:
         ordering = ['name']
+
+    def image_tag(self):
+        img = self.color_tag
+        if img is not None:
+                return mark_safe('<img src="{}" height="50" />'.format(img.url,))
 
 class Technique(models.Model):
     name = models.CharField(max_length=40)
