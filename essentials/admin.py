@@ -48,14 +48,14 @@ class CategoryAdmin(DraggableMPTTAdmin):
 class VariantInline(admin.TabularInline):
     model = Variant
     #readonly_fields = ('image_tag',)
-    extra = 1
+    extra = 0
     show_change_link = True
     save_as =True
     
 @admin_thumbnails.thumbnail('image')
 class MockupInline(admin.TabularInline):
     model = Mockup
-    extra = 1
+    extra = 0
     show_change_link = True
 
 @admin_thumbnails.thumbnail('image')
