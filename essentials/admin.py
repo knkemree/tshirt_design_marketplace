@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group
 import admin_thumbnails
 from mptt.admin import DraggableMPTTAdmin
 
-from .models import Category, Product, Color, Size, Variant, Mockup
+from .models import Category, Product, Color, Size, Technique, Variant, Mockup
 
 
 # Register your models here.
@@ -74,6 +74,9 @@ class ColorAdmin(admin.ModelAdmin):
 class SizeAdmin(admin.ModelAdmin):
     list_display = ['name',]
 
+class TechniqueAdmin(admin.ModelAdmin):
+    list_display = ['name',]
+
 class VariantAdmin(admin.ModelAdmin):
     list_display = ['product','color','size','price','quantity',]
 
@@ -88,6 +91,7 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Color, ColorAdmin)
 admin.site.register(Size, SizeAdmin)
+admin.site.register(Technique, TechniqueAdmin)
 admin.site.register(Variant, VariantAdmin)
 admin.site.register(Mockup, MockupAdmin)
 #admin.site.register(Mockup_Group, Mockup_GroupAdmin)
