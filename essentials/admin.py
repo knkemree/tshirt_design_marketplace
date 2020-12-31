@@ -50,6 +50,7 @@ class VariantInline(admin.TabularInline):
     #readonly_fields = ('image_tag',)
     extra = 1
     show_change_link = True
+    save_as =True
     
 @admin_thumbnails.thumbnail('image')
 class MockupInline(admin.TabularInline):
@@ -78,7 +79,8 @@ class TechniqueAdmin(admin.ModelAdmin):
     list_display = ['name',]
 
 class VariantAdmin(admin.ModelAdmin):
-    list_display = ['product','color','size','price','quantity',]
+    list_display = ['product','technique','color','size','price','quantity','created_at','updated_at']
+    save_as =True
 
     
 @admin_thumbnails.thumbnail('image')
