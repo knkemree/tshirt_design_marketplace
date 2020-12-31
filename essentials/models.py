@@ -158,9 +158,9 @@ class Mockup(models.Model):
 
 class Variant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants")
-    technique = models.ForeignKey(Technique, on_delete=models.CASCADE,blank=True,null=True)
-    color = models.ForeignKey(Color, on_delete=models.CASCADE,blank=True,null=True)
     size = models.ForeignKey(Size, on_delete=models.CASCADE,blank=True,null=True)
+    color = models.ForeignKey(Color, on_delete=models.CASCADE,blank=True,null=True)
+    technique = models.ForeignKey(Technique, on_delete=models.CASCADE,blank=True,null=True)
     quantity = models.IntegerField(default=1)
     cost = models.DecimalField(max_digits=12, decimal_places=2,default=0)
     price = models.DecimalField(max_digits=12, decimal_places=2,default=0)
