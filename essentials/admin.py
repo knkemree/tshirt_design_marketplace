@@ -70,7 +70,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 class ColorAdmin(admin.ModelAdmin):
-    list_display = ['name','group','image_tag']
+    list_display = ['name','group','product_preview','image_tag']
     list_filter = ['name']
     list_editable = ['group']
     inlines = [MockupInline]

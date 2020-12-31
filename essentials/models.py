@@ -126,6 +126,13 @@ class Color(models.Model):
         if img is not None:
                 return mark_safe('<img src="{}" height="50" />'.format(img.url,))
 
+    def product_preview(self):
+        images = Mockup.objects.filter(item_color_id=self.id)
+        img = images[0]
+        if img is not None:
+                return mark_safe('<img src="{}" height="100" />'.format(img.image.url,))
+
+
 class Technique(models.Model):
     name = models.CharField(max_length=40)
     def __str__(self):
