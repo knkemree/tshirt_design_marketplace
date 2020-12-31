@@ -70,6 +70,11 @@ class Product(models.Model):
     def get_lowest_price(self):
         return self.variants.all().aggregate(Min('price'))
 
+    def image_tag(self):
+        img = self.image
+        if img is not None:
+                return mark_safe('<img src="{}" height="150" />'.format(img.url,))
+
 
 
     ## method to create a fake table field in read only mode
@@ -98,14 +103,31 @@ class Product(models.Model):
 
 class Size(models.Model):
     name = models.CharField(max_length=20)
+    row_no = models.IntegerField(default=0)
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ['row_no']
+
 class Color(models.Model):
-    name = models.CharField(max_length=40)
+    group = models.CharField(max_length=40, blank=True,null=True, help_text='e.g. black adult tshirts, black youth tshirts, black hoodies (this field only for admins and not visible to customers)')
+    name = models.CharField(max_length=40, help_text='e.g black (this field is visible to customers)')
     color_tag = models.ImageField(upload_to='color_tags/', blank=True)
     
+    def __str__(self):
+        return self.name
 
+    class Meta:
+        ordering = ['name']
+
+    def image_tag(self):
+        img = self.color_tag
+        if img is not None:
+                return mark_safe('<img src="{}" height="50" />'.format(img.url,))
+
+class Technique(models.Model):
+    name = models.CharField(max_length=40)
     def __str__(self):
         return self.name
 
@@ -127,13 +149,21 @@ class Mockup(models.Model):
 
 class Variant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants")
+    technique = models.ForeignKey(Technique, on_delete=models.CASCADE,blank=True,null=True)
     color = models.ForeignKey(Color, on_delete=models.CASCADE,blank=True,null=True)
     size = models.ForeignKey(Size, on_delete=models.CASCADE,blank=True,null=True)
     quantity = models.IntegerField(default=1)
+    cost = models.DecimalField(max_digits=12, decimal_places=2,default=0)
     price = models.DecimalField(max_digits=12, decimal_places=2,default=0)
+    sale_price = models.DecimalField(max_digits=12, decimal_places=2,default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['size','color','technique']
 
     def __str__(self):
-        return self.product.title+str('-')+self.size.name+str('-')+self.color.name
+        return self.product.title+str(' / ')+self.size.name+str(' / ')+self.color.name
 
     def image_tag(self):
         img = self.product.image

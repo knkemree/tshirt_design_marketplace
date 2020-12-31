@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group
 import admin_thumbnails
 from mptt.admin import DraggableMPTTAdmin
 
-from .models import Category, Product, Color, Size, Variant, Mockup
+from .models import Category, Product, Color, Size, Technique, Variant, Mockup
 
 
 # Register your models here.
@@ -48,18 +48,20 @@ class CategoryAdmin(DraggableMPTTAdmin):
 class VariantInline(admin.TabularInline):
     model = Variant
     #readonly_fields = ('image_tag',)
-    extra = 1
+    extra = 0
     show_change_link = True
+    save_as =True
+    ordering = ("size","color","technique",)
     
 @admin_thumbnails.thumbnail('image')
 class MockupInline(admin.TabularInline):
     model = Mockup
-    extra = 1
+    extra = 0
     show_change_link = True
 
 @admin_thumbnails.thumbnail('image')
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['title','category', 'active']
+    list_display = ['title','category', 'active','image_tag']
     list_filter = ['category']
     #readonly_fields = ('image_tag',)
     inlines = [VariantInline]
@@ -68,14 +70,23 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 class ColorAdmin(admin.ModelAdmin):
-    list_display = ['name','color_tag']
+    list_display = ['name','group','image_tag']
+    list_filter = ['name']
+    list_editable = ['group']
     inlines = [MockupInline]
 
 class SizeAdmin(admin.ModelAdmin):
+    list_display = ['name','row_no']
+    list_editable = ['row_no']
+
+class TechniqueAdmin(admin.ModelAdmin):
     list_display = ['name',]
 
 class VariantAdmin(admin.ModelAdmin):
-    list_display = ['product','color','size','price','quantity',]
+    list_display = ['__str__','size','color','technique','price','quantity','created_at','updated_at']
+    list_filter = ['product','size','color','technique']
+    #search_fields = ('id','product','size','color','technique',)
+    save_as =True
 
     
 @admin_thumbnails.thumbnail('image')
@@ -88,6 +99,7 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Color, ColorAdmin)
 admin.site.register(Size, SizeAdmin)
+admin.site.register(Technique, TechniqueAdmin)
 admin.site.register(Variant, VariantAdmin)
 admin.site.register(Mockup, MockupAdmin)
 #admin.site.register(Mockup_Group, Mockup_GroupAdmin)
