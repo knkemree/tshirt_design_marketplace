@@ -70,24 +70,25 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 class ColorAdmin(admin.ModelAdmin):
-    list_display = ['name','group','product_preview','image_tag']
-    list_filter = ['name']
-    list_editable = ['group']
+    list_display = ['name','group','product_preview','image_tag','created_at','updated_at',]
+    list_filter = ['name','created_at','updated_at',]
+    list_editable = ['group',]
+    search_fields = ['name',]
     inlines = [MockupInline]
 
 class SizeAdmin(admin.ModelAdmin):
-    list_display = ['name','row_no']
-    list_editable = ['row_no']
+    list_display = ['name','row_no',]
+    list_editable = ['row_no',]
+    search_fields = ['name',]
 
 class TechniqueAdmin(admin.ModelAdmin):
     list_display = ['name',]
+    search_fields = ['name',]
 
 class VariantAdmin(admin.ModelAdmin):
-    list_display = ['__str__','size','color','technique','price','quantity',
-    'created_at','updated_at'
-    ]
-    list_filter = ['product','size','color','technique']
-    #search_fields = ('id','product','size','color','technique',)
+    list_display = ['__str__','size','color','technique','price','quantity','created_at','updated_at',]
+    list_filter = ['product','size','color','technique',]
+    search_fields = ['size','color','technique',]
     save_as =True
 
     
