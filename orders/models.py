@@ -13,11 +13,11 @@ class Order(models.Model):
     recipient = models.CharField(max_length=50)
     shipping_label = models.FileField(upload_to='uploads/', blank=True, null=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    coupon = models.ForeignKey(Coupon,
-                               related_name='orders',
-                               null=True,
-                               blank=True,
-                               on_delete=models.SET_NULL)
+    # coupon = models.ForeignKey(Coupon,
+    #                            related_name='orders',
+    #                            null=True,
+    #                            blank=True,
+    #                            on_delete=models.SET_NULL)
     discount = models.IntegerField(default=0,
                                   validators=[MinValueValidator(0),
                                       MaxValueValidator(100)])
