@@ -3,6 +3,23 @@
   Checkout
 {% endblock %}
 {% block blank %}
+
+<ul>
+  {% for item in cart %}
+    <li>
+      {{ item.quantity }}x {{ item.product.name }}
+      <span>${{ item.total_price|floatformat:2 }}</span>
+    </li>
+  {% endfor %}
+  {% if cart.coupon %}
+    <li>
+      "{{ cart.coupon.code }}" ({{ cart.coupon.discount }}% off)
+      <span class="neg">- ${{ cart.get_discount|floatformat:2 }}</span>
+    </li>
+  {% endif %}
+</ul>
+
+<p>Total: ${{ cart.get_total_price_after_discount|floatformat:2 }}</p>
 <!-- Page Title-->
     <div class="page-title-overlap bg-dark pt-4">
       <div class="container d-lg-flex justify-content-between py-2 py-lg-3">

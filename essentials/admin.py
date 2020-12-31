@@ -83,7 +83,9 @@ class TechniqueAdmin(admin.ModelAdmin):
     list_display = ['name',]
 
 class VariantAdmin(admin.ModelAdmin):
-    list_display = ['__str__','size','color','technique','price','quantity','created_at','updated_at']
+    list_display = ['__str__','size','color','technique','price','quantity',
+    'created_at','updated_at'
+    ]
     list_filter = ['product','size','color','technique']
     #search_fields = ('id','product','size','color','technique',)
     save_as =True

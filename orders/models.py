@@ -1,17 +1,26 @@
+from decimal import Decimal
 from django.db import models
+from django.urls import reverse 
+from django.core.validators import MinValueValidator, \
+                                   MaxValueValidator
+from core import settings
 from essentials.models import Product, Variant, Design
 from account.models import Customer, Seller
-from decimal import Decimal
-from django.urls import reverse 
-from core import settings
-#from localflavor.us.forms import USStateSelect
+from coupons.models import Coupon
 
 class Order(models.Model):
     ordered_by = models.ForeignKey(Seller, on_delete=models.CASCADE)
     recipient = models.CharField(max_length=50)
     shipping_label = models.FileField(upload_to='uploads/', blank=True, null=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    discount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    coupon = models.ForeignKey(Coupon,
+                               related_name='orders',
+                               null=True,
+                               blank=True,
+                               on_delete=models.SET_NULL)
+    discount = models.IntegerField(default=0,
+                                  validators=[MinValueValidator(0),
+                                      MaxValueValidator(100)])
     shipping_fee = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     profit = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     paid = models.BooleanField(default=False)
@@ -30,7 +39,8 @@ class Order(models.Model):
 
     def get_total_cost(self):
         total_cost = sum(item.get_customer_cost() for item in self.items.all())
-        return total_cost
+        return total_cost - total_cost * \
+            (self.discount / Decimal(100))
 
     def cart_total(self):
         total_cost = sum(item.get_customer_cost() for item in self.items.all())

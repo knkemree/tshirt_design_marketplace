@@ -77,6 +77,10 @@ def order_create(request):
             email = Seller.objects.get(seller=request.user)
             order.ordered_by = email 
             order.total = cart.get_total_price()
+            order = form.save(commit=False)
+            if cart.coupon:
+                order.coupon = cart.coupon
+                order.discount = cart.coupon.discount
             order.save()
             for item in cart:
                 end_product_img = get_image_from_data_url(item['end_product_img'])[0]

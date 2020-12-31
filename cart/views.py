@@ -1,12 +1,14 @@
 from django.shortcuts import render
 
 # Create your views here.
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from essentials.models import Product, Variant
 from .cart import Cart
 from .forms import CartAddProductForm
-from django.http import HttpResponse, JsonResponse
+from coupons.forms import CouponApplyForm
+
 
 @require_POST
 def cart_add(request, variant_id):
@@ -51,7 +53,9 @@ def cart_detail(request):
         item['update_quantity_form'] = CartAddProductForm(initial={
                             'quantity': item['quantity'],
                             'override': True})
-    context = {'cart': cart}
+    coupon_apply_form = CouponApplyForm()
+    context = {'cart': cart,
+                'coupon_apply_form': coupon_apply_form}
     return render(request, 'cart.html', context)
     #return HttpResponse('hi')
 
