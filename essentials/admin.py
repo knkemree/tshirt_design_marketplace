@@ -73,7 +73,8 @@ class ColorAdmin(admin.ModelAdmin):
     inlines = [MockupInline]
 
 class SizeAdmin(admin.ModelAdmin):
-    list_display = ['name',]
+    list_display = ['name','row_no']
+    list_editable = ['row_no']
 
 class TechniqueAdmin(admin.ModelAdmin):
     list_display = ['name',]
@@ -81,6 +82,7 @@ class TechniqueAdmin(admin.ModelAdmin):
 class VariantAdmin(admin.ModelAdmin):
     list_display = ['__str__','technique','color','size','price','quantity','created_at','updated_at']
     list_filter = ['product','size','color','technique']
+    #search_fields = ('id','product','size','color','technique',)
     save_as =True
 
     
