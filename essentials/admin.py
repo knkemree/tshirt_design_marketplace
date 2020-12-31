@@ -69,7 +69,9 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 class ColorAdmin(admin.ModelAdmin):
-    list_display = ['name','color_tag']
+    list_display = ['name','group','color_tag']
+    list_filter = ['name']
+    list_editable = ['group']
     inlines = [MockupInline]
 
 class SizeAdmin(admin.ModelAdmin):
