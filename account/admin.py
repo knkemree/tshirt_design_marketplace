@@ -34,7 +34,7 @@ class CustomerAdmin(BaseUserAdmin):
     search_fields = ('email',)
     ordering = ('date_joined',)
     filter_horizontal = ()
-    readonly_fields = ('seller','last_login','date_joined')
+    readonly_fields = ('stripe_id','seller','last_login','date_joined')
 
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['subject','comment', 'active','create_at']
