@@ -108,7 +108,7 @@ class Size(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['name']
+        ordering = ['row_no']
 
 class Color(models.Model):
     group = models.CharField(max_length=40, blank=True,null=True, help_text='e.g. black adult tshirts, black youth tshirts, black hoodies (this field only for admins and not visible to customers)')
