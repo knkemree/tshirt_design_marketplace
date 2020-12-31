@@ -80,7 +80,7 @@ class TechniqueAdmin(admin.ModelAdmin):
 
 class VariantAdmin(admin.ModelAdmin):
     list_display = ['__str__','technique','color','size','price','quantity','created_at','updated_at']
-    list_filter = ['product']
+    list_filter = ['product','size','color','technique']
     save_as =True
 
     
