@@ -114,6 +114,8 @@ class Color(models.Model):
     group = models.CharField(max_length=40, blank=True,null=True, help_text='e.g. black adult tshirts, black youth tshirts, black hoodies (this field only for admins and not visible to customers)')
     name = models.CharField(max_length=40, help_text='e.g black (this field is visible to customers)')
     color_tag = models.ImageField(upload_to='color_tags/', blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return self.name
