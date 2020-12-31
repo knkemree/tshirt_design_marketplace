@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'cart',
     'orders',
     'payment',
+    'coupons.apps.CouponsConfig',
 
     'taggit',
     'mptt',
