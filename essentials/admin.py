@@ -51,7 +51,7 @@ class VariantInline(admin.TabularInline):
     extra = 0
     show_change_link = True
     save_as =True
-    ordering = ["size","color","technique",]
+    ordering = ["color","size","technique",]
     
 @admin_thumbnails.thumbnail('image')
 class MockupInline(admin.TabularInline):
