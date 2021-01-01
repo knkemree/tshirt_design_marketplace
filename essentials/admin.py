@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 
 import admin_thumbnails
+from django.utils.safestring import mark_safe
 from mptt.admin import DraggableMPTTAdmin
 
 from .models import Category, Product, Color, Size, Technique, Variant, Mockup
@@ -47,11 +48,18 @@ class CategoryAdmin(DraggableMPTTAdmin):
 
 class VariantInline(admin.TabularInline):
     model = Variant
+    #fields = ['render_image',]
     #readonly_fields = ('image_tag',)
     extra = 0
     show_change_link = True
     save_as =True
     ordering = ["color","size","technique",]
+
+    # def render_image(self, obj):
+    #     images = Mockup.objects.filter(item_color_id=obj.color.id)
+    #     img = images[0]
+    #     if img is not None:
+    #         return mark_safe("""<img src="/images/%s.jpg" />""" % obj.image)
     
 @admin_thumbnails.thumbnail('image')
 class MockupInline(admin.TabularInline):
