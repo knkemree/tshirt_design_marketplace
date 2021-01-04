@@ -8,6 +8,8 @@ from django.utils.safestring import mark_safe
 from mptt.admin import DraggableMPTTAdmin
 
 from .models import Category, Product, Color, Size, Technique, Variant, Mockup
+#Attribute, AttributeValue, Collection, ItemAttributeValue, ItemType, ItemTypeAttributeValue, ItemVariant, ItemVariantValues
+
 
 
 # Register your models here.
@@ -104,6 +106,27 @@ class VariantAdmin(admin.ModelAdmin):
 class MockupAdmin(admin.ModelAdmin):
     list_display = ['image_tag','item_color','active']
     list_filter = ['item_color','active']
+
+
+# need to work on inline admin 
+# class ItemAdmin(admin.TabularInline):
+#   model = Item
+#   extra = 2
+
+# class ItemTypeAdmin(admin.ModelAdmin):
+#   inlines = [ItemAdmin]
+
+# admin.site.register(models.Product, ProductAdmin)
+# admin.site.register(models.ProductType, ProductTypeAdmin)
+
+# admin.site.register(ItemType)
+# admin.site.register(Attribute)
+# admin.site.register(AttributeValue)
+# admin.site.register(ItemAttributeValue)
+# admin.site.register(ItemTypeAttributeValue)
+# admin.site.register(ItemVariant)
+# admin.site.register(ItemVariantValues)
+# admin.site.register(Collection)
     
 
 admin.site.register(Category, CategoryAdmin)

@@ -200,4 +200,147 @@ class Design(models.Model):
             return ""
     
 
+# class ItemType(models.Model):
+#     name = models.CharField(max_length=150, help_text="type of Item. ex - accessories, clothing")
+#     slug = models.SlugField(max_length=150, unique=True)
+#     is_shipping_required = models.BooleanField(default=True)
 
+#     class Meta:
+#         ordering = ("slug",)
+#         verbose_name = 'Item Type'
+#         verbose_name_plural = 'Item Types'
+#         app_label = "Item"
+
+#     def __str__(self):
+#         return self.name
+
+
+
+
+# class Item(models.Model):
+#     item_type = models.ForeignKey(
+#         ItemType, related_name="items", on_delete=models.CASCADE
+#     )
+#     name = models.CharField(max_length=128)
+#     slug = models.SlugField()
+#     description = models.TextField(blank=True)
+#     category = models.ForeignKey(
+#         Category,
+#         related_name="items",
+#         on_delete=models.SET_NULL,
+#         null=True,
+#         blank=True,
+#     )
+#     article_number = models.CharField(max_length=30)
+
+#     class Meta:
+#       verbose_name = "item"
+#       verbose_name_plural = "items"
+#       ordering = ("name",)
+#       constraints = [
+#           models.UniqueConstraint(
+#               fields=["article_number", "slug"], name="unique article number and slug")
+#       ]
+
+#     def __str__(self):
+#         return f'{self.name} - {self.article_number}'
+
+# class Attribute(models.Model):
+#   name = models.CharField(max_length=200, blank=True)
+#   description = models.TextField(blank=True)
+#   has_variant = models.BooleanField(default=False)
+
+#   def __str__(self):
+#     return self.name
+
+
+# class AttributeValue(models.Model):
+#   attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
+#   value = models.CharField(max_length=200, blank=True)
+#   description = models.TextField(blank=True)
+
+#   def __str__(self):
+#     return self.value
+
+
+# class ItemAttributeValue(models.Model):
+#   item = models.ForeignKey(Item, on_delete=models.CASCADE)
+#   attribute_value = models.ForeignKey(AttributeValue, on_delete=models.CASCADE)
+
+#   def __str__(self):
+#     return f"{self.item.name} - {self.attribute_value}"
+
+
+# class ItemTypeAttributeValue(models.Model):
+#   item_type = models.ForeignKey(ItemType, on_delete=models.CASCADE)
+#   attribute_value = models.ForeignKey(AttributeValue, on_delete=models.CASCADE)
+
+#   def __str__(self):
+#     return f'{self.item_type.name} - {self.attribute_value.value}'
+
+
+# class ItemVariant(models.Model):
+#   sku = models.CharField(max_length=255, unique=True)
+#   name = models.CharField(max_length=255, blank=True)
+#   item = models.ForeignKey(Item, on_delete=models.CASCADE)
+#   price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+#   track_inventory = models.BooleanField(default=True)
+
+#   def __str__(self):
+#     return f'{self.item.name} - {self.name}'
+
+# class ItemVariantValues(models.Model):
+#   item = models.ForeignKey(Item, on_delete=models.CASCADE)
+#   variant = models.ForeignKey(ItemVariant, on_delete=models.CASCADE)
+#   value = models.ForeignKey(ItemAttributeValue, on_delete=models.CASCADE)
+#   stock = models.PositiveIntegerField(default=0)
+#   price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+
+#   def __str__(self):
+#     return f'{self.item.name} - {self.variant.name} - {self.value.attribute_value.value}'
+
+
+# class ItemImage(models.Model):
+#   # just modeling the relationship
+#   item = models.ForeignKey(Item, on_delete=models.CASCADE)
+#   # image will be here
+
+
+# class VariantImage(models.Model):
+#   # just drawing the relationship
+#   variant = models.ForeignKey(ItemVariant, related_name="variant_images", on_delete=models.CASCADE)
+#   # Versatilieimagefield.
+
+
+# class CollectionItem(models.Model):
+#     collection = models.ForeignKey(
+#         "Collection", related_name="collectionitem", on_delete=models.CASCADE
+#     )
+#     item = models.ForeignKey(
+#         Item, related_name="collectionitem", on_delete=models.CASCADE
+#     )
+
+#     class Meta:
+#         unique_together = (("collection", "item"),)
+
+#     def get_ordering_queryset(self):
+#         return self.item.collectionitem.all()
+
+
+# class Collection(models.Model):
+#     name = models.CharField(max_length=250, unique=True)
+#     slug = models.SlugField(max_length=255, unique=True)
+#     items = models.ManyToManyField(
+#         Item,
+#         blank=True,
+#         related_name="collections",
+#         through=CollectionItem,
+#         through_fields=("collection", "item"),
+#     )
+#     description = models.TextField(blank=True)
+
+#     class Meta:
+#         ordering = ("slug",)
+
+#     def __str__(self):
+#         return self.name
