@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 
 import admin_thumbnails
+from django.utils.safestring import mark_safe
 from mptt.admin import DraggableMPTTAdmin
 
 from .models import Category, Product, Color, Size, Technique, Variant, Mockup
@@ -47,11 +48,18 @@ class CategoryAdmin(DraggableMPTTAdmin):
 
 class VariantInline(admin.TabularInline):
     model = Variant
+    #fields = ['render_image',]
     #readonly_fields = ('image_tag',)
     extra = 0
     show_change_link = True
     save_as =True
-    ordering = ("size","color","technique",)
+    ordering = ["color","size","technique",]
+
+    # def render_image(self, obj):
+    #     images = Mockup.objects.filter(item_color_id=obj.color.id)
+    #     img = images[0]
+    #     if img is not None:
+    #         return mark_safe("""<img src="/images/%s.jpg" />""" % obj.image)
     
 @admin_thumbnails.thumbnail('image')
 class MockupInline(admin.TabularInline):
@@ -70,24 +78,25 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 class ColorAdmin(admin.ModelAdmin):
-    list_display = ['name','group','product_preview','image_tag']
-    list_filter = ['name']
-    list_editable = ['group']
+    list_display = ['name','group','product_preview','image_tag','created_at','updated_at',]
+    list_filter = ['name','created_at','updated_at',]
+    list_editable = ['group',]
+    search_fields = ['name',]
     inlines = [MockupInline]
 
 class SizeAdmin(admin.ModelAdmin):
-    list_display = ['name','row_no']
-    list_editable = ['row_no']
+    list_display = ['name','row_no',]
+    list_editable = ['row_no',]
+    search_fields = ['name',]
 
 class TechniqueAdmin(admin.ModelAdmin):
     list_display = ['name',]
+    search_fields = ['name',]
 
 class VariantAdmin(admin.ModelAdmin):
-    list_display = ['__str__','size','color','technique','price','quantity',
-    'created_at','updated_at'
-    ]
-    list_filter = ['product','size','color','technique']
-    #search_fields = ('id','product','size','color','technique',)
+    list_display = ['__str__','size','color','technique','price','quantity','created_at','updated_at',]
+    list_filter = ['product','size','color','technique',]
+    search_fields = ['size','color','technique',]
     save_as =True
 
     

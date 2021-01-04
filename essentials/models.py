@@ -114,6 +114,8 @@ class Color(models.Model):
     group = models.CharField(max_length=40, blank=True,null=True, help_text='e.g. black adult tshirts, black youth tshirts, black hoodies (this field only for admins and not visible to customers)')
     name = models.CharField(max_length=40, help_text='e.g black (this field is visible to customers)')
     color_tag = models.ImageField(upload_to='color_tags/', blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return self.name
@@ -156,9 +158,9 @@ class Mockup(models.Model):
 
 class Variant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants")
-    technique = models.ForeignKey(Technique, on_delete=models.CASCADE,blank=True,null=True)
-    color = models.ForeignKey(Color, on_delete=models.CASCADE,blank=True,null=True)
     size = models.ForeignKey(Size, on_delete=models.CASCADE,blank=True,null=True)
+    color = models.ForeignKey(Color, on_delete=models.CASCADE,blank=True,null=True)
+    technique = models.ForeignKey(Technique, on_delete=models.CASCADE,blank=True,null=True)
     quantity = models.IntegerField(default=1)
     cost = models.DecimalField(max_digits=12, decimal_places=2,default=0)
     price = models.DecimalField(max_digits=12, decimal_places=2,default=0)
