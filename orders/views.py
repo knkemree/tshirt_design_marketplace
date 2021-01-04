@@ -35,8 +35,8 @@ from account.models import Seller
 
 
 
-
-def get_image_from_data_url( data_url, resize=True, base_width=600 ):
+#def get_image_from_data_url(data_url, resize=True, base_width=600 ):
+def get_image_from_data_url(data_url, resize=True, base_width=1200):
 
     # getting the file format and the necessary dataURl for the file
     _format, _dataurl       = data_url.split(';base64,')
@@ -44,7 +44,7 @@ def get_image_from_data_url( data_url, resize=True, base_width=600 ):
     _filename, _extension   = secrets.token_hex(20), _format.split('/')[-1]
 
     # generating the contents of the file
-    file = ContentFile( base64.b64decode(_dataurl), name=f"{_filename}.{_extension}")
+    file = ContentFile(base64.b64decode(_dataurl), name=f"{_filename}.{_extension}")
 
     # resizing the image, reducing quality and size
     if resize:
@@ -55,9 +55,9 @@ def get_image_from_data_url( data_url, resize=True, base_width=600 ):
         image_io = io.BytesIO()
 
         # resize
-        w_percent    = (base_width/float(image.size[0]))
-        h_size       = int((float(image.size[1])*float(w_percent)))
-        image        = image.resize((base_width,h_size), Image.ANTIALIAS)
+        #w_percent    = (base_width/float(image.size[0]))
+        #h_size       = int((float(image.size[1])*float(w_percent)))
+        #image        = image.resize((base_width,h_size), Image.ANTIALIAS)
 
         # save resized image
         image.save(image_io, format=_extension)
@@ -77,10 +77,11 @@ def order_create(request):
             email = Seller.objects.get(seller=request.user)
             order.ordered_by = email 
             order.total = cart.get_total_price()
+            #order.shipping_label = form.shipping_label
             order = form.save(commit=False)
-            if cart.coupon:
-                order.coupon = cart.coupon
-                order.discount = cart.coupon.discount
+            # if cart.coupon:
+            #     order.coupon = cart.coupon
+            #     order.discount = cart.coupon.discount
             order.save()
             for item in cart:
                 end_product_img = get_image_from_data_url(item['end_product_img'])[0]
