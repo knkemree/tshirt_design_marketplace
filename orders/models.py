@@ -50,6 +50,7 @@ class Order(models.Model):
         return reverse('order_details',
                        args=[self.id])
 
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order,
                               related_name='items',
