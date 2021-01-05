@@ -51,7 +51,7 @@
   // fabric.Object.prototype.cornerStyle = 'circle';
   // fabric.Object.prototype.cornerSize = 10;
 
-  var fonts = ["Goudy Stout","Roboto",'Pacifico','VT323','Quicksand','Inconsolata'];
+  var fonts = ["Perpetua Titling MT","Goudy Stout","Graduate","Roboto",'Pacifico','VT323','Quicksand','Inconsolata','Bangers','Boogaloo','Caveat','Caveat Brush','Chela One','Cherry Swash','Coiny','Concert One','Creepster','Fredoka One','Germania One','Knewave','Montserrat','Open Sans','Oswald','Permanent Marker','Rammetto One','Shrikhand','Spicy Rice','Vampiro One','Vollkorn','Wendy One'];
 
   function updateTshirtImage(imageURL){
       // If the user doesn't pick an option of the select, clear the canvas
@@ -267,8 +267,8 @@
   myfont.load()
       .then(function() {
       // when font is loaded, use it.
-      canvas.getActiveObject().set("fontFamily", font);
-      canvas.requestRenderAll();
+      setTimeout(canvas.getActiveObject().set("fontFamily", font), 2000);
+      setTimeout(canvas.requestRenderAll(), 2000);
       }).catch(function(e) {
       console.log(e)
       alert("Can't load " + font +". Did you choose the text?");
@@ -507,7 +507,7 @@ canvas.selection = false;
         };
         img1.src = dataUrl;
         document.body.appendChild(img1);
-        // $('#id_design').val(dataUrl) 
+        $('#id_design').val(dataUrl); 
     }).catch(function (error) {
       console.error('oops, something went wrong!', error);
     });
@@ -542,15 +542,6 @@ function hideBg() {
 
 {% block css %}
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Graduate&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;1,100&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Inconsolata&display=swap');
-  @import url(//db.onlinewebfonts.com/c/cb1a9d8c8e33d221e26a0d8247856c5e?family=Goudy+Stout);
-</style>
-<style>
   .drawing-area{
     position: absolute;
     top: 60px;
@@ -583,6 +574,7 @@ function hideBg() {
     user-select: none; 
     cursor: default;
 }
+
 </style>
 {% endblock %}
 
@@ -640,9 +632,10 @@ function hideBg() {
 
       <div class="row mb-3">
         <div class="mb-3"><span class="h3 font-weight-normal text-accent mr-1">${{ variant.price }}</span>
-          <del class="text-muted font-size-lg mr-3">$15.<small>00</small></del><span class="badge badge-danger badge-shadow align-middle mt-n2">Sale</span>
+          <del class="text-muted font-size-lg mr-3">$17.<small>00</small></del><span class="badge badge-danger badge-shadow align-middle mt-n2">Sale</span>
         </div>
       </div>
+    
     
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
