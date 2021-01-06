@@ -63,7 +63,7 @@ def cart_detail(request):
 def cart_clear(request):
     cart = Cart(request)
     cart.clear()
-    subject = "TEST Order"
+    subject = "New Order"
     message = "Order"
     mail_admins(subject, message, html_message="we got new order. Go to orders: contextcustom.com/orders/order/")
     return HttpResponse('Cart cleared!')
