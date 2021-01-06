@@ -8,6 +8,7 @@ from essentials.models import Product, Variant
 from .cart import Cart
 from .forms import CartAddProductForm
 from coupons.forms import CouponApplyForm
+from django.core.mail import mail_admins
 
 
 @require_POST
@@ -62,4 +63,7 @@ def cart_detail(request):
 def cart_clear(request):
     cart = Cart(request)
     cart.clear()
+    subject = "TEST Order"
+    message = "Order"
+    mail_admins(subject, message, html_message="we got new order. Go to orders: contextcustom.com/orders/order/")
     return HttpResponse('Cart cleared!')

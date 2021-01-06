@@ -40,10 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'debug_toolbar',
+    'import_export',
     'storages',
     'ckeditor',
     'ckeditor_uploader',
     'phonenumber_field',
+    
     #'allauth',
     #'allauth.account',
     #'allauth.socialaccount',
@@ -52,7 +55,7 @@ INSTALLED_APPS = [
     'rest_auth.registration',
     'rest_framework',
     'rest_framework.authtoken',
-    'debug_toolbar',
+    
 
     'account',
     'essentials',
@@ -179,7 +182,7 @@ AUTH_USER_MODEL = 'account.Customer'
 
 PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
 
-ADMINS = (('EMRE','konakziyaemre@gmail.com'),)
+ADMINS = (('EMRE','konakziyaemre@gmail.com'),('DAVUD','davis@samnmtrade.com'),('TALHA','stok0616@gmail.com'))
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
