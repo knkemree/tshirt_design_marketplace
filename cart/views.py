@@ -65,5 +65,5 @@ def cart_clear(request):
     cart.clear()
     subject = "New Order"
     message = "Order"
-    mail_admins(subject, message, html_message="we got new order. Go to orders: contextcustom.com/orders/order/")
+    mail_admins(subject, message, html_message="we got new order. Go to orders: contextcustom.com/admin/orders/order/")
     return HttpResponse('Cart cleared!')
