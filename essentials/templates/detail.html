@@ -5,6 +5,14 @@
 
 {% block javascript %}
 <script>
+  // sayfa acildigindaki galerideki ilk resmi goster
+$( document ).ready(function() {
+    $( ".cz-preview-item" ).addClass('active');
+    
+});
+</script>
+
+<script>
 // get technique id on load or on change. add it to the hidden technique input area. technique id will be added to cart session on add to cart submission
 $( document ).ready(function() {
     var tech = $( "#technique" ).val();
