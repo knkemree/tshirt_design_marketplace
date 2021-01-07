@@ -3,8 +3,10 @@ from decouple import config
 from django.views.decorators.debug import sensitive_variables
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
+from django.core.mail import mail_admins
 #from .tasks import payment_completed
 from orders.models import Order
+
 
 stripe.api_key = config('STRIPE_PRIVATE_KEY')
 STRIPE_PUBLIC_KEY = config('STRIPE_PUBLIC_KEY')
@@ -38,6 +40,9 @@ def payment_process(request):
             # store the unique transaction id
             order.stripe_id = result.id
             order.save()
+            subject = "New Order"
+            message = "Order"
+            mail_admins(subject, message, html_message="We got new order. Go to orders: contextcustom.com/admin/orders/order/")
             # launch asynchronous task
             # payment_completed.delay(order.id)
             return redirect('payment:done')

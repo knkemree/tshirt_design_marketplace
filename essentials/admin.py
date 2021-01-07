@@ -7,8 +7,7 @@ import admin_thumbnails
 from django.utils.safestring import mark_safe
 from mptt.admin import DraggableMPTTAdmin
 
-from .models import Category, Product, Color, Size, Technique, Variant, Mockup
-#Attribute, AttributeValue, Collection, ItemAttributeValue, ItemType, ItemTypeAttributeValue, ItemVariant, ItemVariantValues
+from .models import Category, Product, Color, Size, Technique, TechniqueBase, Variant, Mockup
 
 
 
@@ -92,8 +91,8 @@ class SizeAdmin(admin.ModelAdmin):
     search_fields = ['name',]
 
 class TechniqueAdmin(admin.ModelAdmin):
-    list_display = ['name',]
-    search_fields = ['name',]
+    list_display = ['technique',]
+    search_fields = ['technique',]
 
 class VariantAdmin(admin.ModelAdmin):
     list_display = ['__str__','size','color','technique','price','quantity','created_at','updated_at',]
@@ -118,7 +117,7 @@ class MockupAdmin(admin.ModelAdmin):
 
 # admin.site.register(models.Product, ProductAdmin)
 # admin.site.register(models.ProductType, ProductTypeAdmin)
-
+# admin.site.register(Item)
 # admin.site.register(ItemType)
 # admin.site.register(Attribute)
 # admin.site.register(AttributeValue)
@@ -133,6 +132,7 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Color, ColorAdmin)
 admin.site.register(Size, SizeAdmin)
+admin.site.register(TechniqueBase)
 admin.site.register(Technique, TechniqueAdmin)
 admin.site.register(Variant, VariantAdmin)
 admin.site.register(Mockup, MockupAdmin)

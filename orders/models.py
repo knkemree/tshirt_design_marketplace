@@ -50,6 +50,9 @@ class Order(models.Model):
         return reverse('order_details',
                        args=[self.id])
 
+    def technique(self):
+        return str(self.technique)
+
 
 
 class OrderItem(models.Model):
@@ -60,6 +63,7 @@ class OrderItem(models.Model):
     variant = models.ForeignKey(Variant,
                                 related_name='order_items',
                                 on_delete=models.SET_NULL, null=True, blank=True)
+    technique = models.CharField(max_length=100, blank=True, null=True)
  
     end_product_img = models.ImageField(upload_to='end_product_imgs/', null=True, blank=True)
     image = models.ImageField(upload_to='designs/', null=True, blank=True)

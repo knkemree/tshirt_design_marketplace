@@ -63,7 +63,7 @@ class Customer(AbstractBaseUser):
     )
     first_name = models.CharField("First Name", max_length=30)
     last_name = models.CharField("Last Name", max_length=30)
-    phone = PhoneNumberField(null=False, blank=False)
+    phone = PhoneNumberField(null=True, blank=True)
     user_permissions = models.ManyToManyField(Permission, blank=True)
     groups = models.ManyToManyField(Group, blank=True)
     admin = models.BooleanField(default=False) # a superuser

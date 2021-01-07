@@ -4,6 +4,9 @@
   Your shopping cart
 {% endblock %}
 {% block blank %}
+{% for item in cart %}
+{{ item }}
+{% endfor %}
 {% if cart.coupon %}
   <tr class="subtotal">
     <td>Subtotal</td>

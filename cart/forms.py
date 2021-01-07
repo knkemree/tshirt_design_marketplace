@@ -7,6 +7,7 @@ class CartAddProductForm(forms.Form):
     override = forms.BooleanField(required=False,
                                   initial=False,
                                   widget=forms.HiddenInput)
+    technique = forms.CharField(required=False, widget=forms.HiddenInput)
     end_product_img = forms.CharField(required=False, widget=forms.HiddenInput)
     mockup = forms.CharField(required=False, widget=forms.HiddenInput)
     design = forms.CharField(required=False, widget=forms.HiddenInput)

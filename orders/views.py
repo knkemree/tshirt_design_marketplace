@@ -77,7 +77,6 @@ def order_create(request):
             email = Seller.objects.get(seller=request.user)
             order.ordered_by = email 
             order.total = cart.get_total_price()
-            #order.shipping_label = form.shipping_label
             order = form.save(commit=False)
             # if cart.coupon:
             #     order.coupon = cart.coupon
@@ -91,7 +90,8 @@ def order_create(request):
                                         price=item['price'],
                                         end_product_img=end_product_img,
                                         image = image,
-                                        quantity=item['quantity'])
+                                        quantity=item['quantity'],
+                                        technique=item['technique'])
             # clear the cart
             cart.clear()
             # launch asynchronous task

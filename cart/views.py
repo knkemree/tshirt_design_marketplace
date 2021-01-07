@@ -28,7 +28,8 @@ def cart_add(request, variant_id):
                     override_quantity=cd['override'],
                     end_product_img=cd['end_product_img'],
                     mockup = cd['mockup'],
-                    design = cd['design']
+                    design = cd['design'],
+                    technique = cd['technique']
                     )
             data['result'] = "Added to cart"
             return redirect('cart:cart_detail')
@@ -63,7 +64,4 @@ def cart_detail(request):
 def cart_clear(request):
     cart = Cart(request)
     cart.clear()
-    subject = "New Order"
-    message = "Order"
-    mail_admins(subject, message, html_message="We got new order. Go to orders: contextcustom.com/admin/orders/order/")
     return HttpResponse('Cart cleared!')

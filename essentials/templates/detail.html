@@ -4,7 +4,18 @@
 {% block title %}{{ variant }}{% endblock %}
 
 {% block javascript %}
+<script>
+// get technique id on load or on change. add it to the hidden technique input area. technique id will be added to cart session on add to cart submission
+$( document ).ready(function() {
+    var tech = $( "#technique" ).val();
+    $( "#id_technique" ).val(tech);
+});
 
+$(document).on('change', '#post-technique',function(e){
+   var tech = $( "#technique" ).val();
+   $( "#id_technique" ).val(tech);
+})
+</script>
 
 
 <script>
@@ -22,8 +33,6 @@
               },
               data_type : 'html',
               success: function (data) {
-                  console.log("success");
-                  console.log(data)
                   $('#appendHere').html(data.rendered_table);
                   $(document.body).css({'cursor' : 'default'});
               },
@@ -490,7 +499,6 @@ canvas.selection = false;
         };
         img.src = dataUrl;
         document.body.appendChild(img);
-        console.log(dataUrl)
         $('#id_end_product_img').val(dataUrl) 
     }).catch(function (error) {
       console.error('oops, something went wrong!', error);
@@ -513,7 +521,7 @@ canvas.selection = false;
     });
     var mockup_id = $(".cz-preview-item.active :input").val();
     $('#id_mockup').val(mockup_id)
-    alert('done');
+    alert('Your design saved');
   });
 
   var canvasModifiedCallback = function() {
@@ -866,6 +874,15 @@ function hideBg() {
                 {% endif %}
               {% endfor %}
                 {{ color }} {% endcomment %}
+                <form method="POST" id="post-technique">
+                  <label for="size">Technique:</label>
+                  {% csrf_token %}
+                  <select class="form-control custom-select" name="technique" id="technique" required>
+                    {% for technique in techniques %}
+                    <option value="{{ technique }}">{{ technique }}</option>
+                    {% endfor %}
+                  </select>
+                </form>
                 <form method="POST" id="post-form">
                   <input type="hidden" name="productid" id="productid" value="{{ product.id }}">
                   <label for="size">Size:</label>
@@ -879,19 +896,18 @@ function hideBg() {
                   <!-- <div class="valid-feedback">Looks good!</div> -->
                 </form>
               </div>
-              <!-- <div class="col-md-6">
-                <form method="POST" id="post-form">
-                  <input type="hidden" name="productid" id="productid" value="{{ product.id }}">
+              {% comment %} <div class="col-md-6">
+                <form method="POST" id="post-technique">
                   <div class="pb-2">
-                    {% for rs in sizes %}
+                    {% for rs in techniques %}
                     <div class="custom-control custom-option custom-control-inline mb-2">
-                      <input class="custom-control-input" type="radio" name="size1" id="{{ rs.size_id }}" {% if variant.size_id == rs.size_id %} checked {% endif %}>
-                      <label class="custom-option-label" for="{{ rs.size_id }}">{{ rs.size.name }}</label>
+                      <input class="custom-control-input" type="radio" name="size1" id="{{ rs.id }}">
+                      <label class="custom-option-label" for="{{ rs.id }}">{{ rs }}</label>
                     </div>
                     {% endfor %}
                   </div>
                 </form>
-              </div> -->
+              </div> {% endcomment %}
               
             </div>
           
