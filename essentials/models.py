@@ -118,7 +118,7 @@ class Size(models.Model):
     name = models.CharField(max_length=20)
     row_no = models.IntegerField(default=0)
     def __str__(self):
-        return str(self.name)
+        return self.name
 
     class Meta:
         ordering = ['row_no']
@@ -131,7 +131,7 @@ class Color(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return str(self.group)
+        return self.group
 
     class Meta:
         ordering = ['name']
