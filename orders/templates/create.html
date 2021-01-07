@@ -71,7 +71,7 @@
               <div class="col-sm-6">
                 <div class="form-group">
                   <label for="id_recipient">Your Customer's Fullname <small class="text-muted">( if any )</small></label>
-                  <input class="form-control" type="text" name="recipient" maxlength="50" id="id_recipient">
+                  <input class="form-control" type="text" name="recipient" maxlength="50" id="id_recipient" required="false">
                   {% comment %} <input class="form-control" type="text" id="checkout-fn"> {% endcomment %}
                 </div>
               </div>
@@ -83,7 +83,7 @@
                 <div class="cz-file-drop-area">
                   <div class="cz-file-drop-icon czi-cloud-upload"></div>
                   <span class="cz-file-drop-message">Drag and drop shipping label to upload</span>
-                  <input class="cz-file-drop-input" type="file" name="shipping_label" id="id_shipping_label">
+                  <input class="cz-file-drop-input" type="file" name="shipping_label" id="id_shipping_label" required="false">
                   <button type="button" class="cz-file-drop-btn btn btn-primary btn-sm">Or select shipping label</button>
                 </div>
               </div>
