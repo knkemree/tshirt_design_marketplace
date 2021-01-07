@@ -50,9 +50,6 @@ class Order(models.Model):
         return reverse('order_details',
                        args=[self.id])
 
-    def technique(self):
-        return str(self.technique)
-
 
 
 class OrderItem(models.Model):

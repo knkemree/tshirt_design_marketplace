@@ -50,7 +50,7 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'customer_name', 'ordered_by','technique','recipient', 'shipping_label',
+    list_display = ['id', 'customer_name', 'ordered_by','recipient', 'shipping_label',
                     'total', 'paid', 'fulfillment',
                     'created', 'updated',order_detail,
                     #order_pdf,
