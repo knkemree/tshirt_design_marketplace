@@ -7,7 +7,7 @@ import admin_thumbnails
 from django.utils.safestring import mark_safe
 from mptt.admin import DraggableMPTTAdmin
 
-from .models import Category, Product, Color, Size, Technique, TechniqueBase, Variant, Mockup
+from .models import Category, Product, Color, Size, Technique, TechniqueBase, Variant, Mockup, Design
 
 
 
@@ -127,7 +127,7 @@ class MockupAdmin(admin.ModelAdmin):
 # admin.site.register(ItemVariantValues)
 # admin.site.register(Collection)
     
-
+admin.site.register(Design)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Color, ColorAdmin)
