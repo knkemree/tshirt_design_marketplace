@@ -54,7 +54,7 @@ class VariantInline(admin.TabularInline):
     extra = 0
     show_change_link = True
     save_as =True
-    ordering = ["color","size","technique",]
+    ordering = ["color","size",]
 
     # def render_image(self, obj):
     #     images = Mockup.objects.filter(item_color_id=obj.color.id)
@@ -95,9 +95,9 @@ class TechniqueAdmin(admin.ModelAdmin):
     search_fields = ['technique',]
 
 class VariantAdmin(admin.ModelAdmin):
-    list_display = ['__str__','size','color','technique','price','quantity','created_at','updated_at',]
-    list_filter = ['product','size','color','technique',]
-    search_fields = ['size','color','technique',]
+    list_display = ['__str__','size','color','price','quantity','created_at','updated_at',]
+    list_filter = ['product','size','color',]
+    search_fields = ['size','color',]
     save_as =True
 
     

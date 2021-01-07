@@ -28,7 +28,7 @@ class Category(MPTTModel):
     updated_at=models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.title
+        return str(self.title)
 
     class MPTTMeta:
         order_insertion_by = ['title']
@@ -45,7 +45,7 @@ class TechniqueBase(models.Model):
     name = models.CharField(max_length=100)
        
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 class Technique(models.Model):
     technique = models.ForeignKey(TechniqueBase, on_delete=models.CASCADE, blank=True, null=True)
@@ -78,7 +78,7 @@ class Product(models.Model):
         unique_together = [['slug', 'title']]
 
     def __str__(self):
-        return self.title
+        return str(self.title)
     
     def get_lowest_price(self):
         return self.variants.all().aggregate(Min('price'))
@@ -118,7 +118,7 @@ class Size(models.Model):
     name = models.CharField(max_length=20)
     row_no = models.IntegerField(default=0)
     def __str__(self):
-        return self.name
+        return str(self.name)
 
     class Meta:
         ordering = ['row_no']
@@ -131,7 +131,7 @@ class Color(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return self.group
+        return str(self.group)
 
     class Meta:
         ordering = ['name']
@@ -168,7 +168,7 @@ class Variant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants")
     size = models.ForeignKey(Size, on_delete=models.CASCADE,blank=True,null=True)
     color = models.ForeignKey(Color, on_delete=models.CASCADE,blank=True,null=True)
-    technique = models.ForeignKey(Technique, on_delete=models.CASCADE,blank=True,null=True)
+    #technique = models.ForeignKey(Technique, on_delete=models.CASCADE,blank=True,null=True)
     quantity = models.IntegerField(default=1)
     cost = models.DecimalField(max_digits=12, decimal_places=2,default=0)
     price = models.DecimalField(max_digits=12, decimal_places=2,default=0)
@@ -180,7 +180,7 @@ class Variant(models.Model):
         ordering = ['size','color']
 
     def __str__(self):
-        return self.product.title+str(' / ')+self.size.name+str(' / ')+self.color.name
+        return str(self.product.title+str(' / ')+self.size.name+str(' / ')+self.color.name)
 
     def image_tag(self):
         img = self.product.image
