@@ -3,7 +3,7 @@ from django.db.models import Q, Avg, Count
 from django.views.generic.list import ListView
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from cart.forms import CartAddProductForm
 from .models import Category, Product, Variant
@@ -51,30 +51,29 @@ def product_detail(request, id, slug):
     if request.method == 'POST':
         variant_id = request.POST.get('variantid')                                                                                                                                                  
         variant = Variant.objects.get(id=variant_id) #selected product by click color radio
-        sizes = Variant.objects.filter(product_id = variant.product_id).order_by('size__id').distinct('size__id')
-        colors = Variant.objects.filter(product_id=id,size_id=variant.size_id ).order_by('color__id').distinct('color__id')
-        color = colors[0].color.name
-        query += variant.product.title+' Size:' +str(variant.size) +' Color:' +str(variant.color)
+        # sizes = Variant.objects.filter(product_id = variant.product_id).order_by('size__id').distinct('size__id')
+        # colors = Variant.objects.filter(product_id=id,size_id=variant.size_id ).order_by('color__id').distinct('color__id')
+        # color = colors[0].color.name
+        # query += variant.product.title+' Size:' +str(variant.size) +' Color:' +str(variant.color)
         
     else:
         variants = Variant.objects.filter(product_id=id)
         variant = Variant.objects.get(id=variants[0].id)
-        sizes = Variant.objects.filter(product_id = variant.product_id).order_by('size__id').distinct('size__id')
-        colors = Variant.objects.filter(product_id=id,size_id=variants[0].size_id ).order_by('color__id').distinct('color__id')
-        color = colors[0].color.name
+        # sizes = Variant.objects.filter(product_id = variant.product_id).order_by('size__id').distinct('size__id')
+        # colors = Variant.objects.filter(product_id=id,size_id=variants[0].size_id ).order_by('color__id').distinct('color__id')
+        # color = colors[0].color.name
 
     cart_product_form = CartAddProductForm()
-    context = {'product': product,'cart_product_form': cart_product_form, 'sizes':sizes, 'colors':colors, 'color':color, 'query':query, 'variant':variant, 'techniques':techniques}
+    context = {'product': product,'cart_product_form': cart_product_form,  'variant':variant,'techniques':techniques}
+    #context = {'product': product,'cart_product_form': cart_product_form,'sizes':sizes, 'colors':colors, 'color':color, 'variant':variant, 'techniques':techniques}
     return render(request,'detail.html',context)
+    #return JsonResponse(context)
 
 def ajaxcolor(request):
     data = {}
     if request.POST.get('action') == 'post':
         size_id = request.POST.get('size')
         productid = request.POST.get('productid')
-        print('product id nedir')
-        print(productid)
-        print(size_id)
         colors = Variant.objects.filter(product_id=productid, size_id=size_id)
         ajax_variant = colors[0]
         context = {
