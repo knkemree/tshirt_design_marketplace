@@ -131,7 +131,7 @@ class Color(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return self.group
+        return str(self.group)
 
     class Meta:
         ordering = ['name']
@@ -144,8 +144,12 @@ class Color(models.Model):
     def product_preview(self):
         images = Mockup.objects.filter(item_color_id=self.id)
         img = images[0]
-        if img is not None:
-                return mark_safe('<img src="{}" height="100" />'.format(img.image.url,))
+        try:
+            img = images[0]
+            if img is not None:
+                    return mark_safe('<img src="{}" height="100" />'.format(img.image.url,))
+        except:
+            pass
 
 
 class Mockup(models.Model):

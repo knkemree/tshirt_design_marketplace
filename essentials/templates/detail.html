@@ -436,6 +436,11 @@ $(document).on('change', '#post-technique',function(e){
 //turn off selection
 canvas.selection = false;
 });
+canvas.on('object:removed', function(e) {
+//turn off selection
+canvas.getActiveObject();
+canvas.selection = true;
+});
 
   
   
@@ -461,22 +466,19 @@ canvas.selection = false;
       var method = add_to_cart_form.attr('method');
       var cart_data = add_to_cart_form.serialize();
       $(document.body).css({'cursor' : 'wait'});
+      $( "#addtocartButton" ).addClass('disabled');
       // console.log('cart_data')
       // console.log(cart_data)
       $.ajax({
           url : action, // the endpoint
           type : method, // http method
           data : cart_data, // data sent with the post request
-
           // handle a successful response
           success : function(data) {
-              // console.log(data); // log the returned json to the console
-              $(document.body).css({'cursor' : 'default'});
               console.log("success"); // another sanity check
-              alert('Design added to cart')
               location.href = '/cart/'
+              $(document.body).css({'cursor' : 'default'});
           },
-
           // handle a non-successful response
           error : function(xhr,errmsg,err) {
             $(document.body).css({'cursor' : 'default'});
@@ -490,11 +492,11 @@ canvas.selection = false;
 
 <script>
 
-  {% comment %} $('#addtocartform').on('submit', function(event){
+  $('#addtocartform').on('submit', function(event){
     event.preventDefault();
     console.log("form submitted!"); 
     add_to_cart();
-  }); {% endcomment %}
+  });
 
   $('#save').on('click', function(event){
     canvas.discardActiveObject();
@@ -539,6 +541,7 @@ canvas.selection = false;
   canvas.on('object:added', canvasModifiedCallback);
   canvas.on('object:removed', canvasModifiedCallback);
   canvas.on('object:modified', canvasModifiedCallback);
+  
 </script>
 
 <script>
@@ -981,7 +984,7 @@ function hideBg() {
                   {{ cart_product_form.as_p }}
                   {% csrf_token %}
                   <!-- <button type="button" class="btn btn-primary">Add to Cart</button> -->
-                  <input type="submit" class="btn btn-primary" value="Add to Cart">
+                  <input id='addtocartButton' type="submit" class="btn btn-primary" value="Add to Cart">
                   {% comment %} <img id="blah" src="#" alt="your image" /> {% endcomment %}
                 </form>
                 <br>
