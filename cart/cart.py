@@ -1,6 +1,6 @@
 from decimal import Decimal
 from django.conf import settings
-from essentials.models import Variant, Product
+from essentials.models import Design, Product, Variant
 from coupons.models import Coupon
 
 
@@ -21,13 +21,15 @@ class Cart(object):
         self.coupon_id = self.session.get('coupon_id')    
         
 
-    def add(self, variant, end_product_img, mockup, design, technique, quantity=1, override_quantity=False,):
+    def add(self, art, variant, end_product_img, mockup, design, technique, quantity=1, override_quantity=False,):
         """
         Add a product to the cart or update its quantity.
         """
-        variant_id = str(variant.id)
-        if variant_id not in self.cart:
-            self.cart[variant_id] = {'quantity': 0,
+        art_id = str(art.id)
+        if art_id not in self.cart:
+            self.cart[art_id] = {'variant':str(variant),
+                                    'variant_id':str(variant.id),
+                                    'quantity': 0,
                                     'price': str(variant.price),
                                     'size':str(variant.size),
                                     'color':str(variant.color),
@@ -37,9 +39,9 @@ class Cart(object):
                                     'technique': technique,
                                     }
         if override_quantity:
-            self.cart[variant_id]['quantity'] = quantity
+            self.cart[art_id]['quantity'] = quantity
         else:
-            self.cart[variant_id]['quantity'] += quantity
+            self.cart[art_id]['quantity'] += quantity
         self.save()
 
     def save(self):
@@ -62,7 +64,8 @@ class Cart(object):
         """
         product_ids = self.cart.keys()
         # get the product objects and add them to the cart
-        products = Variant.objects.filter(id__in=product_ids)
+        products = Design.objects.filter(id__in=product_ids)
+        #products = Variant.objects.filter(id__in=product_ids)
         cart = self.cart.copy()
         for product in products:
             cart[str(product.id)]['product'] = product

@@ -1,7 +1,6 @@
 from PIL import Image
 import base64, secrets, io
 #import weasyprint
-
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
@@ -10,15 +9,13 @@ from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.http import HttpResponse
-
+from django.utils.safestring import mark_safe
 from .models import OrderItem, Order
 from .forms import OrderCreateForm
 from . tasks import order_created
-
 from cart.cart import Cart
-from django.utils.safestring import mark_safe
-#import weasyprint
 from account.models import Seller
+from essentials.models import Design
 
 
 # @staff_member_required
@@ -70,6 +67,7 @@ def get_image_from_data_url(data_url, resize=True, base_width=1200):
 
 def order_create(request):
     cart = Cart(request)
+    
     if request.method == 'POST':
         form = OrderCreateForm(request.POST, request.FILES)
         if form.is_valid():
@@ -86,7 +84,7 @@ def order_create(request):
                 end_product_img = get_image_from_data_url(item['end_product_img'])[0]
                 image = get_image_from_data_url(item['design'])[0]
                 OrderItem.objects.create(order=order,
-                                        variant=item['product'],
+                                        variant_id=item['variant_id'],
                                         price=item['price'],
                                         end_product_img=end_product_img,
                                         image = image,

@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from cart.forms import CartAddProductForm
-from .models import Category, Product, Variant
+from .models import Category, Product, Variant, Design
 from account.mixins import SellerAccountMixin
 
 
@@ -47,24 +47,37 @@ def product_detail(request, id, slug):
     query = request.GET.get('q')
     product = get_object_or_404(Product,id=id,slug=slug,active=True)
     techniques = product.technique.all()
+    
 
     if request.method == 'POST':
+        
         variant_id = request.POST.get('variantid')                                                                                                                                                  
         variant = Variant.objects.get(id=variant_id) #selected product by click color radio
+
+        # art = Design.objects.create(email=request.user, variant_id=variant_id)
+        # request.session['art_id'] = art.id
+        # art.save()
+
         sizes = Variant.objects.filter(product_id = variant.product_id).order_by('size__id').distinct('size__id')
         colors = Variant.objects.filter(product_id=id,size_id=variant.size_id ).order_by('color__id').distinct('color__id')
         color = colors[0].color.name
         query += variant.product.title+' Size:' +str(variant.size) +' Color:' +str(variant.color)
         
+        
     else:
         variants = Variant.objects.filter(product_id=id)
         variant = Variant.objects.get(id=variants[0].id)
+
+        # art = Design.objects.create(email=request.user, variant=variant)
+        # request.session['art_id'] = art.id
+        # art.save()
+        
         sizes = Variant.objects.filter(product_id = variant.product_id).order_by('size__id').distinct('size__id')
         colors = Variant.objects.filter(product_id=id,size_id=variants[0].size_id ).order_by('color__id').distinct('color__id')
         color = colors[0].color.name
-
+    
     cart_product_form = CartAddProductForm()
-    context = {'product': product,'cart_product_form': cart_product_form,'sizes':sizes, 'colors':colors, 'color':color, 'variant':variant, 'techniques':techniques}
+    context = {'product': product,'cart_product_form': cart_product_form,'sizes':sizes, 'colors':colors, 'color':color, 'variant':variant, 'techniques':techniques,}
     return render(request,'detail.html',context)
 
 def ajaxcolor(request):
@@ -84,3 +97,6 @@ def ajaxcolor(request):
                 }
         return JsonResponse(data)
     return JsonResponse(data)
+
+def product_design(request):
+    return render(request,'product_design.html')

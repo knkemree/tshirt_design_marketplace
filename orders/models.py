@@ -13,6 +13,7 @@ class Order(models.Model):
     recipient = models.CharField(max_length=50)
     shipping_label = models.FileField(upload_to='uploads/', blank=True, null=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    note = models.CharField(max_length=1000, blank=True, null=True)
     coupon = models.ForeignKey(Coupon,
                                related_name='orders',
                                null=True,

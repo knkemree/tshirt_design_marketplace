@@ -76,6 +76,7 @@
                 </div>
               </div>
             </div>
+            
             <!-- Drag and drop file upload -->
             <div class="row">
               <div class="col-sm-12">
@@ -87,6 +88,10 @@
                   <button type="button" class="cz-file-drop-btn btn btn-primary btn-sm">Or select shipping label</button>
                 </div>
               </div>
+            </div>
+            <div class="form-group mb-4">
+              <label class="mb-3" for="note"><span class="badge badge-info font-size-xs mr-2">Note</span><span class="font-weight-medium">  Additional comments</span></label>
+              <textarea class="form-control" name="note" cols="30" rows="6" maxlength="1000" id="id_note" spellcheck="false"></textarea>
             </div>
             
             <!-- Navigation (desktop)-->
@@ -120,6 +125,13 @@
               <li class="d-flex justify-content-between align-items-center"><span class="mr-2">Discount:</span><span class="text-right">—</span></li> {% endcomment %}
             </ul>
             <h3 class="font-weight-normal text-center my-4">${{ cart.get_total_price }}</h3>
+            <!-- <form action="{% url 'orders:order_create' %}" method="POST">
+              <div class="form-group mb-4">
+                <label class="mb-3" for="order-comments"><span class="badge badge-info font-size-xs mr-2">Note</span><span class="font-weight-medium">  Additional comments</span></label>
+                <textarea class="form-control" name="note" cols="30" rows="6" maxlength="1000" id="id_note" spellcheck="false"></textarea>
+                
+              </div>
+            </form> -->
             <form class="needs-validation" method="post" novalidate>
               <div class="form-group">
                 <input class="form-control" type="text" placeholder="Promo code" required>
