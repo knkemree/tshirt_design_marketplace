@@ -31,9 +31,10 @@ class SellerProductListView(SellerAccountMixin, ListView):
 @login_required(login_url='/signup/')
 def product_list(request, category_slug=None):
     category = None
-    categories = Category.objects.all()
+    categories = Category.objects.filter(active=True)
+    parent_categories = Category.objects.filter(active=True, parent=None) 
+
     products = Product.objects.filter(active=True)
-    print(request.session.keys())
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
         products = products.filter(category=category)
@@ -41,6 +42,7 @@ def product_list(request, category_slug=None):
                   'list.html',
                   {'category': category,
                    'categories': categories,
+                   'parent_categories': parent_categories,
                    'products': products})
 
 def product_detail(request, id, slug):

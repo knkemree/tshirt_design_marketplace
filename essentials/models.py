@@ -172,7 +172,7 @@ class Variant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants")
     size = models.ForeignKey(Size, on_delete=models.CASCADE,blank=True,null=True)
     color = models.ForeignKey(Color, on_delete=models.CASCADE,blank=True,null=True)
-    technique = models.ForeignKey(Technique, on_delete=models.CASCADE,blank=True,null=True)
+    #technique = models.ForeignKey(Technique, on_delete=models.CASCADE,blank=True,null=True)
     quantity = models.IntegerField(default=1)
     cost = models.DecimalField(max_digits=12, decimal_places=2,default=0)
     price = models.DecimalField(max_digits=12, decimal_places=2,default=0)
@@ -212,3 +212,29 @@ class Design(models.Model):
              return mark_safe('<img src="{}" height="50" style="background-color:{}"/>'.format(img.url, color))
         else:
             return ""
+
+class Method(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='methods')
+    technique = models.ForeignKey(TechniqueBase, on_delete=models.CASCADE, blank=True, null=True)
+    price = models.DecimalField(max_digits=12, decimal_places=2,default=0, help_text="price for this printing method")
+
+    def __str__(self):
+        return self.name
+
+class PlacementBase(models.Model):
+    name = models.CharField(max_length=100, blank=True, null=True, help_text="e.g. 'front' or 'back'")
+
+    def __str__(self):
+        return self.name
+
+class Placement(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='placements')
+    placement = models.ForeignKey(PlacementBase, on_delete=models.CASCADE, related_name='placements')
+    image = models.ImageField(upload_to='background_transparent_images/')
+
+    def __str__(self):
+        return self.name
+
+
+
+    

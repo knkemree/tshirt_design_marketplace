@@ -175,6 +175,7 @@ $(document).on('change', '#post-technique',function(e){
           // obj.setFill($(this).val());
           obj.set("fill", this.value);
       }
+      canvasModifiedCallback();
       canvas.renderAll();
       });
 
@@ -186,6 +187,7 @@ $(document).on('change', '#post-technique',function(e){
       // obj.setFill($(this).val());
       obj.set("stroke", this.value);
   }
+  canvasModifiedCallback();
   canvas.renderAll();
   });
 
@@ -204,7 +206,9 @@ $(document).on('change', '#post-technique',function(e){
       });
       obj.set("shadow", shadow);
   }
+  canvasModifiedCallback();
   canvas.renderAll();
+
   });
 
   
@@ -247,8 +251,10 @@ $(document).on('change', '#post-technique',function(e){
           if ( iTextSample.width >  250) {
                   iTextSample.fontSize *=  250 / ( iTextSample.width + 1);
                   iTextSample.width =  250;
-          }
-          });
+          };
+            
+
+        });
       
       canvas.add(iTextSample).setActiveObject(iTextSample);
   };
@@ -271,6 +277,8 @@ $(document).on('change', '#post-technique',function(e){
   document.getElementById('font-family').onchange = function() {
   if (this.value !== 'Times New Roman') {
       loadAndUse(this.value);
+      canvasModifiedCallback();
+      canvas.requestRenderAll();
   } else {
       canvas.getActiveObject().set("stroke", this.value);
       canvas.requestRenderAll();
@@ -284,8 +292,8 @@ $(document).on('change', '#post-technique',function(e){
   myfont.load()
       .then(function() {
       // when font is loaded, use it.
-      setTimeout(canvas.getActiveObject().set("fontFamily", font), 2000);
-      setTimeout(canvas.requestRenderAll(), 2000);
+      canvas.getActiveObject().set("fontFamily", font);
+      canvas.requestRenderAll();
       }).catch(function(e) {
       console.log(e)
       alert("Can't load " + font +". Did you choose the text?");
@@ -461,14 +469,14 @@ canvas.selection = true;
   }
   // AJAX for posting
   function add_to_cart() {
+      canvas.discardActiveObject();
+      canvas.renderAll();
+      $(document.body).css({'cursor' : 'wait'});
+      $( "#addtocartButton" ).addClass('disabled');
       var add_to_cart_form = $('#addtocartform');
       var action = add_to_cart_form.attr('action');
       var method = add_to_cart_form.attr('method');
       var cart_data = add_to_cart_form.serialize();
-      $(document.body).css({'cursor' : 'wait'});
-      $( "#addtocartButton" ).addClass('disabled');
-      // console.log('cart_data')
-      // console.log(cart_data)
       $.ajax({
           url : action, // the endpoint
           type : method, // http method
@@ -492,11 +500,17 @@ canvas.selection = true;
 
 <script>
 
-  // $('#addtocartform').on('submit', function(event){
-  //   event.preventDefault();
-  //   console.log("form submitted!"); 
-  //   add_to_cart();
-  // });
+  $('#addtocartform').on('submit', function(event){
+    event.preventDefault();
+    console.log("form submitted!"); 
+    add_to_cart();
+    // add_to_cart();
+  });
+
+  $( "#addtocartform" ).mouseover(function() {
+    canvas.discardActiveObject();
+    canvas.renderAll();
+  });
 
   $('#save').on('click', function(event){
     canvas.discardActiveObject();
@@ -536,6 +550,39 @@ canvas.selection = true;
 
   var canvasModifiedCallback = function() {
     console.log('canvas modified!');
+    canvas.discardActiveObject();
+    canvas.renderAll();
+    var node2 = document.getElementById('tshirt-canvas');
+    canvas.backgroundImage = null;
+    canvas.renderAll();
+    domtoimage.toPng(node2).then(function (dataUrl) {
+        var img1 = new Image();
+        var options = {
+        quality: 0.99, 
+        width: 2000,
+        height: 2000,
+        };
+        img1.src = dataUrl;
+        document.body.appendChild(img1);
+        $('#id_design').val(dataUrl); 
+    }).catch(function (error) {
+      console.error('oops, something went wrong!', error);
+    });
+    var mockup_id = $(".cz-preview-item.active :input").val();
+    $('#id_mockup').val(mockup_id)
+    
+    var node = document.getElementById('tshirt-div');
+    domtoimage.toPng(node).then(function (dataUrl) {
+        var img = new Image();
+        var options = {
+        quality: 0.99,
+        };
+        img.src = dataUrl;
+        document.body.appendChild(img);
+        $('#id_end_product_img').val(dataUrl) 
+    }).catch(function (error) {
+      console.error('oops, something went wrong!', error);
+    });
   };
 
   canvas.on('object:added', canvasModifiedCallback);
@@ -991,8 +1038,8 @@ function hideBg() {
                   {% comment %} <img id="blah" src="#" alt="your image" /> {% endcomment %}
                 </form>
                 <br>
-                <small>Save your design before adding to cart!</small>
-                <input id='save' type="button" class="btn btn-outline-accent btn-sm"value="Save"/>
+                <!-- <small>Save your design before adding to cart!</small> -->
+                <input id='save' type="button" class="btn btn-outline-accent btn-sm"value="Save" style="display: none;"/>
               </div>
             </div>
           </div>
@@ -1022,6 +1069,16 @@ function hideBg() {
 
 
 
+
+
+
+
+
+
+
+
+
+{% endblock %}
 
 <!-- Custom page title-->
 <div class="page-title-overlap bg-dark pt-4">
@@ -1134,6 +1191,7 @@ function hideBg() {
                   </div>
                   
                 </form>
+                
                 <!-- Product panels-->
                 <div class="accordion mb-4" id="productPanels">
                   <div class="card">
@@ -1681,12 +1739,3 @@ function hideBg() {
     </div>
   </div>
 </div>
-
-
-
-
-
-
-
-
-{% endblock %}

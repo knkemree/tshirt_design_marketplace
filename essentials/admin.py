@@ -7,7 +7,7 @@ import admin_thumbnails
 from django.utils.safestring import mark_safe
 from mptt.admin import DraggableMPTTAdmin
 
-from .models import Category, Product, Color, Size, Technique, TechniqueBase, Variant, Mockup, Design
+from .models import Category, Product, Color, Size, Technique, TechniqueBase, Variant, Mockup, Design, Method, Placement, PlacementBase
 
 
 
@@ -54,7 +54,7 @@ class VariantInline(admin.TabularInline):
     extra = 0
     show_change_link = True
     save_as =True
-    ordering = ["color","size","technique",]
+    ordering = ["color","size",]
 
     # def render_image(self, obj):
     #     images = Mockup.objects.filter(item_color_id=obj.color.id)
@@ -68,12 +68,22 @@ class MockupInline(admin.TabularInline):
     extra = 0
     show_change_link = True
 
+class MethodInline(admin.TabularInline):
+    model = Method
+    extra = 0
+    show_change_link = True
+
+class PlacementInline(admin.TabularInline):
+    model = Placement
+    extra = 0
+    show_change_link = True
+
 @admin_thumbnails.thumbnail('image')
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['title','category', 'active','image_tag']
     list_filter = ['category']
     #readonly_fields = ('image_tag',)
-    inlines = [VariantInline]
+    inlines = [VariantInline, MethodInline, PlacementInline]
     prepopulated_fields = {'slug': ('title',)}
 
 
@@ -95,9 +105,9 @@ class TechniqueAdmin(admin.ModelAdmin):
     search_fields = ['technique',]
 
 class VariantAdmin(admin.ModelAdmin):
-    list_display = ['__str__','size','color','technique','price','quantity','created_at','updated_at',]
-    list_filter = ['product','size','color','technique',]
-    search_fields = ['size','color','technique',]
+    list_display = ['__str__','size','color','price','quantity','created_at','updated_at',]
+    list_filter = ['product','size','color',]
+    search_fields = ['size','color',]
     save_as =True
 
     
@@ -136,5 +146,8 @@ admin.site.register(TechniqueBase)
 admin.site.register(Technique, TechniqueAdmin)
 admin.site.register(Variant, VariantAdmin)
 admin.site.register(Mockup, MockupAdmin)
+admin.site.register(Method)
+admin.site.register(Placement)
+admin.site.register(PlacementBase)
 #admin.site.register(Mockup_Group, Mockup_GroupAdmin)
 #admin.site.unregister(Group)

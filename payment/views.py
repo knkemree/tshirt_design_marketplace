@@ -16,6 +16,7 @@ STRIPE_PUBLIC_KEY = config('STRIPE_PUBLIC_KEY')
 @sensitive_variables('token')
 def payment_process(request):
     cart = Cart(request)
+    
     order_id = request.session.get('order_id')
     order = get_object_or_404(Order, id=order_id)
     total_cost = order.get_total_cost()
@@ -45,7 +46,7 @@ def payment_process(request):
             subject = "New Order"
             message = "Order"
             mail_admins(subject, message, html_message="We got new order. Go to orders: contextcustom.com/admin/orders/order/")
-            #cart.clear()
+            # cart.clear()
             # launch asynchronous task
             # payment_completed.delay(order.id)
             return redirect('payment:done')
