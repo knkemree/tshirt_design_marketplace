@@ -5,6 +5,13 @@
 
 {% block javascript %}
 <script>
+  $("#addtocartform").submit(function(e) {
+    e.preventDefault();
+    e.preventDefault();
+});
+</script>
+
+<script>
   // sayfa acildigindaki galerideki ilk resmi goster
 $( document ).ready(function() {
     $( ".cz-preview-item:first" ).addClass('active');

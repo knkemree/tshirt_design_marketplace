@@ -58,6 +58,7 @@ def cart_remove(request, art_id):
     cart = Cart(request)
     product = get_object_or_404(Design, id=art_id)
     cart.remove(product)
+    product.delete()
     return redirect('cart:cart_detail')
 
 def cart_detail(request):
