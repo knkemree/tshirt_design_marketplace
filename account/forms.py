@@ -8,6 +8,7 @@ from django.forms import CharField,  ModelForm
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput)
+    seller = forms.BooleanField(required = False)
 
     class Meta:
         model = Customer

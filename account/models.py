@@ -68,7 +68,7 @@ class Customer(AbstractBaseUser):
     groups = models.ManyToManyField(Group, blank=True)
     admin = models.BooleanField(default=False) # a superuser
     staff = models.BooleanField(default=False) # a admin user; non super-user
-    seller = models.BooleanField(default=False)
+    seller = models.BooleanField(default=False, blank=True, null=True)
     stripe_id = models.CharField(max_length=150) 
     is_active = models.BooleanField(default=True)
     remember_me = models.BooleanField(default=False)
