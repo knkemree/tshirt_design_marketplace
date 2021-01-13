@@ -76,7 +76,7 @@
               <div class="media-body pt-2">
                 <h3 class="product-title font-size-base mb-2"><a href="{{ product.get_absolute_url }}">{{ item.variant }}</a></h3>
                 <div class="font-size-sm"><span class="text-muted mr-2">Size:</span>{{ item.size}}</div>
-                <div class="font-size-sm"><span class="text-muted mr-2">Color:</span>{{ item.color }}</div>
+                <div class="font-size-sm"><span class="text-muted mr-2">Color:</span>{{ design.variant.color.name }}</div>
                 <div class="font-size-lg text-accent pt-2">${{ item.price }}</div>
               </div>
             </div>
