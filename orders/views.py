@@ -4,6 +4,7 @@ import base64, secrets, io
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
@@ -110,3 +111,13 @@ def admin_order_detail(request, order_id):
     return render(request,
                   'admin/orders/order/detail.html',
                   {'order': order})
+
+@login_required
+def order_list(request):
+    seller = Seller.objects.get(seller=request.user)
+    orders = Order.objects.filter(ordered_by=seller)
+    context = {
+        'seller':seller,
+        'orders': orders,
+    }
+    return render(request, 'order_list.html', context)

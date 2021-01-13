@@ -197,8 +197,8 @@ class Variant(models.Model):
             return ""
 
 class Design(models.Model):
-    variant = models.ForeignKey(Variant, on_delete=models.PROTECT, related_name="designs")
-    email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="designs")
+    variant = models.ForeignKey(Variant, on_delete=models.PROTECT, related_name="designs", blank=True, null=True)
+    email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="designs", blank=True, null=True)
     end_product_img = models.ImageField(upload_to='end_product_imgs/')
     image = models.ImageField(upload_to='designs/')
 
@@ -213,27 +213,27 @@ class Design(models.Model):
         else:
             return ""
 
-# class Method(models.Model):
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='methods')
-#     technique = models.ForeignKey(TechniqueBase, on_delete=models.CASCADE, blank=True, null=True)
-#     price = models.DecimalField(max_digits=12, decimal_places=2,default=0, help_text="price for this printing method")
+class Method(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='methods')
+    technique = models.ForeignKey(TechniqueBase, on_delete=models.CASCADE, blank=True, null=True)
+    price = models.DecimalField(max_digits=12, decimal_places=2,default=0, help_text="price for this printing method")
 
-#     def __str__(self):
-#         return self.name
+    def __str__(self):
+        return self.name
 
-# class PlacementBase(models.Model):
-#     name = models.CharField(max_length=100, blank=True, null=True, help_text="e.g. 'front' or 'back'")
+class PlacementBase(models.Model):
+    name = models.CharField(max_length=100, blank=True, null=True, help_text="e.g. 'front' or 'back'")
 
-#     def __str__(self):
-#         return self.name
+    def __str__(self):
+        return self.name
 
-# class Placement(models.Model):
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='placements', blank=True, null=True,)
-#     placement = models.ForeignKey(PlacementBase, on_delete=models.CASCADE, related_name='placements', blank=True, null=True,)
-#     image = models.ImageField(upload_to='background_transparent_images/')
+class Placement(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='placements', blank=True, null=True,)
+    placement = models.ForeignKey(PlacementBase, on_delete=models.CASCADE, related_name='placements', blank=True, null=True,)
+    image = models.ImageField(upload_to='background_transparent_images/')
 
-#     def __str__(self):
-#         return self.name
+    def __str__(self):
+        return self.name
 
 
 

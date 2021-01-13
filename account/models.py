@@ -190,7 +190,7 @@ class Seller(models.Model):
 	# 	return reverse("products:vendor_detail", kwargs={"vendor_name": self.user.username})
 
     def get_customer_name(self):
-        return self.seller.first_name + self.seller.last_name
+        return self.seller.first_name +' '+ self.seller.last_name
     
     def save(self, *args, **kwargs):
         customer = Customer.objects.get(email=self.seller)
