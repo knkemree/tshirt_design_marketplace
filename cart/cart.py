@@ -1,8 +1,7 @@
 from decimal import Decimal
 from django.conf import settings
 from django.shortcuts import get_object_or_404
-from essentials.models import Design, Product, Variant, Method
-#Placement
+from essentials.models import Design, Product, Variant, Placement, Method
 from coupons.models import Coupon
 
 
@@ -23,7 +22,7 @@ class Cart(object):
         self.coupon_id = self.session.get('coupon_id')    
         
 
-    def add(self, art, variant, technique, end_product_img, mockup, design, quantity=1, override_quantity=False,):
+    def add(self, art, variant, placement, technique, end_product_img, mockup, design, quantity=1, override_quantity=False,):
         """
         Add a product to the cart or update its quantity.
         """
@@ -31,15 +30,14 @@ class Cart(object):
 
         # burasi olmazsa update ederken hata veriyor
         try:
-            #placement = get_object_or_404(Placement, id=placement)
+            placement = get_object_or_404(Placement, id=placement)
             method = get_object_or_404(Method, id=technique)
         except:
             pass
         if art_id not in self.cart:
             self.cart[art_id] = {'variant':str(variant),
                                     'variant_id':str(variant.id),
-                                    'price': str(variant.variant_price()+method.method_price()),
-                                    #'price': str(variant.variant_price()+placement.placement_price()+method.method_price()),
+                                    'price': str(variant.variant_price()+placement.placement_price()+method.method_price()),
                                     'quantity': 0,
                                     'size':str(variant.size),
                                     'color':str(variant.color),

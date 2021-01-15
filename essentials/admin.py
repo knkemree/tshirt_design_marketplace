@@ -7,8 +7,7 @@ import admin_thumbnails
 from django.utils.safestring import mark_safe
 from mptt.admin import DraggableMPTTAdmin
 
-from .models import Category, Product, Color, Size, Technique, TechniqueBase, Variant, Mockup, Design, Font, Method
-#Placement, PlacementBase, 
+from .models import Category, Product, Color, Size, Technique, TechniqueBase, Variant, Mockup, Design, Placement, PlacementBase, Font, Method
 
 
 
@@ -74,10 +73,10 @@ class MethodInline(admin.TabularInline):
     extra = 0
     show_change_link = True
 
-# class PlacementInline(admin.TabularInline):
-#     model = Placement
-#     extra = 0
-#     show_change_link = True
+class PlacementInline(admin.TabularInline):
+    model = Placement
+    extra = 0
+    show_change_link = True
 
 @admin_thumbnails.thumbnail('image')
 class ProductAdmin(admin.ModelAdmin):
@@ -86,7 +85,7 @@ class ProductAdmin(admin.ModelAdmin):
     #readonly_fields = ('image_tag',)
     inlines = [VariantInline, 
     MethodInline, 
-    #PlacementInline
+    PlacementInline
     ]
     prepopulated_fields = {'slug': ('title',)}
 
@@ -151,8 +150,8 @@ admin.site.register(Technique, TechniqueAdmin)
 admin.site.register(Variant, VariantAdmin)
 admin.site.register(Mockup, MockupAdmin)
 admin.site.register(Method)
-#admin.site.register(Placement)
-#admin.site.register(PlacementBase)
+admin.site.register(Placement)
+admin.site.register(PlacementBase)
 admin.site.register(Font)
 #admin.site.register(Mockup_Group, Mockup_GroupAdmin)
 #admin.site.unregister(Group)
