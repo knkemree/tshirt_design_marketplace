@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from cart.forms import CartAddProductForm
-from .models import Category, Product, Variant, Design
+from .models import Category, Product, Variant, Design, Placement, Method
 from account.mixins import SellerAccountMixin
 
 
@@ -50,30 +50,16 @@ def product_detail(request, id, slug):
     product = get_object_or_404(Product,id=id,slug=slug,active=True)
     techniques = product.technique.all()
     
-
     if request.method == 'POST':
-        
         variant_id = request.POST.get('variantid')                                                                                                                                                  
         variant = Variant.objects.get(id=variant_id) #selected product by click color radio
-
-        # art = Design.objects.create(email=request.user, variant_id=variant_id)
-        # request.session['art_id'] = art.id
-        # art.save()
-
         sizes = Variant.objects.filter(product_id = variant.product_id).order_by('size__id').distinct('size__id')
         colors = Variant.objects.filter(product_id=id,size_id=variant.size_id ).order_by('color__id').distinct('color__id')
         color = colors[0].color.name
         query += variant.product.title+' Size:' +str(variant.size) +' Color:' +str(variant.color)
-        
-        
     else:
         variants = Variant.objects.filter(product_id=id)
         variant = Variant.objects.get(id=variants[0].id)
-
-        # art = Design.objects.create(email=request.user, variant=variant)
-        # request.session['art_id'] = art.id
-        # art.save()
-        
         sizes = Variant.objects.filter(product_id = variant.product_id).order_by('size__id').distinct('size__id')
         colors = Variant.objects.filter(product_id=id,size_id=variants[0].size_id ).order_by('color__id').distinct('color__id')
         color = colors[0].color.name
@@ -98,6 +84,38 @@ def ajaxcolor(request):
         data = {'rendered_table': render_to_string('color_list.html', context=context),
                 }
         return JsonResponse(data)
+    return JsonResponse(data)
+
+def change_place(request):
+    data = {}
+    if request.is_ajax:
+        place_id = request.GET.get('place_id', None)
+        method_id = request.GET.get('method_id', None)
+        variant_id = request.GET.get('variant_id', None)
+        placement = get_object_or_404(Placement, id=place_id)
+        method = get_object_or_404(Method, id=method_id)
+        variant = get_object_or_404(Variant, id=variant_id)
+        print(placement, method, variant)
+        data['ajax'] = 'true'
+        data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price()
+        return JsonResponse(data)
+    data['ajax'] = 'false'
+    data['price_all_included'] = 0
+    return JsonResponse(data)
+
+def change_method(request):
+    data = {}
+    if request.is_ajax:
+        place_id = request.GET.get('place_id', None)
+        method_id = request.GET.get('method_id', None)
+        variant_id = request.GET.get('variant_id', None)
+        placement = get_object_or_404(Placement, id=place_id)
+        method = get_object_or_404(Method, id=method_id)
+        variant = get_object_or_404(Variant, id=variant_id)
+        data['ajax'] = 'true'
+        data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price()
+        return JsonResponse(data)
+    data['ajax'] = 'false'
     return JsonResponse(data)
 
 def product_design(request):

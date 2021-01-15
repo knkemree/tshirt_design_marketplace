@@ -26,21 +26,20 @@ def cart_add(request, variant_id, art_id=None):
             # if not updating qty create new design instance
             if cd['override'] == False:
                 art = Design.objects.create(email=request.user, variant_id=variant_id)
-                #request.session['art_id'] = art.id
                 art.save()
             #if updating get art.id from session. session created when first click on add to cart
             else:
-                #art_id = request.session.get('art_id')
                 art = get_object_or_404(Design, id=art_id)
             cart.add(
                     art=art,
                     variant=art.variant,
+                    placement = cd['placement'],
+                    technique = cd['technique'],
                     quantity=cd['quantity'],
                     override_quantity=cd['override'],
                     end_product_img=cd['end_product_img'],
                     mockup = cd['mockup'],
                     design = cd['design'],
-                    technique = cd['technique']
                     )
             data['result'] = "Added to cart"
             return redirect('cart:cart_detail')
