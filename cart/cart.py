@@ -1,8 +1,7 @@
 from decimal import Decimal
 from django.conf import settings
 from django.shortcuts import get_object_or_404
-from essentials.models import Design, Product, Variant, Placement
-#Method
+from essentials.models import Design, Product, Variant, Placement, Method
 from coupons.models import Coupon
 
 
