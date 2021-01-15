@@ -226,16 +226,16 @@ class Design(models.Model):
         else:
             return ""
 
-class Method(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='methods')
-    technique = models.ForeignKey(TechniqueBase, on_delete=models.CASCADE, blank=True, null=True)
-    price = models.DecimalField(max_digits=12, decimal_places=2,default=0, help_text="price for this printing method")
+# class Method(models.Model):
+#     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='methods')
+#     technique = models.ForeignKey(TechniqueBase, on_delete=models.CASCADE, blank=True, null=True)
+#     price = models.DecimalField(max_digits=12, decimal_places=2,default=0, help_text="price for this printing method")
 
-    def __str__(self):
-        return self.technique.name
+#     def __str__(self):
+#         return self.technique.name
 
-    def method_price(self):
-        return self.price
+#     def method_price(self):
+#         return self.price
 
 
 
