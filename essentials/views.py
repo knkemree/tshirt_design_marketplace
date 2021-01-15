@@ -6,8 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from cart.forms import CartAddProductForm
-from .models import Category, Product, Variant, Design, Method
-#Placement
+from .models import Category, Product, Variant, Design, Placement,Method
 from account.mixins import SellerAccountMixin
 
 
@@ -93,12 +92,12 @@ def change_place(request):
         place_id = request.GET.get('place_id', None)
         method_id = request.GET.get('method_id', None)
         variant_id = request.GET.get('variant_id', None)
-        #placement = get_object_or_404(Placement, id=place_id)
+        placement = get_object_or_404(Placement, id=place_id)
         method = get_object_or_404(Method, id=method_id)
         variant = get_object_or_404(Variant, id=variant_id)
+        print(placement, method, variant)
         data['ajax'] = 'true'
-        data['price_all_included'] = variant.variant_price()+method.method_price()
-        #data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price()
+        data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price()
         return JsonResponse(data)
     data['ajax'] = 'false'
     data['price_all_included'] = 0
