@@ -47,6 +47,7 @@ class OrderItemInline(admin.TabularInline):
     model = OrderItem
     raw_id_fields = ['variant']
     readonly_fields = ('technique',)
+    extra = 0
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):

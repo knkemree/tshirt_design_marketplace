@@ -3,6 +3,11 @@
 {% block title %}
   Your shopping cart
 {% endblock %}
+
+{% block javascript %}
+
+{% endblock %}
+
 {% block blank %}
 
 <!-- {% if cart.coupon %}
@@ -35,16 +40,16 @@
   {{ coupon_apply_form }}
   <input type="submit" value="Apply">
   {% csrf_token %}
-</form>
--->
+</form> -->
+
 
   <div class="page-title-overlap bg-dark pt-4">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-start">
-            <li class="breadcrumb-item"><a class="text-nowrap" href="index.html"><i class="czi-home"></i>Home</a></li>
-            <li class="breadcrumb-item text-nowrap"><a href="shop-grid-ls.html">Shop</a>
+            <li class="breadcrumb-item"><a class="text-nowrap" href="#"><i class="czi-home"></i>Home</a></li>
+            <li class="breadcrumb-item text-nowrap"><a href="#">Shop</a>
             </li>
             <li class="breadcrumb-item text-nowrap active" aria-current="page">Cart</li>
           </ol>
@@ -65,18 +70,19 @@
         </div>
         <!-- Item-->
         {% for item in cart %}
-          {% with product=item.product %}
+          {% with design=item.product %}
           <div class="d-sm-flex justify-content-between align-items-center my-4 pb-3 border-bottom">
-            <div class="media media-ie-fix d-block d-sm-flex align-items-center text-center text-sm-left"><a class="d-inline-block mx-auto mr-sm-4" href="{{ product.get_absolute_url }}" style="width: 10rem;"><img src="{{ item.end_product_img }}" alt="product image"></a>
+            <div class="media media-ie-fix d-block d-sm-flex align-items-center text-center text-sm-left"><a class="d-inline-block mx-auto mr-sm-4" href="{{ product.get_absolute_url }}" style="width: 10rem;"><img src="{% if item.end_product_img %}{{ item.end_product_img }}{% else %}{{ design.variant.product.image.url }}{% endif %}" alt="product image"></a>
               <div class="media-body pt-2">
-                <h3 class="product-title font-size-base mb-2"><a href="{{ product.get_absolute_url }}">{{ product }}</a></h3>
+                <h3 class="product-title font-size-base mb-2"><a href="{{ product.get_absolute_url }}">{{ item.variant }}</a></h3>
+                <div class="font-size-sm"><span class="text-muted mr-2">Technique:</span>{{ item.technique}}</div>
                 <div class="font-size-sm"><span class="text-muted mr-2">Size:</span>{{ item.size}}</div>
-                <div class="font-size-sm"><span class="text-muted mr-2">Color:</span>{{ item.color }}</div>
+                <div class="font-size-sm"><span class="text-muted mr-2">Color:</span>{{ design.variant.color.name }}</div>
                 <div class="font-size-lg text-accent pt-2">${{ item.price }}</div>
               </div>
             </div>
             <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
-              <form action="{% url 'cart:cart_add' product.id %}" method="post">
+              <form action="{% url 'cart:cart_update' design.variant.id design.id %}" method="post">
                 {{ item.update_quantity_form.quantity }}
                 {{ item.update_quantity_form.override }}
                 <button class="btn btn-outline-accent btn-sm" type="submit"><i class="czi-loading font-size-base mr-2"></i>Update</button>
@@ -86,12 +92,13 @@
                 <label class="font-weight-medium" for="quantity1">Quantity</label>
                 <input class="form-control" type="number" id="quantity1" value={{ item.quantity }}>
               </div> -->
-              <form action="{% url 'cart:cart_remove' product.id %}" method="post">
+              <form action="{% url 'cart:cart_remove' design.id %}" method="post">
                 {% csrf_token %}
                 <button class="btn btn-link px-0 text-danger" type="submit"><i class="czi-close-circle mr-2"></i><span class="font-size-sm">Remove</span></button>
               </form>
               
             </div>
+            
           </div>
           {% endwith %}
         {% endfor %}
@@ -105,10 +112,10 @@
             <h2 class="h6 mb-3 pb-1">Subtotal</h2>
             <h3 class="font-weight-normal">${{ cart.get_total_price }}</h3>
           </div>
-          <div class="form-group mb-4">
+          <!-- <div class="form-group mb-4">
             <label class="mb-3" for="order-comments"><span class="badge badge-info font-size-xs mr-2">Note</span><span class="font-weight-medium">  Additional comments</span></label>
             <textarea class="form-control" rows="6" id="order-comments"></textarea>
-          </div>
+          </div> -->
           <div class="accordion" id="order-options">
             <div class="card">
               <div class="card-header">
@@ -124,7 +131,7 @@
                 </form>
               </div>
             </div>
-            <div class="card">
+            <!-- <div class="card">
               <div class="card-header">
                 <h3 class="accordion-heading"><a class="collapsed" href="#shipping-estimates" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="shipping-estimates">Shipping estimates<span class="accordion-indicator"></span></a></h3>
               </div>
@@ -167,7 +174,7 @@
                   </form>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div><a class="btn btn-primary btn-shadow btn-block mt-4" href="{% url 'orders:order_create' %}"><i class="czi-card font-size-lg mr-2"></i>Proceed to Checkout</a>
         </div>
       </aside>

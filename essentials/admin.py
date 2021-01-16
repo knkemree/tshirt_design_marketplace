@@ -7,7 +7,7 @@ import admin_thumbnails
 from django.utils.safestring import mark_safe
 from mptt.admin import DraggableMPTTAdmin
 
-from .models import Category, Product, Color, Size, Technique, TechniqueBase, Variant, Mockup
+from .models import Category, Product, Color, Size, Technique, TechniqueBase, Variant, Mockup, Design, Method, Placement, PlacementBase, Font
 
 
 
@@ -68,18 +68,30 @@ class MockupInline(admin.TabularInline):
     extra = 0
     show_change_link = True
 
+class MethodInline(admin.TabularInline):
+    model = Method
+    extra = 0
+    show_change_link = True
+
+class PlacementInline(admin.TabularInline):
+    model = Placement
+    extra = 0
+    show_change_link = True
+
 @admin_thumbnails.thumbnail('image')
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['title','category', 'active','image_tag']
     list_filter = ['category']
     #readonly_fields = ('image_tag',)
-    inlines = [VariantInline]
+    inlines = [VariantInline, 
+    MethodInline, PlacementInline
+    ]
     prepopulated_fields = {'slug': ('title',)}
 
 
 
 class ColorAdmin(admin.ModelAdmin):
-    list_display = ['name','group','product_preview','image_tag','created_at','updated_at',]
+    list_display = ['name','group','image_tag','created_at','updated_at',]
     list_filter = ['name','created_at','updated_at',]
     list_editable = ['group',]
     search_fields = ['name',]
@@ -127,7 +139,7 @@ class MockupAdmin(admin.ModelAdmin):
 # admin.site.register(ItemVariantValues)
 # admin.site.register(Collection)
     
-
+admin.site.register(Design)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Color, ColorAdmin)
@@ -136,5 +148,9 @@ admin.site.register(TechniqueBase)
 admin.site.register(Technique, TechniqueAdmin)
 admin.site.register(Variant, VariantAdmin)
 admin.site.register(Mockup, MockupAdmin)
+admin.site.register(Method)
+admin.site.register(Placement)
+admin.site.register(PlacementBase)
+admin.site.register(Font)
 #admin.site.register(Mockup_Group, Mockup_GroupAdmin)
 #admin.site.unregister(Group)

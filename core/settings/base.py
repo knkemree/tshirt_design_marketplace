@@ -182,7 +182,7 @@ AUTH_USER_MODEL = 'account.Customer'
 
 PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
 
-ADMINS = (('EMRE','konakziyaemre@gmail.com'),('DAVUD','davis@samnmtrade.com'),('TALHA','stok0616@gmail.com'))
+ADMINS = (('EMRE','konakziyaemre@gmail.com'),('DAVUD','davis@samnmtrade.com'),('TALHA','stok0616@gmail.com'),('AYSENUR','dmomarketing20@gmail.com'),('MELIHA','sweethomestarts@gmail.com'))
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

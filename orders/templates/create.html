@@ -4,7 +4,7 @@
 {% endblock %}
 {% block blank %}
 
-<ul>
+<!-- <ul>
   {% for item in cart %}
     <li>
       {{ item.quantity }}x {{ item.product.name }}
@@ -19,7 +19,7 @@
   {% endif %}
 </ul>
 
-<p>Total: ${{ cart.get_total_price_after_discount|floatformat:2 }}</p>
+<p>Total: ${{ cart.get_total_price_after_discount|floatformat:2 }}</p> -->
 <!-- Page Title-->
     <div class="page-title-overlap bg-dark pt-4">
       <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
@@ -71,11 +71,12 @@
               <div class="col-sm-6">
                 <div class="form-group">
                   <label for="id_recipient">Your Customer's Fullname <small class="text-muted">( if any )</small></label>
-                  <input class="form-control" type="text" name="recipient" maxlength="50" required="False" id="id_recipient">
+                  <input class="form-control" type="text" name="recipient" maxlength="50" id="id_recipient" required="false">
                   {% comment %} <input class="form-control" type="text" id="checkout-fn"> {% endcomment %}
                 </div>
               </div>
             </div>
+            
             <!-- Drag and drop file upload -->
             <div class="row">
               <div class="col-sm-12">
@@ -83,10 +84,14 @@
                 <div class="cz-file-drop-area">
                   <div class="cz-file-drop-icon czi-cloud-upload"></div>
                   <span class="cz-file-drop-message">Drag and drop shipping label to upload</span>
-                  <input class="cz-file-drop-input" type="file" name="shipping_label" id="id_shipping_label" required="False">
+                  <input class="cz-file-drop-input" type="file" name="shipping_label" id="id_shipping_label" required="false">
                   <button type="button" class="cz-file-drop-btn btn btn-primary btn-sm">Or select shipping label</button>
                 </div>
               </div>
+            </div>
+            <div class="form-group mb-4">
+              <label class="mb-3" for="note"><span class="badge badge-info font-size-xs mr-2">Note</span><span class="font-weight-medium">  Additional comments</span></label>
+              <textarea class="form-control" name="note" cols="30" rows="6" maxlength="1000" id="id_note" spellcheck="false"></textarea>
             </div>
             
             <!-- Navigation (desktop)-->
@@ -120,6 +125,13 @@
               <li class="d-flex justify-content-between align-items-center"><span class="mr-2">Discount:</span><span class="text-right">—</span></li> {% endcomment %}
             </ul>
             <h3 class="font-weight-normal text-center my-4">${{ cart.get_total_price }}</h3>
+            <!-- <form action="{% url 'orders:order_create' %}" method="POST">
+              <div class="form-group mb-4">
+                <label class="mb-3" for="order-comments"><span class="badge badge-info font-size-xs mr-2">Note</span><span class="font-weight-medium">  Additional comments</span></label>
+                <textarea class="form-control" name="note" cols="30" rows="6" maxlength="1000" id="id_note" spellcheck="false"></textarea>
+                
+              </div>
+            </form> -->
             <form class="needs-validation" method="post" novalidate>
               <div class="form-group">
                 <input class="form-control" type="text" placeholder="Promo code" required>

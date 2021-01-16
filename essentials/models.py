@@ -41,9 +41,15 @@ class Category(MPTTModel):
         return reverse('essentials:product_list_by_category',
                        args=[self.slug])
 
+class Font(models.Model):
+    name = models.CharField(max_length=50) 
+
+    def __str__(self):
+        return self.name
+
 class TechniqueBase(models.Model):
     name = models.CharField(max_length=100)
-       
+    fonts = models.ManyToManyField(Font, related_name='technique_bases', blank=True, null=True) 
     def __str__(self):
         return str(self.name)
 
@@ -82,6 +88,8 @@ class Product(models.Model):
     
     def get_lowest_price(self):
         return self.variants.all().aggregate(Min('price'))
+
+    
 
     def image_tag(self):
         img = self.image
@@ -127,6 +135,8 @@ class Color(models.Model):
     group = models.CharField(max_length=40, blank=True,null=True, help_text='e.g. black adult tshirts, black youth tshirts, black hoodies (this field only for admins and not visible to customers)')
     name = models.CharField(max_length=40, help_text='e.g black (this field is visible to customers)')
     color_tag = models.ImageField(upload_to='color_tags/', blank=True)
+    color_code = models.CharField(max_length=40, blank=True ,null=True, help_text='texture has priorty on color code. either color code or texture will be color option to customers')
+    texture = models.ImageField(upload_to='textures/', blank=True, null=True, help_text='texture has priorty on color code. either color code or texture will be color option to customers')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -144,8 +154,12 @@ class Color(models.Model):
     def product_preview(self):
         images = Mockup.objects.filter(item_color_id=self.id)
         img = images[0]
-        if img is not None:
-                return mark_safe('<img src="{}" height="100" />'.format(img.image.url,))
+        try:
+            img = images[0]
+            if img is not None:
+                    return mark_safe('<img src="{}" height="100" />'.format(img.image.url,))
+        except:
+            pass
 
 
 class Mockup(models.Model):
@@ -179,8 +193,13 @@ class Variant(models.Model):
     class Meta:
         ordering = ['size','color']
 
+    # def __str__(self):
+    #     return self.product.title+str(' / ')+self.size.name+str(' / ')+self.color.name
     def __str__(self):
-        return str(self.product.title+str(' / ')+self.size.name+str(' / ')+self.color.name)
+        return str(self.product.title)
+
+    def variant_price(self):
+        return self.price
 
     def image_tag(self):
         img = self.product.image
@@ -191,8 +210,8 @@ class Variant(models.Model):
             return ""
 
 class Design(models.Model):
-    variant = models.ForeignKey(Variant, on_delete=models.PROTECT, related_name="designs")
-    email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="designs")
+    variant = models.ForeignKey(Variant, on_delete=models.PROTECT, related_name="designs", blank=True, null=True)
+    email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="designs", blank=True, null=True)
     end_product_img = models.ImageField(upload_to='end_product_imgs/')
     image = models.ImageField(upload_to='designs/')
 
@@ -206,3 +225,38 @@ class Design(models.Model):
              return mark_safe('<img src="{}" height="50" style="background-color:{}"/>'.format(img.url, color))
         else:
             return ""
+
+class Method(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='methods')
+    technique = models.ForeignKey(TechniqueBase, on_delete=models.CASCADE, blank=True, null=True)
+    price = models.DecimalField(max_digits=12, decimal_places=2,default=0, help_text="price for this printing method")
+
+    def __str__(self):
+        return self.technique.name
+
+    def method_price(self):
+        return self.price
+
+
+
+class PlacementBase(models.Model):
+    name = models.CharField(max_length=100, blank=True, null=True, help_text="e.g. 'front' or 'back'")
+
+    def __str__(self):
+        return self.name
+
+class Placement(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='placements', blank=True, null=True,)
+    placement = models.ForeignKey(PlacementBase, on_delete=models.CASCADE, related_name='placements', blank=True, null=True,)
+    price = models.DecimalField(max_digits=12, decimal_places=2,default=0, help_text="price for this placement")
+    image = models.ImageField(upload_to='background_transparent_images/')
+
+    def __str__(self):
+        return self.placement.name
+
+    def placement_price(self):
+        return self.price
+
+
+
+
