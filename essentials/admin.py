@@ -7,7 +7,7 @@ import admin_thumbnails
 from django.utils.safestring import mark_safe
 from mptt.admin import DraggableMPTTAdmin
 
-from .models import Category, Product, Color, Size, Technique, TechniqueBase, Variant, Mockup, Design, Method, Placement, PlacementBase, Font
+from .models import Category, Product, Color, Size, Technique, TechniqueBase, Variant, Mockup, Design, Placement, PlacementBase, Font, Method
 
 
 
@@ -84,7 +84,8 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ['category']
     #readonly_fields = ('image_tag',)
     inlines = [VariantInline, 
-    MethodInline, PlacementInline
+    MethodInline, 
+    PlacementInline
     ]
     prepopulated_fields = {'slug': ('title',)}
 

@@ -199,6 +199,7 @@ class Variant(models.Model):
         return str(self.product.title)
 
     def variant_price(self):
+
         return self.price
 
     def image_tag(self):

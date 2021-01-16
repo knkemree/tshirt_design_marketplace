@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from cart.forms import CartAddProductForm
-from .models import Category, Product, Variant, Design, Placement, Method
+from .models import Category, Product, Variant, Design, Placement,Method
 from account.mixins import SellerAccountMixin
 
 
