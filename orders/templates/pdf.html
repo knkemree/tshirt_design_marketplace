@@ -1,4 +1,4 @@
-<html>
+<!-- <html>
 <body>
   <h1>Context Custom</h1>
   <p>
@@ -12,8 +12,8 @@
     Fullname: {{ order.customer_name }}<br>
     Email: {{ order.ordered_by }}<br>
     Status: {% if order.paid %}Paid{% else %}Pending payment{% endif %}
-    <!-- {{ order.address }}<br> -->
-    <!-- {{ order.postal_code }}, {{ order.city }} -->
+    {{ order.address }}<br>
+    {{ order.postal_code }}, {{ order.city }}
   </p>
   <h3>Items bought</h3>
   <table>
@@ -42,4 +42,103 @@
   </table>
 
 </body>
-</html>
+
+
+</html> -->
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="container bootstrap snippets bootdeys">
+<div class="row">
+  <div class="col-sm-12">
+	  	<div class="panel panel-default invoice" id="invoice">
+		  <div class="panel-body">
+			<div class="invoice-ribbon"><div class="ribbon-inner">{% if order.paid %}PAID{% else %}PENDING{% endif %}</div></div>
+		    <div class="row">
+
+				<div class="col-sm-6 top-left">
+					<i class="fa fa-rocket"></i>
+				</div>
+
+				<div class="col-sm-6 top-right">
+						<h3 class="marginright">INVOICE-{{ order.id }}</h3>
+						<span class="marginright">{{ order.created|date:"M d, Y" }}</span>
+			    </div>
+
+			</div>
+			<hr>
+			<div class="row">
+
+				<div class="col-xs-4 from">
+					<p class="lead marginbottom">From : Context Custom</p>
+					<p>1112 Staffordshire Rd.</p>
+					<p>Stafford</p>
+					<p>Texas, 77477</p>
+					<p>Phone: 832-303-5264</p>
+					<p>Email: admin@samnmtrade.com</p>
+				</div>
+
+				<div class="col-xs-4 to">
+					<p class="lead marginbottom">To : {{ order.customer_name }}</p>
+					<!-- <p>425 Market Street</p>
+					<p>Suite 2200, San Francisco</p>
+					<p>California, 94105</p>
+					<p>Phone: 415-676-3600</p> -->
+					<p>Email: {{ order.ordered_by }}</p>
+
+			    </div>
+
+			    <div class="col-xs-4 text-right payment-details">
+          <p class="lead marginbottom payment-info">Payment details</p>
+          <p>Account Name: {{ order.ordered_by }}</p>
+					<p>Ordered At: {{ order.created|date:"M d, Y" }}</p>
+					<p>Status: {% if order.paid %}Paid{% else %}Pending Payment{% endif %}</p>
+					<p>Total Amount: ${{ order.get_total_cost|floatformat:2 }}</p>
+			    </div>
+
+			</div>
+
+			<div class="row table-row">
+				<table class="table table-striped">
+			      <thead>
+			        <tr>
+			          <th class="text-center" style="width:5%">#</th>
+			          <th style="width:50%">Item</th>
+			          <th class="text-right" style="width:15%">Quantity</th>
+			          <th class="text-right" style="width:15%">Unit Price</th>
+			          <th class="text-right" style="width:15%">Total Price</th>
+			        </tr>
+			      </thead>
+			      <tbody>
+              {% for item in order.items.all %}
+                <tr class="text-center row{% cycle '1' '2' %}">
+                  <td>{{ item.variant }} / <strong>{{ item.variant.size }}</strong> / <strong>{{ item.variant.color }}</strong></td>
+                  <td class="text-right">${{ item.price }}</td>
+                  <td class="text-right">{{ item.quantity }}</td>
+                  <td class="text-right">${{ item.get_customer_cost }}</td>
+                </tr>
+              {% endfor %}
+			       </tbody>
+			    </table>
+
+			</div>
+
+			<div class="row">
+			<div class="col-xs-6 margintop">
+				<!-- <p class="lead marginbottom">THANK YOU!</p>
+
+				<button class="btn btn-success" id="invoice-print"><i class="fa fa-print"></i> Print Invoice</button>
+				<button class="btn btn-danger"><i class="fa fa-envelope-o"></i> Mail Invoice</button> -->
+			</div>
+			<div class="col-xs-6 text-right pull-right invoice-total">
+					      <!-- <p>Subtotal : $1019</p>
+			          <p>Discount (10%) : $101 </p>
+			          <p>VAT (8%) : $73 </p> -->
+			          <p>Total : $${{ order.get_total_cost }}</p>
+			</div>
+			</div>
+
+		  </div>
+		</div>
+	</div>
+</div>
+</div>
