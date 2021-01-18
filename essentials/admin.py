@@ -7,7 +7,7 @@ import admin_thumbnails
 from django.utils.safestring import mark_safe
 from mptt.admin import DraggableMPTTAdmin
 
-from .models import Category, Product, Color, Size, Technique, TechniqueBase, Variant, Mockup, Design, Method, Placement, PlacementBase, Font
+from .models import Category, Product, Color, Size, TechniqueBase, Variant, Design, Method, Placement, PlacementBase, Font
 
 
 
@@ -61,12 +61,6 @@ class VariantInline(admin.TabularInline):
     #     img = images[0]
     #     if img is not None:
     #         return mark_safe("""<img src="/images/%s.jpg" />""" % obj.image)
-    
-@admin_thumbnails.thumbnail('image')
-class MockupInline(admin.TabularInline):
-    model = Mockup
-    extra = 0
-    show_change_link = True
 
 class MethodInline(admin.TabularInline):
     model = Method
@@ -95,16 +89,11 @@ class ColorAdmin(admin.ModelAdmin):
     list_filter = ['name','created_at','updated_at',]
     list_editable = ['group',]
     search_fields = ['name',]
-    inlines = [MockupInline]
 
 class SizeAdmin(admin.ModelAdmin):
     list_display = ['name','row_no',]
     list_editable = ['row_no',]
     search_fields = ['name',]
-
-class TechniqueAdmin(admin.ModelAdmin):
-    list_display = ['technique',]
-    search_fields = ['technique',]
 
 class VariantAdmin(admin.ModelAdmin):
     list_display = ['__str__','size','color','price','quantity','created_at','updated_at',]
@@ -112,32 +101,7 @@ class VariantAdmin(admin.ModelAdmin):
     search_fields = ['size','color',]
     save_as =True
 
-    
-@admin_thumbnails.thumbnail('image')
-class MockupAdmin(admin.ModelAdmin):
-    list_display = ['image_tag','item_color','active']
-    list_filter = ['item_color','active']
 
-
-# need to work on inline admin 
-# class ItemAdmin(admin.TabularInline):
-#   model = Item
-#   extra = 2
-
-# class ItemTypeAdmin(admin.ModelAdmin):
-#   inlines = [ItemAdmin]
-
-# admin.site.register(models.Product, ProductAdmin)
-# admin.site.register(models.ProductType, ProductTypeAdmin)
-# admin.site.register(Item)
-# admin.site.register(ItemType)
-# admin.site.register(Attribute)
-# admin.site.register(AttributeValue)
-# admin.site.register(ItemAttributeValue)
-# admin.site.register(ItemTypeAttributeValue)
-# admin.site.register(ItemVariant)
-# admin.site.register(ItemVariantValues)
-# admin.site.register(Collection)
     
 admin.site.register(Design)
 admin.site.register(Category, CategoryAdmin)
@@ -145,12 +109,8 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(Color, ColorAdmin)
 admin.site.register(Size, SizeAdmin)
 admin.site.register(TechniqueBase)
-admin.site.register(Technique, TechniqueAdmin)
 admin.site.register(Variant, VariantAdmin)
-admin.site.register(Mockup, MockupAdmin)
 admin.site.register(Method)
 admin.site.register(Placement)
 admin.site.register(PlacementBase)
 admin.site.register(Font)
-#admin.site.register(Mockup_Group, Mockup_GroupAdmin)
-#admin.site.unregister(Group)
