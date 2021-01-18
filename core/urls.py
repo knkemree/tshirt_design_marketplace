@@ -24,6 +24,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth import views as auth_views
 from .views import HomeView, home_page
 from account.views import signup, account_activation_sent, activate, activated, login_request
+from core.views import how_it_works
 from essentials import views
 
 urlpatterns = [
@@ -48,6 +49,7 @@ urlpatterns = [
     path('password_reset/done/',auth_views.PasswordResetDoneView.as_view(),name='password_reset_done'),
     path('reset/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
     path('reset/done/',auth_views.PasswordResetCompleteView.as_view(),name='password_reset_complete'),
+    path('how_it_works/', how_it_works, name='how_it_works'),
     path('cart/', include('cart.urls', namespace='cart')),
     path('orders/', include('orders.urls', namespace='orders')),
     path('payment/', include('payment.urls', namespace='payment')),

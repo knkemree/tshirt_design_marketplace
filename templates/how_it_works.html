@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}How It Works{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}
+
+{% block blank %}
+
+<!-- Page title-->
+    <!-- Page Title (Light)-->
+    <div class="bg-secondary py-4">
+        <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+          <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-start">
+                <li class="breadcrumb-item"><a class="text-nowrap" href="index.html"><i class="czi-home"></i>Home</a></li>
+                <li class="breadcrumb-item text-nowrap active" aria-current="page">How It Works?</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+            <h1 class="h3 mb-0">How does Context Custom Work?</h1>
+          </div>
+        </div>
+      </div>
+      <!-- Page Content-->
+      <!-- Contact detail cards-->
+      <section class="container-fluid pt-grid-gutter">
+        <div class="row">
+          <div class="col-xl-3 col-md-6 mb-grid-gutter">
+            <a class="card"  data-scroll>
+                <div class="card-body text-center">
+                    <!-- <img src="{% static 'img\illustrations\undraw_Online_shopping.svg' %}" alt="online shop"> -->
+                    <i class="czi-lable h1 mt-2 mb-4 text-primary"></i>
+                    <p class="font-size-sm text-muted">First Step</p>
+                    <h3 class="h6 mb-2">Your Online Store</h3>
+                    <p class="font-size-sm text-muted">Sell your products on marketplaces</p>
+                    <!-- <div class="font-size-sm text-primary">1<i class="czi-arrow-right align-middle ml-1"></i></div> -->
+                </div>
+            </a>
+         </div>
+          <div class="col-xl-3 col-md-6 mb-grid-gutter">
+            <div class="card">
+              <div class="card-body text-center"><i class="czi-money-bag h1 mt-2 mb-4 text-primary"></i>
+                <p class="font-size-sm text-muted">Second Step</p>
+                <h3 class="h6 mb-3">Nancy from U.S.</h3>
+                <p class="font-size-sm text-muted">Nancy buys something on your store</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-md-6 mb-grid-gutter">
+            <div class="card">
+              <div class="card-body text-center"><i class="czi-settings h1 mt-2 mb-4 text-primary"></i>
+                <p class="font-size-sm text-muted">Third Step</p>
+                <h3 class="h6 mb-3">Our Print Machines</h3>
+                <p class="font-size-sm text-muted">We start processing Nancy's order</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-md-6 mb-grid-gutter">
+            <div class="card">
+              <div class="card-body text-center"><i class="czi-delivery h1 mt-2 mb-4 text-primary"></i>
+                <p class="font-size-sm text-muted">Forth Step</p>
+                <h3 class="h6 mb-3">Delivery</h3>
+                <p class="font-size-sm text-muted">Nancy gets your product</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+{% endblock %}
