@@ -211,6 +211,8 @@ class Variant(models.Model):
 
             
 
+
+
 class Design(models.Model):
     variant = models.ForeignKey(Variant, on_delete=models.PROTECT, related_name="designs", blank=True, null=True)
     email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="designs", blank=True, null=True)
