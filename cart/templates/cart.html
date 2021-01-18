@@ -92,11 +92,12 @@
                 <label class="font-weight-medium" for="quantity1">Quantity</label>
                 <input class="form-control" type="number" id="quantity1" value={{ item.quantity }}>
               </div> -->
+            </div>
+            <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
               <form action="{% url 'cart:cart_remove' design.id %}" method="post">
                 {% csrf_token %}
                 <button class="btn btn-link px-0 text-danger" type="submit"><i class="czi-close-circle mr-2"></i><span class="font-size-sm">Remove</span></button>
               </form>
-              
             </div>
             
           </div>
