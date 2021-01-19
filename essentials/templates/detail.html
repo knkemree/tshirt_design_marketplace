@@ -4,17 +4,38 @@
 {% block title %}{{ variant }}{% endblock %}
 
 {% block javascript %}
-<!-- <script>
-  var canvas = document.querySelector('canvas');
-fitToContainer(canvas);
-
-function fitToContainer(canvas){
-  // Make it visually fill the positioned parent
-  canvas.style.width ='100%';
-  canvas.style.height='100%';
-  
-}
-</script> -->
+<script>
+  $('.cz-thumblist-item').on('click', function(event){
+    // setTimeout($('.cz-thumblist-item:active').attr('id'),750)
+    var place_id = $('.cz-thumblist-item.active').attr('id');
+    console.log(place_id);
+    $.ajax({ 
+    url: "{% url 'essentials:dynamic_canvas' %}",
+    data: {
+      'product_id': $('#productid').val(),
+    },
+    dataType: 'json',
+    success:  function(data){
+      console.log(data);
+      $("#drawingArea").css({ top: data[place_id].top });
+      $("#drawingArea").css({ left: data[place_id].left });
+      $("#drawingArea").css({ width: data[place_id].width });
+      $("#drawingArea").css({ height: data[place_id].height });
+      $("#canvas-container").css({ height: data[place_id].height });
+      $("#canvas-container").css({ width: data[place_id].width });
+      var cnv = document.getElementById("tshirt-canvas");
+var parent = document.getElementById("canvas-container");
+console.log('genislik')
+console.log(parent.offsetWidth)
+console.log('yukseklik')
+console.log(parent.offsetHeight)
+cnv.width = parent.offsetWidth;
+cnv.height = parent.offsetHeight;
+    },
+    });
+    
+   });
+</script>
 
 <script>
   $(document).ready(function(){
@@ -33,6 +54,7 @@ function fitToContainer(canvas){
       $("#drawingArea").css({ height: data[place_id].height });
       $("#canvas-container").css({ height: data[place_id].height });
       $("#canvas-container").css({ width: data[place_id].width });
+      
       // $(".upper-canvas").css({ height: data[place_id].height });
       // $(".upper-canvas").css({ width: data[place_id].width });
       // $(".lower-canvas").css({ height: data[place_id].height });
@@ -47,6 +69,17 @@ function fitToContainer(canvas){
       
     }});
   });
+</script>
+
+<script>
+  var cnv = document.getElementById("tshirt-canvas");
+  var parent = document.getElementById("canvas-container");
+  console.log('genislik')
+  console.log(parent.offsetWidth)
+  console.log('yukseklik')
+  console.log(parent.offsetHeight)
+  cnv.width = parent.offsetWidth;
+  cnv.height = parent.offsetHeight;
 </script>
 
 <script>
@@ -792,7 +825,7 @@ function hideBg() {
             <!-- <div id="drawingArea" class="drawing-area" style="border: 1px dashed #B2CCFF;" > -->
             <div id="drawingArea" style="position: absolute; z-index: 10; border: 1px dashed #B2CCFF;">
               <div id="canvas-container" style="position: absolute; user-select: none;">
-                  <canvas id="tshirt-canvas" width="250px"  height="500px"></canvas>
+                  <canvas id="tshirt-canvas" style="position: relative; left: 0; right: 0; top: 0; bottom: 0;"></canvas>
               </div> 
             </div>
           </div>
