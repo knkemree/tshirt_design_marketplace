@@ -159,27 +159,28 @@ $(document).on('change', '#post-technique',function(e){
 
 <script>
 $(document).on('change', '#post-form',function(e){
-    e.preventDefault();
-    $(document.body).css({'cursor' : 'wait'});
-    $.ajax({  
-        url:'{% url "ajaxcolor" %}',
-        data:{       
-            'product_id':$('#productid').val(),
-            'size_id':$('#size').val(),
-            // csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),   
-        },
-        dataType : 'html',
-        success: function (data) {
-            console.log(data)
-            $('#appendHere').html(data.rendered_table);
-            $(document.body).css({'cursor' : 'default'});
-        },
-        error: function (data) {
-            $(document.body).css({'cursor' : 'default'});
-            alert("Got an error dude " + data);
-        }
-    });
-});
+          e.preventDefault();
+          $(document.body).css({'cursor' : 'wait'});
+          $.ajax({
+              type:'POST',
+              url:'{% url "ajaxcolor" %}',
+              data:{
+                  productid:$('#productid').val(),
+                  size:$('#size').val(),
+                  csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                  action: 'post'
+              },
+              data_type : 'html',
+              success: function (data) {
+                  $('#appendHere').html(data.rendered_table);
+                  $(document.body).css({'cursor' : 'default'});
+              },
+              error: function (data) {
+                  $(document.body).css({'cursor' : 'default'});
+                  alert("Got an error dude " + data);
+              }
+          });
+      });
 </script>
 
 <script>
