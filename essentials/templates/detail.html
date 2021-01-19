@@ -175,10 +175,10 @@ $(document).on('change', '#post-form',function(e){
                   $('#appendHere').html(data.rendered_table);
                   $(document.body).css({'cursor' : 'default'});
               },
-              error: function (data) {
-                  $(document.body).css({'cursor' : 'default'});
-                  alert("Got an error dude " + data);
-              }
+              // error: function (data) {
+              //     $(document.body).css({'cursor' : 'default'});
+              //     alert("Got an error dude " + data);
+              // }
           });
       });
 </script>
@@ -791,7 +791,7 @@ function hideBg() {
             {% endfor %} -->
             <!-- <div id="drawingArea" class="drawing-area" style="border: 1px dashed #B2CCFF;" > -->
             <div id="drawingArea" style="position: absolute; z-index: 10; border: 1px dashed #B2CCFF;">
-              <div id="canvas-container" style="position: relative; user-select: none;">
+              <div id="canvas-container" style="position: absolute; user-select: none;">
                   <canvas id="tshirt-canvas" width="250px"  height="500px"></canvas>
               </div> 
             </div>
