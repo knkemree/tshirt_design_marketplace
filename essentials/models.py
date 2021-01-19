@@ -254,6 +254,11 @@ class Placement(models.Model):
     placement = models.ForeignKey(PlacementBase, on_delete=models.SET_NULL, related_name='placements', blank=True, null=True,)
     price = models.DecimalField(max_digits=12, decimal_places=2,default=0, help_text="price for this placement")
     image = models.ImageField(upload_to='background_transparent_images/')
+    width = models.CharField(max_length=10, blank=True, null=True)
+    height = models.CharField(max_length=10, blank=True, null=True)
+    top = models.CharField(max_length=10, blank=True, null=True)
+    left = models.CharField(max_length=10, blank=True, null=True)
+
 
     def __str__(self):
         return self.placement.name

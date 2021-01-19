@@ -118,5 +118,23 @@ def change_method(request):
     data['ajax'] = 'false'
     return JsonResponse(data)
 
+
+def dynamic_canvas(request):
+    data = {}
+    if request.is_ajax:
+        product_id = request.GET.get('product_id', None)
+        product = get_object_or_404(Product, id=product_id)
+        placements = product.placements.all()
+        for placement in placements:
+            data[placement.id] = {}
+            data[placement.id]['top'] = placement.top
+            data[placement.id]['left'] = placement.left
+            data[placement.id]['width'] = placement.width
+            data[placement.id]['height'] = placement.height
+
+            # data['width'] = str(placement)
+        return JsonResponse(data)
+    return JsonResponse(data)
+
 def product_design(request):
     return render(request,'product_design.html')

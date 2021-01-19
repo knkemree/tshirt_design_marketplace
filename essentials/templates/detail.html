@@ -5,7 +5,31 @@
 
 {% block javascript %}
 <script>
-  
+  $(document).ready(function(){
+    $.ajax({ 
+    url: "{% url 'essentials:dynamic_canvas' %}",
+    data: {
+      'product_id': {{ product.id }},
+    },
+    dataType: 'json',
+    success: function(data){
+      var place_id = $('.cz-thumblist-item:first').attr('id');
+      console.log(data[place_id].top); // another sanity check
+      $("#drawingArea").css({ top: data[place_id].top });
+      $("#drawingArea").css({ left: data[place_id].left });
+      $("#drawingArea").css({ width: data[place_id].width });
+      $("#drawingArea").css({ height: data[place_id].height });
+      $("#canvas-container").css({ height: data[place_id].height });
+      $("#canvas-container").css({ width: data[place_id].width });
+      $("#tshirt-canvas").css({ height: data[place_id].height });
+      $("#tshirt-canvas").css({ width: data[place_id].width });
+      // $('#tshirt-canvas').prop('width', data[place_id].width)
+      // $('#tshirt-canvas').prop('height', data[place_id].height)
+      // canvas.height = data[place_id].height
+      // canvas.width = data[place_id].width
+      
+    }});
+  });
 </script>
 
 <script>
@@ -17,8 +41,10 @@
 
 <script>
   $(document).ready(function(){
+    // setTimeout($('.cz-thumblist-item:active').attr('id'),1000)
     var placement_id = $('.cz-thumblist-item:first').attr('id');
     $( "#id_placement" ).val(placement_id);
+    // $( "#id_placement" ).val(placement_id);
   });
 </script>
 
@@ -29,7 +55,7 @@ $(document).ready(function(){
     url: "{% url 'essentials:change_method' %}",
     data: {
       'method_id': $( "#technique" ).val(),
-      'place_id': $('.cz-thumblist-item:first').attr('id'),
+      'place_id':  $('.cz-thumblist-item:first').attr('id'),
       'variant_id': $('input[name=variantid]', '#post-color').val()
     },
     dataType: 'json',
@@ -747,9 +773,9 @@ function hideBg() {
             </div>
             {% endfor %} -->
             <!-- <div id="drawingArea" class="drawing-area" style="border: 1px dashed #B2CCFF;" > -->
-            <div id="drawingArea" class="drawing-area">
-              <div class="canvas-container" >
-                  <canvas id="tshirt-canvas" width="250" height="500"></canvas>
+            <div id="drawingArea" style="position: absolute; z-index: 10; border: 1px dashed #B2CCFF;">
+              <div id="canvas-container" style="position: relative; user-select: none;">
+                  <canvas id="tshirt-canvas"></canvas>
               </div> 
             </div>
           </div>

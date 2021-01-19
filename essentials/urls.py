@@ -9,6 +9,7 @@ urlpatterns = [
     path('', views.product_list, name='product_list'),
     path('api/', products_list, name='list'),
     path('ajax/change_place/', views.change_place, name='change_place'),
+    path('ajax/dynamic_canvas', views.dynamic_canvas, name='dynamic_canvas'),
     path('ajax/change_method/', views.change_method, name='change_method'),
     path('design/', views.product_design, name='product_design'),
     path('vendor/products/', SellerProductListView.as_view(), name='seller_product_catalog'),
