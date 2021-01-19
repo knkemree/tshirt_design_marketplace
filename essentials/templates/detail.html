@@ -145,7 +145,7 @@ $(document).on('change', '#post-form',function(e){
     e.preventDefault();
     $(document.body).css({'cursor' : 'wait'});
     $.ajax({
-        type:'POST',
+        
         url:'{% url "ajaxcolor" %}',
         data:{
             productid:$('#productid').val(),
