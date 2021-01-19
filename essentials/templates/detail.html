@@ -4,6 +4,18 @@
 {% block title %}{{ variant }}{% endblock %}
 
 {% block javascript %}
+<!-- <script>
+  var canvas = document.querySelector('canvas');
+fitToContainer(canvas);
+
+function fitToContainer(canvas){
+  // Make it visually fill the positioned parent
+  canvas.style.width ='100%';
+  canvas.style.height='100%';
+  
+}
+</script> -->
+
 <script>
   $(document).ready(function(){
     $.ajax({ 
@@ -21,12 +33,17 @@
       $("#drawingArea").css({ height: data[place_id].height });
       $("#canvas-container").css({ height: data[place_id].height });
       $("#canvas-container").css({ width: data[place_id].width });
-      // $("#tshirt-canvas").css({ height: data[place_id].height });
-      // $("#tshirt-canvas").css({ width: data[place_id].width });
-      // $('#tshirt-canvas').prop('width', data[place_id].width)
-      // $('#tshirt-canvas').prop('height', data[place_id].height)
-      // canvas.height = data[place_id].height
-      // canvas.width = data[place_id].width
+      // $(".upper-canvas").css({ height: data[place_id].height });
+      // $(".upper-canvas").css({ width: data[place_id].width });
+      // $(".lower-canvas").css({ height: data[place_id].height });
+      // $(".lower-canvas").css({ width: data[place_id].width });
+       
+      // var cnvs = document.querySelector("canvas");
+      // $(".upper-canvas").setAttribute("width", data[place_id].width);
+      // $(".lower-canvas").setAttribute("height", data[place_id].height)
+      // var canvas = document.getElementsByClassName("tshirt-canvas");
+      // canvas.width = $("#drawingArea").width();
+      // canvas.height = $("#drawingArea").height();
       
     }});
   });
@@ -144,17 +161,16 @@ $(document).on('change', '#post-technique',function(e){
 $(document).on('change', '#post-form',function(e){
     e.preventDefault();
     $(document.body).css({'cursor' : 'wait'});
-    $.ajax({
-        
+    $.ajax({  
         url:'{% url "ajaxcolor" %}',
-        data:{
-            productid:$('#productid').val(),
-            size:$('#size').val(),
-            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
-            action: 'post'
+        data:{       
+            'product_id':$('#productid').val(),
+            'size_id':$('#size').val(),
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),   
         },
-        data_type : 'html',
+        dataType : 'html',
         success: function (data) {
+            console.log(data)
             $('#appendHere').html(data.rendered_table);
             $(document.body).css({'cursor' : 'default'});
         },
@@ -775,7 +791,7 @@ function hideBg() {
             <!-- <div id="drawingArea" class="drawing-area" style="border: 1px dashed #B2CCFF;" > -->
             <div id="drawingArea" style="position: absolute; z-index: 10; border: 1px dashed #B2CCFF;">
               <div id="canvas-container" style="position: relative; user-select: none;">
-                  <canvas id="tshirt-canvas" width="250px" height="500px"></canvas>
+                  <canvas id="tshirt-canvas"></canvas>
               </div> 
             </div>
           </div>

@@ -70,9 +70,10 @@ def product_detail(request, id, slug):
 
 def ajaxcolor(request):
     data = {}
-    if request.POST.get('action') == 'post':
-        size_id = request.POST.get('size')
-        productid = request.POST.get('productid')
+    if request.is_ajax:
+        size_id = request.GET.get('size_id', None)
+        productid = request.GET.get('product_id', None)
+        print(size_id, productid)
         colors = Variant.objects.filter(product_id=productid, size_id=size_id)
         ajax_variant = colors[0]
         context = {
