@@ -166,7 +166,7 @@ $(document).on('change', '#post-form',function(e){
         data:{       
             'product_id':$('#productid').val(),
             'size_id':$('#size').val(),
-            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),   
+            // csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),   
         },
         dataType : 'html',
         success: function (data) {
@@ -791,7 +791,7 @@ function hideBg() {
             <!-- <div id="drawingArea" class="drawing-area" style="border: 1px dashed #B2CCFF;" > -->
             <div id="drawingArea" style="position: absolute; z-index: 10; border: 1px dashed #B2CCFF;">
               <div id="canvas-container" style="position: relative; user-select: none;">
-                  <canvas id="tshirt-canvas"></canvas>
+                  <canvas id="tshirt-canvas" width="250px"  height="500px"></canvas>
               </div> 
             </div>
           </div>
