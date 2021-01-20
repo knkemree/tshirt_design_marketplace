@@ -18,4 +18,8 @@ def home_page(request):
 def how_it_works(request):
     context = {}
     return render(request, 'how_it_works.html', context)
+
+def test(request):
+    context = {}
+    return render(request,'test.html', context)
     
