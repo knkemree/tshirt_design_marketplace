@@ -134,7 +134,7 @@ class Size(models.Model):
 class Color(models.Model):
     group = models.CharField(max_length=40, blank=True,null=True, help_text='e.g. black adult tshirts, black youth tshirts, black hoodies (this field only for admins and not visible to customers)')
     name = models.CharField(max_length=40, help_text='e.g black (this field is visible to customers)')
-    color_tag = models.ImageField(upload_to='color_tags/', blank=True, null=True)
+    #color_tag = models.ImageField(upload_to='color_tags/', blank=True, null=True)
     color_code = models.CharField(max_length=40, blank=True ,null=True, help_text='texture has priorty on color code. either color code or texture will be color option to customers')
     texture = models.ImageField(upload_to='textures/', blank=True, null=True, help_text='texture has priorty on color code. either color code or texture will be color option to customers')
     created_at = models.DateTimeField(auto_now_add=True)
