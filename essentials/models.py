@@ -146,10 +146,10 @@ class Color(models.Model):
     class Meta:
         ordering = ['name']
 
-    def image_tag(self):
-        img = self.color_tag
-        if img is not None:
-                return mark_safe('<img src="{}" height="50" />'.format(img.url,))
+    # def image_tag(self):
+    #     img = self.color_tag
+    #     if img is not None:
+    #             return mark_safe('<img src="{}" height="50" />'.format(img.url,))
 
     def product_preview(self):
         images = Mockup.objects.filter(item_color_id=self.id)

@@ -85,7 +85,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 class ColorAdmin(admin.ModelAdmin):
-    list_display = ['name','group','image_tag','created_at','updated_at',]
+    list_display = ['name','group','created_at','updated_at',]
     list_filter = ['name','created_at','updated_at',]
     list_editable = ['group',]
     search_fields = ['name',]
