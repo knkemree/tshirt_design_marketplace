@@ -191,7 +191,7 @@ class Variant(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['size','color']
+        ordering = ['color']
 
     # def __str__(self):
     #     return self.product.title+str(' / ')+self.size.name+str(' / ')+self.color.name

@@ -5,8 +5,51 @@
 
 {% block javascript %}
 <script>
-  
+  function onObjectSelected(e) {	 
+      console.log('object selected')
+	    var selectedObject = e.target;
+	    $("#text-string").val("");
+	    selectedObject.hasRotatingPoint = true
+	    if (selectedObject && selectedObject.type === 'text') {
+	    	//display text editor	    	
+	    	$("#texteditor").css('display', 'block');
+	    	$("#text-string").val(selectedObject.getText());	    	
+	    	// $('#text-fontcolor').miniColors('value',selectedObject.fill);
+	    	// $('#text-strokecolor').miniColors('value',selectedObject.strokeStyle);	
+	    	// $("#imageeditor").css('display', 'block');
+	    }
+	    else if (selectedObject && selectedObject.type === 'image'){
+	    	//display image editor
+	    	$("#texteditor").css('display', 'none');	
+	    	// $("#imageeditor").css('display', 'block');
+	    }
+	  }
+	 function onSelectedCleared(e){
+		 $("#texteditor").css('display', 'none');
+		 $("#text-string").val("");
+    //  $("#imageeditor").css('display', 'none');
+   }
 </script>
+
+<script>
+  $('#add-text').on('click', function(){
+    var text = $('#text-string').val();
+    if(text != ''){
+      Addtext(text);
+      console.log(text)
+      console.log('hey')
+      $('#text-string').val('')
+    }else{
+      alert('Text area empty')
+      $('#text-string').val('')
+    };
+
+    
+  })
+</script>
+
+
+
 <script>
   $('.cz-thumblist-item').on('click', function(event){
     var place_id = $('.cz-thumblist-item.active').attr('id');
@@ -286,6 +329,7 @@ $(document).on('change', '#post-form',function(e){
       if(keyCode == 46){
           console.log("Removing selected element on Fabric.js on DELETE key !");
           canvas.remove(canvas.getActiveObject());
+          $("#text-string").val("");
       }
   }, false);
 
@@ -335,8 +379,8 @@ $(document).on('change', '#post-form',function(e){
 
   
   // Add text
-  function Addtext() {
-      var iTextSample = new fabric.IText('text', {
+  function Addtext(text) {
+      var iTextSample = new fabric.IText(text, {
           left: 50,
           top: 50,
           width: 150,
@@ -532,6 +576,16 @@ $(document).on('change', '#post-form',function(e){
       $("#text-font-size").val(event.target.fontSize);
       }
   });
+  canvas.on({
+			 'object:moving': function(e) {		  	
+			    e.target.opacity = 0.5;
+			  },
+			  'object:modified': function(e) {		  	
+			    e.target.opacity = 1;
+			  },
+			 'object:selected':onObjectSelected,
+			 'selection:cleared':onSelectedCleared
+		 });
 
   });
 
@@ -773,6 +827,7 @@ function add_to_cart() {
       <!-- Tabs content -->
       <div class="tab-content">
         <div class="tab-pane fade show" id="home1" role="tabpanel">
+          <div id='texteditor'>
             <div>
               <select id="font-family" class="form-control"></select>
             </div>
@@ -940,18 +995,22 @@ function add_to_cart() {
               </div>
               
           </div>
-          <button type="button" class="btn btn-primary btn-sm" onclick="Addtext()">Add Text</button>
+          </div>
+            
+          <textarea class="form-control" id="text-string" name="text" id="" cols="30" rows="5" placeholder="Start typing here..."></textarea>
+          <button id="add-text" type="button" class="mt-3 btn btn-primary btn-sm">Add Text</button>
           <!-- <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button> -->
         </div>
+        
         <div class="tab-pane fade" id="profile1" role="tabpanel">
           <!-- Drag and drop file upload -->
-<div class="cz-file-drop-area">
-  <div class="cz-file-drop-icon czi-cloud-upload"></div>
-  <span class="cz-file-drop-message">Drag and drop here to upload</span>
-  <input class="cz-file-drop-input" type="file" name="uploaded_image" accept="image/*" id="id_uploaded_image">
-  {% comment %} <input id="tshirt-custompicture" type="file" class="cz-file-drop-input"> {% endcomment %}
-  <button type="button" class="cz-file-drop-btn btn btn-primary btn-sm">Or select file</button>
-</div>
+          <div class="cz-file-drop-area">
+            <div class="cz-file-drop-icon czi-cloud-upload"></div>
+            <span class="cz-file-drop-message">Drag and drop here to upload</span>
+            <input class="cz-file-drop-input" type="file" name="uploaded_image" accept="image/*" id="id_uploaded_image">
+            {% comment %} <input id="tshirt-custompicture" type="file" class="cz-file-drop-input"> {% endcomment %}
+            <button type="button" class="cz-file-drop-btn btn btn-primary btn-sm">Or select file</button>
+          </div>
           <div>
             <!-- <label for="tshirt-custompicture">Upload your own design:</label>
             <input type="file" id="tshirt-custompicture" class="form-control"/> -->
