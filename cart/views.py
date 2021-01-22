@@ -37,9 +37,9 @@ def cart_add(request, variant_id, art_id=None):
                     technique = cd['technique'],
                     quantity=cd['quantity'],
                     override_quantity=cd['override'],
-                    #end_product_img=cd['end_product_img'],
+                    end_product_img=cd['end_product_img'],
                     mockup = cd['mockup'],
-                    #design = cd['design'],
+                    design = cd['design'],
                     json_data = cd['json_data']
                     )
             data['result'] = "Added to cart"

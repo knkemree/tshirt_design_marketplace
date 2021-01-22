@@ -83,13 +83,13 @@ def order_create(request):
             #     order.discount = cart.coupon.discount
             order.save()
             for item in cart:
-                #end_product_img = get_image_from_data_url(item['end_product_img'])[0]
-                #image = get_image_from_data_url(item['design'])[0]
+                end_product_img = get_image_from_data_url(item['end_product_img'])[0]
+                image = get_image_from_data_url(item['design'])[0]
                 OrderItem.objects.create(order=order,
                                         variant_id=item['variant_id'],
                                         price=item['price'],
-                                        #end_product_img=end_product_img,
-                                        #image = image,
+                                        end_product_img=end_product_img,
+                                        image = image,
                                         quantity=item['quantity'],
                                         technique=item['technique'],
                                         json_data = item['json_data']
