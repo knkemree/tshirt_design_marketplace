@@ -15,4 +15,5 @@ class CartAddProductForm(forms.Form):
     end_product_img = forms.CharField(required=False, widget=forms.HiddenInput)
     mockup = forms.CharField(required=False, widget=forms.HiddenInput)
     design = forms.CharField(required=False, widget=forms.HiddenInput)
+    json_data = forms.JSONField(required=False, widget=forms.HiddenInput)
     

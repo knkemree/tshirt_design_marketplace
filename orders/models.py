@@ -7,6 +7,8 @@ from core import settings
 from essentials.models import Product, Variant, Design
 from account.models import Customer, Seller
 from coupons.models import Coupon
+import json
+from django.utils.safestring import mark_safe
 
 class Order(models.Model):
     ordered_by = models.ForeignKey(Seller, on_delete=models.CASCADE)
@@ -47,9 +49,14 @@ class Order(models.Model):
         total_cost = sum(item.get_customer_cost() for item in self.items.all())
         return total_cost
 
+    def total_item_qty(self):
+        total_item = sum(item.quantity for item in self.items.all())
+        return total_item
+
     def get_absolute_url(self):
         return reverse('order_details',
                        args=[self.id])
+
 
 
 
@@ -69,6 +76,7 @@ class OrderItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     quantity = models.PositiveIntegerField(default=1)
+    json_data = models.JSONField(blank=True, null=True)
 
 
     def __str__(self):
@@ -79,6 +87,11 @@ class OrderItem(models.Model):
 
     def get_my_cost(self):
         return self.cost * self.quantity
+
+    def dump_json(self):
+        return json.dumps(self.json_data)
+
+    
 
     
     

@@ -40,6 +40,7 @@ def cart_add(request, variant_id, art_id=None):
                     end_product_img=cd['end_product_img'],
                     mockup = cd['mockup'],
                     design = cd['design'],
+                    json_data = cd['json_data']
                     )
             data['result'] = "Added to cart"
             return redirect('cart:cart_detail')

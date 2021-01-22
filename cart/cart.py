@@ -3,6 +3,7 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404
 from essentials.models import Design, Product, Variant, Placement, Method
 from coupons.models import Coupon
+import json
 
 
 
@@ -22,10 +23,11 @@ class Cart(object):
         self.coupon_id = self.session.get('coupon_id')    
         
 
-    def add(self, art, variant, placement, technique, end_product_img, mockup, design, quantity=1, override_quantity=False,):
+    def add(self, art, variant, placement, technique, end_product_img, mockup, design, json_data=None, quantity=1, override_quantity=False,):
         """
         Add a product to the cart or update its quantity.
         """
+
         art_id = str(art.id)
 
         # burasi olmazsa update ederken hata veriyor
@@ -44,6 +46,7 @@ class Cart(object):
                                     'end_product_img': end_product_img,
                                     'mockup': mockup,
                                     'design': design,
+                                    'json_data':json_data,
                                     'technique': str(method),
                                     }
         if override_quantity:

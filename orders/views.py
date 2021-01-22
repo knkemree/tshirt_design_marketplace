@@ -91,7 +91,9 @@ def order_create(request):
                                         end_product_img=end_product_img,
                                         image = image,
                                         quantity=item['quantity'],
-                                        technique=item['technique'])
+                                        technique=item['technique'],
+                                        json_data = item['json_data']
+                                        )
             # clear the cart
             cart.clear()
             # launch asynchronous task
@@ -112,6 +114,13 @@ def admin_order_detail(request, order_id):
     return render(request,
                   'admin/orders/order/detail.html',
                   {'order': order})
+
+@staff_member_required
+def admin_order_item_detail(request, order_id):
+    order_item = get_object_or_404(OrderItem, id=order_id)
+    return render(request,
+                  'admin/orders/orderitem/detail.html',
+                  {'order_item': order_item})
 
 @login_required
 def order_list(request):

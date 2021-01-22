@@ -42,23 +42,36 @@ def order_detail(obj):
     return mark_safe(f'<a href="{url}">View</a>')
 
 
+def order_item_detail(obj):
+    url = reverse('orders:admin_order_item_detail', args=[obj.id])
+    return mark_safe(f'<a href="{url}">View</a>')
+
+
 #@admin_thumbnails.thumbnail('image')
-@admin_thumbnails.thumbnail('image')
+# @admin_thumbnails.thumbnail('image')
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
+    exclude = ['json_data','cost','end_product_img','image']
     raw_id_fields = ['variant']
-    readonly_fields = ('technique',)
+    readonly_fields = ('technique','price','quantity',)
+    show_change_link = True
     extra = 0
+
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'customer_name', 'ordered_by','recipient', 'shipping_label',
+    list_display = ['id', 'customer_name','recipient', 
                     'total', 'paid', 'fulfillment',
-                    'created', 'updated',order_detail,
+                    'updated',order_detail,
                     order_pdf,
                     ]
-    list_display_links =['customer_name']
+    #search_fields = ['ordered_by',]
+    # list_display_links =['customer_name']
     list_filter = ['ordered_by','paid', 'fulfillment','created', 'updated']
     inlines = [OrderItemInline]
     actions = [export_to_csv]
     readonly_fields = ('paid','stripe_id')
+
+# @admin.register(OrderItem)
+# class OrderItemAdmin(admin.ModelAdmin):
+#     list_display = ['id','order','variant','technique','price','quantity',order_item_detail]

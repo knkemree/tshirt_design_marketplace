@@ -1,18 +1,43 @@
 {% extends "admin/base_site.html" %}
+{% load static %}
+{% block extrahead %}
+<!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Vendor scrits: js libraries and plugins-->
+    <!-- <script src="{% static 'vendor/jquery/dist/jquery.slim.min.js' %}"></script> -->
+    <script src="{% static 'vendor/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'vendor/bs-custom-file-input/dist/bs-custom-file-input.min.js' %}"></script>
+    <script src="{% static 'vendor/simplebar/dist/simplebar.min.js' %}"></script>
+    <script src="{% static 'vendor/tiny-slider/dist/min/tiny-slider.js' %}"></script>
+    <script src="{% static 'vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js' %}"></script>
+    <!-- Include Fabric.js and other requirements in the page -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.1.0/fabric.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fontfaceobserver/2.1.0/fontfaceobserver.js"></script>
+    <!-- Main theme script-->
+    <script src="{% static 'js/theme.min.js' %}"></script>
+
+{% endblock %}
+{% block extrastyle %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" !important rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" !important crossorigin="anonymous">
+{% endblock %}
+
+
 {% block title %}
-  Order {{ order.id }} {{ block.super }}
+  Order #{{ order.id }} {{ block.super }}
 {% endblock %}
 {% block breadcrumbs %}
   <div class="breadcrumbs">
     <a href="{% url "admin:index" %}">Home</a> &rsaquo;
     <a href="{% url "admin:orders_order_changelist" %}">Orders</a>
     &rsaquo;
-    <a href="{% url "admin:orders_order_change" order.id %}">Order {{ order.id }}</a>
-    &rsaquo; Detail
+    <!-- <a href="{% url "admin:orders_order_change" order.id %}">Order {{ order.id }}</a> -->
+    <a>Order {{ order.id }}</a>
   </div>
 {% endblock %}
 {% block content %}
-<h1>Order {{ order.id }}</h1>
+<h2>Order #{{ order.id }}</h2>
 <ul class="object-tools">
   <li>
     <a href="#" onclick="window.print();">Print order</a>
@@ -38,12 +63,12 @@
   <tr>
     <th>Shipping Label</th>
   <td>
-    <a href="{{ order.shipping_label.url }}">View</a>
+    {% if order.shipping_label %}<a href="{{ order.shipping_label.url }}">View</a>{% endif %}
   </td> 
   </tr>
   <tr>
     <th>Total amount</th>
-    <td>${{ order.get_total_cost }}</td>
+    <td>${{ order.get_total_cost|floatformat:2 }}</td>
   </tr>
   <tr>
     <th>Status</th>
@@ -55,26 +80,38 @@
   <table style="width:100%">
     <thead>
       <tr>
+        <th>Preview</th>
         <th>Product</th>
+        <th>Technique</th>
         <th>Price</th>
         <th>Quantity</th>
         <th>Total</th>
+        <th>Details</th>
       </tr>
     </thead>
     <tbody>
       {% for item in order.items.all %}
         <tr class="row{% cycle "1" "2" %}">
-          <td>{{ item.variant }} / <strong>{{ item.variant.size }}</strong> / <strong>{{ item.variant.color }}</strong></td>
-          <td class="num">${{ item.price }}</td>
+          <td class='num'><img src="{{ item.end_product_img.url }}" alt="" style="height: 200px;"></td>
+          <td>{{ item.variant }} / <strong>{{ item.variant.size }}</strong> / <strong>{{ item.variant.color.name }}</strong></td>
+          <td class="num">{{ item.technique }}</td>
+          <td class="num">${{ item.price|floatformat:2 }}</td>
           <td class="num">{{ item.quantity }}</td>
-          <td class="num">${{ item.get_customer_cost }}</td>
+          <td class="num">${{ item.get_customer_cost|floatformat:2 }}</td>
+          <td class="num"><a href="{% url 'orders:admin_order_item_detail' item.id %}">View</a></td>
         </tr>
       {% endfor %}
       <tr class="total">
-        <td colspan="3">Total</td>
-        <td class="num">${{ order.get_total_cost }}</td>
+        <td colspan="6">Total Item QTY: {{ order.total_item_qty }}</td>
+        <td class="num">Total: ${{ order.get_total_cost|floatformat:2 }}</td>
       </tr>
     </tbody>
   </table>
 </div>
+
 {% endblock %}
+
+{% block bodyfooter %}
+
+{% endblock %}
+

@@ -2,8 +2,68 @@
 {% load static %}
 
 {% block title %}{{ variant }}{% endblock %}
+{% block breadcrumbs %}
+  <div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">Home</a> &rsaquo;
+    <a href="{% url 'admin:orders_order_changelist' %}">Orders</a>&rsaquo;
+    <!-- <a href="{% url "admin:orders_order_change" order.id %}">Order {{ order.id }}</a> -->
+    <a href="">Order #{{ order.id }}</a>
+    &rsaquo;
+    <a>Details</a>
+  </div>
+{% endblock %}
 
 {% block javascript %}
+<script>
+  function rasterizeJSON(){
+    raterized = JSON.stringify(canvas.toObject());
+    $('#id_json_data').val(raterized);
+  }
+</script>
+
+<script>
+  function saveCanvasToJSON() {
+    const json = JSON.stringify(canvas);
+    localStorage.setItem('Kanvas', json);
+
+  }
+</script>
+
+<script>
+  function loadCanvasFromJSON() {
+    const CANVAS = localStorage.getItem('Kanvas');
+    canvas.loadFromJSON(CANVAS, () => {
+      console.log('CANVAS untar');
+      console.log(CANVAS);
+
+      // making sure to render canvas at the end
+      canvas.renderAll();
+
+      // and checking if object's "name" is preserved
+      console.log('this.canvas.item(0).name');
+      console.log(canvas);
+    });
+  }
+</script>
+
+<script>
+  $('#loadFromJSON').on('click', function(){
+    loadCanvasFromJSON();
+  })
+</script>
+
+<script>
+  $('#saveToLocal').on('click', function(){
+    saveCanvasToJSON();
+  })
+</script>
+
+<script>
+  $('#toJson').on('click', function(){
+    console.log(JSON.stringify(canvas.getActiveObject().toObject()))
+  })
+</script>
+
 <script>
   function onObjectSelected(e) {	 
       console.log('object selected')
@@ -118,7 +178,7 @@
 <script>
   $(document).ready(function(){
     // var placement_id = $('.cz-thumblist-item:first').attr('id');
-    var placement_id = setTimeout($('.cz-thumblist-item.active').attr('id'),500);
+    var placement_id = setTimeout($('.cz-thumblist-item.active').attr('id'),1000);
     $( "#id_placement" ).val(placement_id);
   });
 </script>
@@ -135,7 +195,7 @@ $(document).ready(function(){
     },
     dataType: 'json',
     success: function(data){
-      console.log(data.price_all_included); // another sanity check
+      // console.log(data.price_all_included); 
       $('#price').text("$"+data.price_all_included);
     }});
 });
@@ -182,7 +242,7 @@ $('#post-placement').on('click', function(event){
         dataType: 'json',
         // handle a successful response
         success : function(data) {
-            console.log(data.price_all_included); // another sanity check
+            // console.log(data.price_all_included); 
             $('#price').text("$"+data.price_all_included);
         },       
     });
@@ -217,28 +277,28 @@ $(document).on('change', '#post-technique',function(e){
 
 <script>
 $(document).on('change', '#post-form',function(e){
-          e.preventDefault();
-          $(document.body).css({'cursor' : 'wait'});
-          $.ajax({
-              type:'POST',
-              url:'{% url "ajaxcolor" %}',
-              data:{
-                  productid:$('#productid').val(),
-                  size:$('#size').val(),
-                  csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
-                  action: 'post'
-              },
-              data_type : 'html',
-              success: function (data) {
-                  $('#appendHere').html(data.rendered_table);
-                  $(document.body).css({'cursor' : 'default'});
-              },
-              // error: function (data) {
-              //     $(document.body).css({'cursor' : 'default'});
-              //     alert("Got an error dude " + data);
-              // }
-          });
-      });
+    e.preventDefault();
+    $(document.body).css({'cursor' : 'wait'});
+    $.ajax({
+        type:'GET',
+        url:'{% url "ajaxcolor" %}',
+        data:{
+            productid:$('#productid').val(),
+            size:$('#size').val(),
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            // action: 'post'
+        },
+        data_type : 'html',
+        success: function (data) {
+            $('#appendHere').html(data.rendered_table);
+            $(document.body).css({'cursor' : 'default'});
+        },
+        error: function (data) {
+            $(document.body).css({'cursor' : 'default'});
+            alert("Got an error! " + data);
+        }
+    });
+});
 </script>
 
 <script>
@@ -640,6 +700,7 @@ function add_to_cart() {
   $('#addtocartform').on('submit', function(event){
     event.preventDefault();
     console.log("form submitted!"); 
+    rasterizeJSON();
     setTimeout(add_to_cart(),3000);
     // add_to_cart();
   });
@@ -999,6 +1060,9 @@ function add_to_cart() {
             
           <textarea class="form-control" id="text-string" name="text" id="" cols="30" rows="5" placeholder="Start typing here..."></textarea>
           <button id="add-text" type="button" class="mt-3 btn btn-primary btn-sm">Add Text</button>
+          <button id='toJson' type="button">Render to Json</button>
+          <button id="saveToLocal">Save to local</button>
+          <button id='loadFromJSON'>Load from local</button>
           <!-- <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button> -->
         </div>
         

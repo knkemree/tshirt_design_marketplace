@@ -1,0 +1,66 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+{% block title %}
+  Order Item
+{% endblock %}
+
+{% block extrahead %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+<!-- jquery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Vendor scrits: js libraries and plugins-->
+<!-- <script src="{% static 'vendor/jquery/dist/jquery.slim.min.js' %}"></script> -->
+<script src="{% static 'vendor/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'vendor/bs-custom-file-input/dist/bs-custom-file-input.min.js' %}"></script>
+<script src="{% static 'vendor/simplebar/dist/simplebar.min.js' %}"></script>
+<script src="{% static 'vendor/tiny-slider/dist/min/tiny-slider.js' %}"></script>
+<script src="{% static 'vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js' %}"></script>
+<!-- Include Fabric.js and other requirements in the page -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.1.0/fabric.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fontfaceobserver/2.1.0/fontfaceobserver.js"></script>
+<!-- Main theme script-->
+<script src="{% static 'js/theme.min.js' %}"></script>
+<script>
+    
+$( document ).ready(function() {
+    var canvas = new fabric.Canvas('tshirt-canvas');
+    var json_content = $('#json_content').val();
+    canvas.loadFromJSON(json_content);
+
+    $('#load-from-db').on('click', function(){
+        canvas.loadFromJSON(json_content);
+    });
+
+    $('#exportToPNG').on('click', function(){
+        $('#tshirt-canvas').get(0).toBlob(function(blob){
+            saveAs(blob, 'canvas.png')
+        })
+    });
+
+    document.addEventListener("keydown", function(e) {
+      var keyCode = e.keyCode;
+      if(keyCode == 46){
+          canvas.remove(canvas.getActiveObject());
+      }
+  }, false);
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<h1>Order Item Details</h1>
+<br>
+<button id="load-from-db">Load from database</button>
+<button id="exportToPNG">Export to PNG</button>
+<br>
+<p>
+    <input type="hidden" name="json_content" id="json_content" value="{{ order_item.dump_json }}">
+    <!-- <textarea name="json_content" id="json_content" cols="30" rows="10">{{ order_item.dump_json }}</textarea> -->
+</p>
+
+<div id="drawingArea" style="width: 1400px; height: 1200px; position: absolute;z-index: 10; border: 1px dashed #B2CCFF;">
+    <canvas id="tshirt-canvas" width="1400" height="1200"></canvas>
+</div>
+{% endblock %}
