@@ -88,13 +88,18 @@ $( document ).ready(function() {
     canvas.on('selection:created', onObjectSelected);
     canvas.on('selection:cleared', onObjectUnSelected);
 
+    $( "#exportToPNG" ).mouseover(function() {
+    canvas.discardActiveObject();
+    canvas.renderAll();
+  });
+
     
 });
 </script>
 {% endblock %}
 
 {% block content %}
-<h2>Order Item</h2>
+<h2>Order Item #{{ order_item.id }}</h2>
 <p>Order: #{{ order_item.order.id }}</p>
 <p>Item: #{{ order_item.id }}</p>
 <br>
@@ -135,7 +140,7 @@ $( document ).ready(function() {
     <!-- <textarea name="json_content" id="json_content" cols="30" rows="10">{{ order_item.dump_json }}</textarea> -->
 </p>
 
-<div id="drawingArea" style="width: 1400px; height: 1200px; position: absolute;z-index: 10; border: 1px dashed #B2CCFF;">
+<div id="drawingArea" style="background-color: #e2e3db; width: 1400px; height: 1200px; position: absolute;z-index: 10; border: 1px dashed #B2CCFF;">
     <canvas id="tshirt-canvas" width="1400" height="1200"></canvas>
 </div>
 {% endblock %}
