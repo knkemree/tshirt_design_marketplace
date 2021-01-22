@@ -49,9 +49,9 @@
   function rasterizeJSON(){
     // raterized = JSON.stringify(canvas.toObject());
     raterized = JSON.stringify(canvas.toDatalessJSON());
-    localStorage.setItem('Kanvas', raterized);
+    // localStorage.setItem('Kanvas', raterized);
     // sessionStorage.setItem("lastname", raterized);
-    // $('#id_json_data').val(raterized);
+    $('#id_json_data').val(raterized);
   }
 </script>
 
