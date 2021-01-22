@@ -5,6 +5,47 @@
 
 {% block javascript %}
 <script>
+  $( document ).ready(function() {
+    var reader = new FileReader();
+        reader.onload = function (event) {
+            var img = new Image();
+            var opts = {};
+            img.onload = function () {
+                var imgInstance = new fabric.Image(img, opts);
+                if (imgInstance.getWidth() > canvas.getWidth()) {
+                    imgInstance.scaleToWidth(canvas.getWidth());
+                }
+                if (imgInstance.getHeight() > canvas.getHeight()) {
+                    imgInstance.scaleToHeight(canvas.getHeight());
+                }
+                canvas.add(imgInstance);
+                canvas.renderAll();
+                img = null;
+
+                /* now that the image is loaded reduce it's size 
+                so the original large image is not stored */
+                /* assumes photo is object 0, need to code a function to       
+                 find the index otherwise */
+                var photoObjectIx = 0; 
+
+                var originalPhotoObject = canvas.getObjects()[photoObjectIx];
+                var nimg = new Image();
+                nimg.onload = function () {
+                    var imgInstance = new fabric.Image(nimg, { selectable: false });
+                    canvas.remove(originalPhotoObject);
+                    canvas.add(imgInstance);
+                    canvas.renderAll();
+                    nimg = null;
+                };
+                nimg.src = originalPhotoObject.toDataURL();
+
+            }
+            img.src = event.target.result;
+        }
+        reader.readAsDataURL(e.target.files[0]);
+});
+</script>
+<script>
   function rasterizeJSON(){
     // raterized = JSON.stringify(canvas.toObject());
     raterized = JSON.stringify(canvas.toDatalessJSON());
