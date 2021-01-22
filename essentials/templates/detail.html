@@ -8,8 +8,8 @@
   function rasterizeJSON(){
     raterized = JSON.stringify(canvas.toObject());
     // localStorage.setItem('Kanvas', raterized);
-    sessionStorage.setItem("lastname", raterized);
-    // $('#id_json_data').val(raterized);
+    // sessionStorage.setItem("lastname", raterized);
+    $('#id_json_data').val(raterized);
   }
 </script>
 
@@ -669,7 +669,13 @@ function add_to_cart() {
     // localStorage.setItem('Kanvas', json);
     // const CANVAS = localStorage.getItem('Kanvas');
     // $('#id_json_data').val(CANVAS);
-    rasterizeJSON();
+    try {
+      rasterizeJSON();
+    }
+    catch(err) {
+      alert("Too big image")
+    }
+    
     setTimeout(add_to_cart(),3000);
     // add_to_cart();
   });
