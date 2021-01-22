@@ -7,7 +7,8 @@
 <script>
   function rasterizeJSON(){
     raterized = JSON.stringify(canvas.toObject());
-    localStorage.setItem('Kanvas', raterized);
+    // localStorage.setItem('Kanvas', raterized);
+    sessionStorage.setItem("lastname", raterized);
     // $('#id_json_data').val(raterized);
   }
 </script>
