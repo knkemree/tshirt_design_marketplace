@@ -4,6 +4,18 @@
   Order Item
 {% endblock %}
 
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">Home</a> 
+    &rsaquo;
+    <a href="{% url 'admin:orders_order_changelist' %}">Orders</a>
+    &rsaquo;
+    <a href="{% url 'orders:admin_order_detail' order_item.order.id %}">Order #{{ order_item.order.id }}</a>
+    &rsaquo;
+    <a>Order Item #{{ order_item.id }}</a>
+</div>
+{% endblock %}
+
 {% block extrahead %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 <!-- jquery -->
@@ -50,7 +62,9 @@ $( document ).ready(function() {
 {% endblock %}
 
 {% block content %}
-<h1>Order Item Details</h1>
+<h2>Order Item</h2>
+<p>Order: #{{ order_item.order.id }}</p>
+<p>Item: #{{ order_item.id }}</p>
 <br>
 <button id="load-from-db">Load from database</button>
 <button id="exportToPNG">Export to PNG</button>
