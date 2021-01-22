@@ -97,7 +97,7 @@
     <tbody>
       {% for item in order.items.all %}
         <tr class="row{% cycle "1" "2" %}">
-          <td class='num'><img src="{{ item.end_product_img.url }}" alt="" style="height: 200px;"></td>
+          <td class='num'><img src="{% if item.end_product_img.url %}{{ item.end_product_img.url }}{% endif %}" alt="" style="height: 200px;"></td>
           <td>{{ item.variant }} / <strong>{{ item.variant.size }}</strong> / <strong>{{ item.variant.color.name }}</strong></td>
           <td class="num">{{ item.technique }}</td>
           <td class="num">${{ item.price|floatformat:2 }}</td>
