@@ -5,47 +5,6 @@
 
 {% block javascript %}
 <script>
-  $( document ).ready(function() {
-    var reader = new FileReader();
-        reader.onload = function (event) {
-            var img = new Image();
-            var opts = {};
-            img.onload = function () {
-                var imgInstance = new fabric.Image(img, opts);
-                if (imgInstance.getWidth() > canvas.getWidth()) {
-                    imgInstance.scaleToWidth(canvas.getWidth());
-                }
-                if (imgInstance.getHeight() > canvas.getHeight()) {
-                    imgInstance.scaleToHeight(canvas.getHeight());
-                }
-                canvas.add(imgInstance);
-                canvas.renderAll();
-                img = null;
-
-                /* now that the image is loaded reduce it's size 
-                so the original large image is not stored */
-                /* assumes photo is object 0, need to code a function to       
-                 find the index otherwise */
-                var photoObjectIx = 0; 
-
-                var originalPhotoObject = canvas.getObjects()[photoObjectIx];
-                var nimg = new Image();
-                nimg.onload = function () {
-                    var imgInstance = new fabric.Image(nimg, { selectable: false });
-                    canvas.remove(originalPhotoObject);
-                    canvas.add(imgInstance);
-                    canvas.renderAll();
-                    nimg = null;
-                };
-                nimg.src = originalPhotoObject.toDataURL();
-
-            }
-            img.src = event.target.result;
-        }
-        reader.readAsDataURL(e.target.files[0]);
-});
-</script>
-<script>
   function rasterizeJSON(){
     // raterized = JSON.stringify(canvas.toObject());
     raterized = JSON.stringify(canvas.toDatalessJSON());
@@ -94,7 +53,7 @@
 
 <script>
   $('#toJson').on('click', function(){
-    console.log(JSON.stringify(canvas.getActiveObject().toObject()))
+    console.log(JSON.stringify(canvas.toSVG()))
   })
 </script>
 
@@ -325,51 +284,15 @@ $(document).on('change', '#post-form',function(e){
 
   var fonts = ["Graduate",'Bangers','Boogaloo','Caveat','Caveat Brush','Chela One','Cherry Swash','Coiny','Concert One','Creepster','Fredoka One','Germania One','Knewave','Montserrat','Open Sans','Oswald','Permanent Marker','Rammetto One','Shrikhand','Spicy Rice','Vampiro One','Vollkorn','Wendy One'];
 
-  function updateTshirtImage(imageURL){
-      // If the user doesn't pick an option of the select, clear the canvas
-      if(!imageURL){
-          canvas.clear();
-      }
-
-      // Create a new image that can be used in Fabric with the URL
-      fabric.Image.fromURL(imageURL, function(img) {
-          // Define the image as background image of the Canvas
-          canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
-              // Scale the image to the canvas size
-              scaleX: canvas.width / img.width,
-              scaleY: canvas.height / img.height
-          });
-      });
-  }
-  
-  document.getElementById("id_uploaded_image").addEventListener("change", function(){
-      updateTshirtImage(this.value);
-  }, false);
-
-
-  function readURL(input) {
-    if (input.files && input.files[0]) {
-      var reader = new FileReader();
-      
-      reader.onload = function(e) {
-        // $('#blah').attr('src', e.target.result);
-        $('#id_design').val(e.target.result);
-      }
-      
-      reader.readAsDataURL(input.files[0]); // convert to base64 string
-    }
-  }
-
-  $("#id_uploaded_image").change(function() {
-    readURL(this);
-  });
   // When the user clicks on upload a custom picture
   document.getElementById('id_uploaded_image').addEventListener("change", function(e){
-      var reader = new FileReader();
+    console.log('image changed')
+      var reader = new FileReader();  
       
       reader.onload = function (event){
           var imgObj = new Image();
           imgObj.src = event.target.result;
+          $('#id_design').val(e.target.result);
           // When the picture loads, create the image in Fabric.js
           imgObj.onload = function () {
               var img = new fabric.Image(imgObj);
@@ -1080,9 +1003,9 @@ function add_to_cart() {
             
           <textarea class="form-control" id="text-string" name="text" id="" cols="30" rows="5" placeholder="Start typing here..."></textarea>
           <button id="add-text" type="button" class="mt-3 btn btn-primary btn-sm">Add Text</button>
-          <!-- <button id='toJson' type="button">Render to Json</button>
+          <button id='toJson' type="button">Render to Json</button>
           <button id="saveToLocal">Save to local</button>
-          <button id='loadFromJSON'>Load from local</button> -->
+          <button id='loadFromJSON'>Load from local</button>
           <!-- <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button> -->
         </div>
         
