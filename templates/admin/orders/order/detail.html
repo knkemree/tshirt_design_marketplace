@@ -74,7 +74,12 @@
     <th>Status</th>
     <td>{% if order.paid %}Paid{% else %}Pending payment{% endif %}</td>
   </tr>
+  <tr>
+    <th>Note</th>
+    <td>{% if order.note %}{{ order.note }}{% endif %}</td>
+  </tr>
 </table>
+<br>
 <div class="module">
   <h2>Items bought</h2>
   <table style="width:100%">

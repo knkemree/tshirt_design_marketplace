@@ -113,3 +113,5 @@ get-pip.py
 db.sqlite3
 
 static_cdn
+
+.vscode

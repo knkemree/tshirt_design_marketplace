@@ -146,7 +146,7 @@
     $.ajax({ 
     url: "{% url 'essentials:dynamic_canvas' %}",
     data: {
-      'product_id': {{ product.id }},
+      'product_id': $('#productid').val(),
     },
     dataType: 'json',
     success: function(data){

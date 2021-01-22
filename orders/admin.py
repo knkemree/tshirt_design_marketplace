@@ -65,6 +65,7 @@ class OrderAdmin(admin.ModelAdmin):
                     'updated',order_detail,
                     order_pdf,
                     ]
+    list_editable = ['fulfillment']
     #search_fields = ['ordered_by',]
     # list_display_links =['customer_name']
     list_filter = ['ordered_by','paid', 'fulfillment','created', 'updated']
