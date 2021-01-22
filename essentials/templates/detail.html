@@ -660,13 +660,13 @@ function add_to_cart() {
 
 <script>
 
-  // $('#addtocartform').on('submit', function(event){
-  //   event.preventDefault();
-  //   console.log("form submitted!"); 
-  //   rasterizeJSON();
-  //   setTimeout(add_to_cart(),3000);
-  //   // add_to_cart();
-  // });
+  $('#addtocartform').on('submit', function(event){
+    event.preventDefault();
+    console.log("form submitted!"); 
+    rasterizeJSON();
+    setTimeout(add_to_cart(),10000);
+    // add_to_cart();
+  });
 
   $( "#addtocartform" ).mouseover(function() {
     canvas.discardActiveObject();
