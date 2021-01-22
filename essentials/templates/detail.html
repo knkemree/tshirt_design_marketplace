@@ -7,6 +7,7 @@
 <script>
   function rasterizeJSON(){
     raterized = JSON.stringify(canvas.toObject());
+    // localStorage.setItem('Kanvas', json);
     $('#id_json_data').val(raterized);
   }
 </script>
@@ -663,7 +664,11 @@ function add_to_cart() {
   $('#addtocartform').on('submit', function(event){
     event.preventDefault();
     console.log("form submitted!"); 
-    rasterizeJSON();
+    const json = JSON.stringify(canvas);
+    localStorage.setItem('Kanvas', json);
+    const CANVAS = localStorage.getItem('Kanvas');
+    $('#id_json_data').val(CANVAS);
+    // rasterizeJSON();
     setTimeout(add_to_cart(),3000);
     // add_to_cart();
   });
