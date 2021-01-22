@@ -16,6 +16,9 @@
 </div>
 {% endblock %}
 
+{% block extrastyle %}
+{% endblock %}
+
 {% block extrahead %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 <!-- jquery -->
@@ -56,7 +59,36 @@ $( document ).ready(function() {
       if(keyCode == 46){
           canvas.remove(canvas.getActiveObject());
       }
-  }, false);
+    }, false);
+
+    var onObjectSelected = function (){
+        $('#type span[class=replace]').append(canvas.getActiveObject().type)
+        $('#text').append(canvas.getActiveObject().text)
+        $('#font-family').append(canvas.getActiveObject().fontFamily)
+        $('#font-color').append(canvas.getActiveObject().fill)
+        $('#font-size').append(canvas.getActiveObject().fontSize)
+        $('#font-weight').append(canvas.getActiveObject().fontWeight)
+        $('#font-style').append(canvas.getActiveObject().fontStyle)
+        $('#underline').append(canvas.getActiveObject().underline)
+        $('#spacing').append(canvas.getActiveObject().charSpacing)
+        $('#outline').append(canvas.getActiveObject().stroke)
+        $('#shadow').append(canvas.getActiveObject().shadow.color)        
+        console.log('selected')
+        $('#font-info').css({display: 'block'})
+        canvas.requestRenderAll();
+
+    }
+
+    var onObjectUnSelected = function(){
+        console.log('deselected')
+        $('.replaceme').html('kk');
+        // $('#font-info > tbody > tr > td').parent('tr').empty();
+    }
+
+    canvas.on('selection:created', onObjectSelected);
+    canvas.on('selection:cleared', onObjectUnSelected);
+
+    
 });
 </script>
 {% endblock %}
@@ -69,6 +101,35 @@ $( document ).ready(function() {
 <button id="load-from-db">Load from database</button>
 <button id="exportToPNG">Export to PNG</button>
 <br>
+<br>
+<table id="font-info" style="display: none;">
+    <tr>
+      <th>Type</th>
+      <th>Text</th>
+      <th>Font Family</th>
+      <th>Font Color</th>
+      <th>Font Size</th>
+      <th>Font Weight</th>
+      <th>Font Style</th>
+      <th>Underline</th>
+      <th>Spacing</th>
+      <th>Outline</th>
+      <th>Shadow</th>
+    </tr>
+    <tr>
+      <td id="type"><span class="replace"></span></td>
+      <td id='text'></td>
+      <td id='font-family'></td>
+      <td id='font-color'></td>
+      <td id='font-size'></td>
+      <td id='font-weight'></td>
+      <td id='font-style'></td>
+      <td id='underline'></td>
+      <td id='spacing'></td>
+      <td id='outline'></td>
+      <td id='shadow'></td>
+    </tr>
+  </table>
 <p>
     <input type="hidden" name="json_content" id="json_content" value="{{ order_item.dump_json }}">
     <!-- <textarea name="json_content" id="json_content" cols="30" rows="10">{{ order_item.dump_json }}</textarea> -->

@@ -2,16 +2,6 @@
 {% load static %}
 
 {% block title %}{{ variant }}{% endblock %}
-{% block breadcrumbs %}
-  <div class="breadcrumbs">
-    <a href="{% url 'admin:index' %}">Home</a> &rsaquo;
-    <a href="{% url 'admin:orders_order_changelist' %}">Orders</a>&rsaquo;
-    <!-- <a href="{% url "admin:orders_order_change" order.id %}">Order {{ order.id }}</a> -->
-    <a href="">Order #{{ order.id }}</a>
-    &rsaquo;
-    <a>Details</a>
-  </div>
-{% endblock %}
 
 {% block javascript %}
 <script>
@@ -64,40 +54,12 @@
   })
 </script>
 
-<script>
-  function onObjectSelected(e) {	 
-      console.log('object selected')
-	    var selectedObject = e.target;
-	    $("#text-string").val("");
-	    selectedObject.hasRotatingPoint = true
-	    if (selectedObject && selectedObject.type === 'text') {
-	    	//display text editor	    	
-	    	$("#texteditor").css('display', 'block');
-	    	$("#text-string").val(selectedObject.getText());	    	
-	    	// $('#text-fontcolor').miniColors('value',selectedObject.fill);
-	    	// $('#text-strokecolor').miniColors('value',selectedObject.strokeStyle);	
-	    	// $("#imageeditor").css('display', 'block');
-	    }
-	    else if (selectedObject && selectedObject.type === 'image'){
-	    	//display image editor
-	    	$("#texteditor").css('display', 'none');	
-	    	// $("#imageeditor").css('display', 'block');
-	    }
-	  }
-	 function onSelectedCleared(e){
-		 $("#texteditor").css('display', 'none');
-		 $("#text-string").val("");
-    //  $("#imageeditor").css('display', 'none');
-   }
-</script>
 
 <script>
   $('#add-text').on('click', function(){
     var text = $('#text-string').val();
     if(text != ''){
       Addtext(text);
-      console.log(text)
-      console.log('hey')
       $('#text-string').val('')
     }else{
       alert('Text area empty')
@@ -612,6 +574,7 @@ $(document).on('change', '#post-form',function(e){
   });
 
   canvas.on('object:selected', function(options) {
+    console.log('hey')
       if (options.target) {
       $("textarea#add-text-value").val(options.target.text);
       $("#text-font-size").val(options.target.fontSize);
@@ -643,7 +606,7 @@ $(document).on('change', '#post-form',function(e){
 			  'object:modified': function(e) {		  	
 			    e.target.opacity = 1;
 			  },
-			 'object:selected':onObjectSelected,
+			 
 			 'selection:cleared':onSelectedCleared
 		 });
 
@@ -773,6 +736,7 @@ function add_to_cart() {
   canvas.on('object:added', canvasModifiedCallback);
   canvas.on('object:removed', canvasModifiedCallback);
   canvas.on('object:modified', canvasModifiedCallback);
+  
   
 </script>
 {% endblock %}
