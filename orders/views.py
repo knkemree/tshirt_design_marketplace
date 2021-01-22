@@ -88,8 +88,8 @@ def order_create(request):
                 OrderItem.objects.create(order=order,
                                         variant_id=item['variant_id'],
                                         price=item['price'],
-                                        end_product_img=end_product_img,
-                                        image = image,
+                                        #end_product_img=end_product_img,
+                                        #image = image,
                                         quantity=item['quantity'],
                                         technique=item['technique'],
                                         json_data = item['json_data']

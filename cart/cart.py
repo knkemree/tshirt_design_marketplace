@@ -23,7 +23,7 @@ class Cart(object):
         self.coupon_id = self.session.get('coupon_id')    
         
 
-    def add(self, art, variant, placement, technique, end_product_img, mockup, design, json_data=None, quantity=1, override_quantity=False,):
+    def add(self, art, variant, placement, technique, end_product_img=None, mockup=None, design=None, json_data=None, quantity=1, override_quantity=False,):
         """
         Add a product to the cart or update its quantity.
         """
