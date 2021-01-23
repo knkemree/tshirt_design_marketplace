@@ -73,6 +73,6 @@ class OrderAdmin(admin.ModelAdmin):
     actions = [export_to_csv]
     readonly_fields = ('paid','stripe_id')
 
-# @admin.register(OrderItem)
-# class OrderItemAdmin(admin.ModelAdmin):
-#     list_display = ['id','order','variant','technique','price','quantity',order_item_detail]
+@admin.register(OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ['id','order','variant','technique','placement','price','quantity',order_item_detail]

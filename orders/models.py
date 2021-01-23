@@ -69,10 +69,9 @@ class OrderItem(models.Model):
                                 related_name='order_items',
                                 on_delete=models.SET_NULL, null=True, blank=True)
     technique = models.CharField(max_length=100, blank=True, null=True)
- 
+    placement = models.CharField(max_length=100, blank=True, null=True)
     end_product_img = models.ImageField(upload_to='end_product_imgs/', null=True, blank=True)
     image = models.ImageField(upload_to='designs/', null=True, blank=True)
-    
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     quantity = models.PositiveIntegerField(default=1)

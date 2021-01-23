@@ -48,6 +48,7 @@ class Cart(object):
                                     'design': design,
                                     'json_data':json_data,
                                     'technique': str(method),
+                                    'placement':str(placement)
                                     }
         if override_quantity:
             self.cart[art_id]['quantity'] = quantity

@@ -92,6 +92,7 @@ def order_create(request):
                                         image = image,
                                         quantity=item['quantity'],
                                         technique=item['technique'],
+                                        placement = item['placement'],
                                         json_data = item['json_data']
                                         )
             # clear the cart
