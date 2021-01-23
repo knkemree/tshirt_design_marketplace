@@ -63,7 +63,7 @@ class Order(models.Model):
 class OrderItem(models.Model):
     order = models.ForeignKey(Order,
                               related_name='items',
-                              on_delete=models.SET_NULL, null=True, blank=True,
+                              on_delete=models.CASCADE, null=True, blank=True,
                               )
     variant = models.ForeignKey(Variant,
                                 related_name='order_items',
