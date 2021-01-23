@@ -88,6 +88,7 @@
         <th>Preview</th>
         <th>Product</th>
         <th>Technique</th>
+        <th>Placement</th>
         <th>Price</th>
         <th>Quantity</th>
         <th>Total</th>
@@ -100,6 +101,7 @@
           <td class='num'><img src="{% if item.end_product_img.url %}{{ item.end_product_img.url }}{% endif %}" alt="" style="height: 200px;"></td>
           <td>{{ item.variant }} / <strong>{{ item.variant.size }}</strong> / <strong>{{ item.variant.color.name }}</strong></td>
           <td class="num">{{ item.technique }}</td>
+          <td class="num">{% if item.placement %}{{ item.placement }}{% endif %}</td>
           <td class="num">${{ item.price|floatformat:2 }}</td>
           <td class="num">{{ item.quantity }}</td>
           <td class="num">${{ item.get_customer_cost|floatformat:2 }}</td>
@@ -107,7 +109,7 @@
         </tr>
       {% endfor %}
       <tr class="total">
-        <td colspan="6">Total Item QTY: {{ order.total_item_qty }}</td>
+        <td colspan="7">Total Item QTY: {{ order.total_item_qty }}</td>
         <td class="num">Total: ${{ order.get_total_cost|floatformat:2 }}</td>
       </tr>
     </tbody>
