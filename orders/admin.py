@@ -75,4 +75,6 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
-    list_display = ['id','order','image_tag','customer_name','recipient','ready_to_ship','technique','placement','get_customer_cost','quantity',order_item_detail,'created_at','updated_at']
+    list_display = ['id','order','image_tag','customer_name','recipient','log_entry','ready_to_ship','technique','placement','get_customer_cost','quantity',order_item_detail,'created_at','updated_at']
+    list_editable = ['ready_to_ship',]
+    #list_display_links = ('order',)
