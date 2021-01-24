@@ -101,6 +101,11 @@ class OrderItem(models.Model):
     def dump_json(self):
         return json.dumps(self.json_data)
 
+    def image_tag(self):
+        img = self.end_product_img
+        if img is not None:
+                return mark_safe('<img src="{}" height="150" />'.format(img.url,))
+
     
 
     
