@@ -10,6 +10,8 @@ from coupons.models import Coupon
 import json
 from django.utils.safestring import mark_safe
 
+from django.contrib.admin.models import LogEntry
+
 class Order(models.Model):
     ordered_by = models.ForeignKey(Seller, on_delete=models.CASCADE)
     recipient = models.CharField(max_length=50, blank=True, null=True)
@@ -75,8 +77,10 @@ class OrderItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     quantity = models.PositiveIntegerField(default=1)
-    #ready_to_ship = models.BooleanField(default=False, blank=True, null=True)
+    ready_to_ship = models.BooleanField(default=False, blank=True, null=True)
     json_data = models.JSONField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
 
     def __str__(self):
