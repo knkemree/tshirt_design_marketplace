@@ -53,7 +53,7 @@ class OrderItemInline(admin.TabularInline):
     model = OrderItem
     exclude = ['json_data','cost','end_product_img','image']
     raw_id_fields = ['variant']
-    readonly_fields = ('technique','price','quantity','log_entry','placement')
+    readonly_fields = ('technique','placement','price','quantity','log_entry')
     show_change_link = True
     extra = 0
 
