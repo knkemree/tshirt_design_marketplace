@@ -53,7 +53,7 @@ class OrderItemInline(admin.TabularInline):
     model = OrderItem
     exclude = ['json_data','cost','end_product_img','image']
     raw_id_fields = ['variant']
-    readonly_fields = ('technique','price','quantity',)
+    readonly_fields = ('technique','price','quantity','ready_to_ship')
     show_change_link = True
     extra = 0
 
@@ -77,4 +77,10 @@ class OrderAdmin(admin.ModelAdmin):
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = ['id','order','image_tag','customer_name','recipient','ready_to_ship','log_entry','technique','placement','get_customer_cost','quantity',order_item_detail,'created_at','updated_at']
     list_editable = ['ready_to_ship',]
-    #list_display_links = ('order',)
+    readonly_fields = ('ready_to_ship',)
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return ['ready_to_ship']
+        else:
+            return []
