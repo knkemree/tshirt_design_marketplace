@@ -77,7 +77,7 @@ class OrderItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     quantity = models.PositiveIntegerField(default=1)
-    ready_to_ship = models.BooleanField(default=False, blank=True, null=True)
+    ready_to_ship = models.BooleanField(default=False)
     log_entry = models.CharField(max_length=200, blank=True, null=True)
     json_data = models.JSONField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
