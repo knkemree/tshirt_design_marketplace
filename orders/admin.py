@@ -48,14 +48,17 @@ def order_item_detail(obj):
 
 
 #@admin_thumbnails.thumbnail('image')
-# @admin_thumbnails.thumbnail('image')
+#@admin_thumbnails.thumbnail('image')
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
+    #fields = ['variant',]
     exclude = ['json_data','cost','end_product_img','image']
     raw_id_fields = ['variant']
     readonly_fields = ('technique','placement','price','quantity','log_entry')
     show_change_link = True
     extra = 0
+
+
 
 
 @admin.register(Order)
@@ -77,6 +80,7 @@ class OrderAdmin(admin.ModelAdmin):
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = ['id','order','image_tag','customer_name','recipient','ready_to_ship','log_entry','technique','placement','get_customer_cost','quantity',order_item_detail,'created_at','updated_at']
     list_editable = ['ready_to_ship',]
+    actions = [export_to_csv]
     readonly_fields = ('log_entry','json_data')
 
     def get_readonly_fields(self, request, obj=None):
