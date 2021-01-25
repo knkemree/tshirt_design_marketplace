@@ -78,7 +78,8 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ['category']
     #readonly_fields = ('image_tag',)
     inlines = [VariantInline, 
-    MethodInline, PlacementInline
+    MethodInline, 
+    PlacementInline
     ]
     prepopulated_fields = {'slug': ('title',)}
 
@@ -110,7 +111,7 @@ admin.site.register(Color, ColorAdmin)
 admin.site.register(Size, SizeAdmin)
 admin.site.register(TechniqueBase)
 admin.site.register(Variant, VariantAdmin)
-admin.site.register(Method)
-admin.site.register(Placement)
+#admin.site.register(Method)
+#admin.site.register(Placement)
 admin.site.register(PlacementBase)
 admin.site.register(Font)

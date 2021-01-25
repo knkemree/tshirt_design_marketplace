@@ -16,6 +16,7 @@ from django.contrib.auth.models import Group, Permission, PermissionsMixin
 from django.db.models.aggregates import Min
 
 
+
 class Category(MPTTModel):
     parent = TreeForeignKey('self',blank=True, null=True ,related_name='children', on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
@@ -41,23 +42,7 @@ class Category(MPTTModel):
         return reverse('essentials:product_list_by_category',
                        args=[self.slug])
 
-class Font(models.Model):
-    name = models.CharField(max_length=50) 
 
-    def __str__(self):
-        return self.name
-
-class TechniqueBase(models.Model):
-    name = models.CharField(max_length=100)
-    fonts = models.ManyToManyField(Font, related_name='technique_bases', blank=True, null=True) 
-    def __str__(self):
-        return self.name
-
-class Technique(models.Model):
-    technique = models.ForeignKey(TechniqueBase, on_delete=models.CASCADE, blank=True, null=True)
-       
-    def __str__(self):
-        return str(self.technique)
 
 
 class Product(models.Model):
@@ -69,7 +54,8 @@ class Product(models.Model):
 
     )
     category = models.ForeignKey(Category, on_delete=models.CASCADE) #many to one relation with Category
-    technique = models.ManyToManyField(Technique, related_name='products', blank=True, null=True)
+    #method = models.ForeignKey(Method, on_delete=models.CASCADE, related_name='products', blank=True, null=True)
+    #placement = models.ForeignKey(Placement, on_delete=models.CASCADE, related_name='products', blank=True, null=True)
     title = models.CharField(max_length=150)
     slug = models.SlugField(null=False, unique=True)
     tags = TaggableManager()
@@ -122,6 +108,71 @@ class Product(models.Model):
     #         cnt = int(reviews["count"])
     #     return cnt
 
+class Font(models.Model):
+    name = models.CharField(max_length=50) 
+
+    def __str__(self):
+        return self.name
+
+class TechniqueBase(models.Model):
+    name = models.CharField(max_length=100)
+    fonts = models.ManyToManyField(Font, related_name='technique_bases', blank=True, null=True) 
+
+    
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Technique"
+        verbose_name_plural = "Techniques"
+
+
+class Method(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='methods', blank=True, null=True)
+    technique = models.ForeignKey(TechniqueBase, on_delete=models.CASCADE, blank=True, null=True)
+    price = models.DecimalField(max_digits=12, decimal_places=2,default=0, help_text="price for this printing method")
+    row_no = models.IntegerField(default=0, blank=True, null=True)
+
+    def __str__(self):
+        return self.technique.name
+
+    class Meta:
+        ordering = ['row_no']
+
+    def method_price(self):
+        return self.price
+
+
+class PlacementBase(models.Model):
+    name = models.CharField(max_length=100, blank=True, null=True, help_text="e.g. 'front' or 'back'")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Placement"
+        verbose_name_plural = "Placements"
+
+class Placement(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, related_name='placements', blank=True, null=True,)
+    placement = models.ForeignKey(PlacementBase, on_delete=models.SET_NULL, related_name='placements', blank=True, null=True,) 
+    row_no = models.IntegerField(default=0, blank=True, null=True)
+    price = models.DecimalField(max_digits=12, decimal_places=2,default=0, help_text="price for this placement")
+    image = models.ImageField(upload_to='background_transparent_images/')
+    width = models.CharField(max_length=10, blank=True, null=True)
+    height = models.CharField(max_length=10, blank=True, null=True)
+    top = models.CharField(max_length=10, blank=True, null=True)
+    left = models.CharField(max_length=10, blank=True, null=True)
+    class Meta:
+        ordering = ['row_no']
+
+
+    def __str__(self):
+        return self.placement.name
+
+    def placement_price(self):
+        return self.price
+
 class Size(models.Model):
     name = models.CharField(max_length=20)
     row_no = models.IntegerField(default=0)
@@ -151,32 +202,7 @@ class Color(models.Model):
     #     if img is not None:
     #             return mark_safe('<img src="{}" height="50" />'.format(img.url,))
 
-    def product_preview(self):
-        images = Mockup.objects.filter(item_color_id=self.id)
-        img = images[0]
-        try:
-            img = images[0]
-            if img is not None:
-                    return mark_safe('<img src="{}" height="100" />'.format(img.image.url,))
-        except:
-            pass
 
-
-class Mockup(models.Model):
-    item_color = models.ForeignKey(Color, on_delete=models.CASCADE,blank=True,null=True, related_name='mockups')
-    image = models.ImageField(blank=True, upload_to='images/')
-    active = models.BooleanField(default=True)
-
-    class Meta:
-        ordering = ('item_color',)
-
-    def __str__(self):
-        return 'image-id-'+str(self.id)
-
-    def image_tag(self):
-        img = self.image
-        if img is not None:
-             return mark_safe('<img src="{}" height="150" />'.format(img.url,))
 
 class Variant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants")
@@ -230,49 +256,7 @@ class Design(models.Model):
         else:
             return ""
 
-class Method(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='methods', blank=True, null=True)
-    technique = models.ForeignKey(TechniqueBase, on_delete=models.CASCADE, blank=True, null=True)
-    price = models.DecimalField(max_digits=12, decimal_places=2,default=0, help_text="price for this printing method")
-    row_no = models.IntegerField(default=0, blank=True, null=True)
 
-    def __str__(self):
-        return self.technique.name
-
-    class Meta:
-        ordering = ['row_no']
-
-    def method_price(self):
-        return self.price
-
-
-
-
-class PlacementBase(models.Model):
-    name = models.CharField(max_length=100, blank=True, null=True, help_text="e.g. 'front' or 'back'")
-
-    def __str__(self):
-        return self.name
-
-class Placement(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, related_name='placements', blank=True, null=True,)
-    placement = models.ForeignKey(PlacementBase, on_delete=models.SET_NULL, related_name='placements', blank=True, null=True,) 
-    row_no = models.IntegerField(default=0, blank=True, null=True)
-    price = models.DecimalField(max_digits=12, decimal_places=2,default=0, help_text="price for this placement")
-    image = models.ImageField(upload_to='background_transparent_images/')
-    width = models.CharField(max_length=10, blank=True, null=True)
-    height = models.CharField(max_length=10, blank=True, null=True)
-    top = models.CharField(max_length=10, blank=True, null=True)
-    left = models.CharField(max_length=10, blank=True, null=True)
-    class Meta:
-        ordering = ['row_no']
-
-
-    def __str__(self):
-        return self.placement.name
-
-    def placement_price(self):
-        return self.price
 
 
 
