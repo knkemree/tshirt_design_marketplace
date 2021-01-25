@@ -48,7 +48,7 @@ def product_list(request, category_slug=None):
 def product_detail(request, id, slug):
     query = request.GET.get('q')
     product = get_object_or_404(Product,id=id,slug=slug,active=True)
-    techniques = product.technique.all()
+    #techniques = product.technique.all()
     
     if request.method == 'POST':
         variant_id = request.POST.get('variantid')                                                                                                                                                  
@@ -65,7 +65,7 @@ def product_detail(request, id, slug):
         color = colors[0].color.name
     
     cart_product_form = CartAddProductForm()
-    context = {'product': product,'cart_product_form': cart_product_form,'sizes':sizes, 'colors':colors, 'color':color, 'variant':variant, 'techniques':techniques,}
+    context = {'product': product,'cart_product_form': cart_product_form,'sizes':sizes, 'colors':colors, 'color':color, 'variant':variant,}
     return render(request,'detail.html',context)
 
 def ajaxcolor(request):

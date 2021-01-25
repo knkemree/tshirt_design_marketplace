@@ -129,7 +129,7 @@ class TechniqueBase(models.Model):
 
 class Method(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='methods', blank=True, null=True)
-    technique = models.ForeignKey(TechniqueBase, on_delete=models.CASCADE, blank=True, null=True)
+    technique = models.ForeignKey(TechniqueBase, on_delete=models.SET_NULL, blank=True, null=True)
     price = models.DecimalField(max_digits=12, decimal_places=2,default=0, help_text="price for this printing method")
     row_no = models.IntegerField(default=0, blank=True, null=True)
 
@@ -154,15 +154,15 @@ class PlacementBase(models.Model):
         verbose_name_plural = "Placements"
 
 class Placement(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, related_name='placements', blank=True, null=True,)
-    placement = models.ForeignKey(PlacementBase, on_delete=models.SET_NULL, related_name='placements', blank=True, null=True,) 
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='placements', blank=True, null=True,)
+    placement = models.ForeignKey(PlacementBase, on_delete=models.SET_NULL, related_name='placements', blank=True, null=True, default=1) 
     row_no = models.IntegerField(default=0, blank=True, null=True)
     price = models.DecimalField(max_digits=12, decimal_places=2,default=0, help_text="price for this placement")
     image = models.ImageField(upload_to='background_transparent_images/')
-    width = models.CharField(max_length=10, blank=True, null=True)
-    height = models.CharField(max_length=10, blank=True, null=True)
-    top = models.CharField(max_length=10, blank=True, null=True)
-    left = models.CharField(max_length=10, blank=True, null=True)
+    width = models.CharField(max_length=10, blank=True, null=True, default='200px')
+    height = models.CharField(max_length=10, blank=True, null=True, default='300px')
+    top = models.CharField(max_length=10, blank=True, null=True, default='75px')
+    left = models.CharField(max_length=10, blank=True, null=True, default='150px')
     class Meta:
         ordering = ['row_no']
 
@@ -206,8 +206,8 @@ class Color(models.Model):
 
 class Variant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants")
-    size = models.ForeignKey(Size, on_delete=models.CASCADE,blank=True,null=True)
-    color = models.ForeignKey(Color, on_delete=models.CASCADE,blank=True,null=True)
+    size = models.ForeignKey(Size, on_delete=models.SET_NULL,blank=True,null=True)
+    color = models.ForeignKey(Color, on_delete=models.SET_NULL,blank=True,null=True)
     #technique = models.ForeignKey(Technique, on_delete=models.CASCADE,blank=True,null=True)
     quantity = models.IntegerField(default=1)
     cost = models.DecimalField(max_digits=12, decimal_places=2,default=0)
