@@ -5,66 +5,63 @@
 
 {% block javascript %}
 <script>
-  // Text formatting actions
-var underline = document.getElementById('btn-underline');
-var bold = document.getElementById('btn-bold');
-var italic = document.getElementById('btn-italic');
+$(document).ready(function(){
+    // Text formatting actions
 
-underline.addEventListener('click', function() {
-  dtEditText('underline');
-});
+  $('#btn-underline').on('click', function(){
+    dtEditText('underline');
+  });
+  $('#btn-bold').on('click', function(){
+    dtEditText('bold');
+  });
+  $('#btn-italic').on('click', function(){
+    dtEditText('italic');
+  }); 
 
-bold.addEventListener('click', function() {
-  dtEditText('bold');
-}); 
+  // Functions
+  function dtEditText(action) {
+      var a = action;
+      var o = canvas.getActiveObject();
+      var t;
 
-italic.addEventListener('click', function() {
-  dtEditText('italic');
-}); 
+      // If object selected, what type?
+      if (o) {
+          t = o.get('type');
+      }
 
-// Functions
-function dtEditText(action) {
-    var a = action;
-    var o = canvas.getActiveObject();
-    var t;
+      if (o && t === 'i-text') {
+          switch(a) {
+              case 'bold':				
+                  var isBold = dtGetStyle(o, 'fontWeight') === 'bold';
+                  dtSetStyle(o, 'fontWeight', isBold ? '' : 'bold');
+              break;
 
-    // If object selected, what type?
-    if (o) {
-        t = o.get('type');
-    }
+              case 'italic':
+                  var isItalic = dtGetStyle(o, 'fontStyle') === 'italic';
+                  dtSetStyle(o, 'fontStyle', isItalic ? '' : 'italic');
+              break;
 
-    if (o && t === 'i-text') {
-        switch(a) {
-            case 'bold':				
-                var isBold = dtGetStyle(o, 'fontWeight') === 'bold';
-                dtSetStyle(o, 'fontWeight', isBold ? '' : 'bold');
-            break;
+              case 'underline':
+                  var isUnderline = dtGetStyle(o, 'textDecoration') === 'underline';
+                  dtSetStyle(o, 'textDecoration', isUnderline ? '' : 'underline');
+              break;
+              canvas.renderAll();
+          }
+      }
+  }
 
-            case 'italic':
-                var isItalic = dtGetStyle(o, 'fontStyle') === 'italic';
-                dtSetStyle(o, 'fontStyle', isItalic ? '' : 'italic');
-            break;
+  // Get the style
+  function dtGetStyle(object, styleName) {
+      return object[styleName];
+  }
 
-            case 'underline':
-                var isUnderline = dtGetStyle(o, 'textDecoration') === 'underline';
-                dtSetStyle(o, 'textDecoration', isUnderline ? '' : 'underline');
-            break;
-            canvas.renderAll();
-        }
-    }
-}
-
-// Get the style
-function dtGetStyle(object, styleName) {
-    return object[styleName];
-}
-
-// Set the style
-function dtSetStyle(object, styleName, value) {
-    object[styleName] = value;
-    object.set({dirty: true});
-    canvas.renderAll();
-}  
+  // Set the style
+  function dtSetStyle(object, styleName, value) {
+      object[styleName] = value;
+      object.set({dirty: true});
+      canvas.renderAll();
+  }
+})  
 </script>
 <script>
   function rasterizeJSON(){
