@@ -38,9 +38,12 @@ def order_pdf(obj):
 order_pdf.short_description = 'Invoice'
 
 def order_detail(obj):
-    url = reverse('orders:admin_order_detail', args=[obj.id])
+    #return mark_safe(f'<a href="admin/orders/order/{obj.id}/change/">View</a>')
+    # url = reverse('orders:admin_order_detail', args=[obj.id])
+    # return mark_safe(f'<a href="{url}">View</a>')
+    url = reverse('admin:%s_%s_change' % (obj._meta.app_label,  obj._meta.model_name),  args=[obj.id] )
     return mark_safe(f'<a href="{url}">View</a>')
-
+    #return u'<a href="%s">Edit %s</a>' % (url,  obj.__str__)
 
 def order_item_detail(obj):
     url = reverse('orders:admin_order_item_detail', args=[obj.id])
@@ -51,12 +54,34 @@ def order_item_detail(obj):
 #@admin_thumbnails.thumbnail('image')
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
-    #fields = ['variant',]
-    exclude = ['json_data','cost','end_product_img','image']
-    raw_id_fields = ['variant']
-    readonly_fields = ('technique','placement','price','quantity','log_entry')
     show_change_link = True
     extra = 0
+    fields = ['preview','item','size','color','technique','placement','price','quantity','ready_to_ship','log_entry','details']
+    #exclude = ['json_data','cost','end_product_img','image']
+    raw_id_fields = ['variant',]
+    readonly_fields = ('item','size','color','preview','technique','placement','price','quantity','ready_to_ship','log_entry','details')
+    list_editable = ['ready_to_ship']
+    
+
+
+    def preview(self, obj):
+        #return mark_safe("""<img src="/images/%s.jpg" />""" % obj.end_product_img)
+        img = obj.end_product_img
+        if img is not None:
+            return mark_safe('<img src="{}" height="150" />'.format(img.url,))
+
+    def item(self, obj):
+        return '{}'.format(obj.variant)
+    def size(self, obj):
+        return '{}'.format(obj.variant.size.name)
+    def color(self, obj):
+        return '{}'.format(obj.variant.color.name)
+    def ready_to_ship(self,obj):
+        return obj.ready_to_ship
+
+    def details(self, obj):
+        id = obj.id
+        return mark_safe(f'<a href="/orders/admin/orderitem/{id}/">View</a>')
 
 
 
@@ -65,16 +90,17 @@ class OrderItemInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'customer_name','recipient', 
                     'total', 'paid', 'fulfillment',
-                    'updated',order_detail,
+                    'updated',
+                    order_detail,
                     order_pdf,
                     ]
     list_editable = ['fulfillment']
-    #search_fields = ['ordered_by',]
-    # list_display_links =['customer_name']
+    search_fields = ['id',]
+    list_display_links =['id',]
     list_filter = ['ordered_by','paid', 'fulfillment','created', 'updated']
     inlines = [OrderItemInline]
     actions = [export_to_csv]
-    readonly_fields = ('paid','stripe_id')
+    readonly_fields = ('paid','stripe_id','note')
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
