@@ -7,7 +7,7 @@ class OrderCreateForm(forms.ModelForm):
     class Meta:
         model = Order
         
-        fields = ['recipient','shipping_label','note']
+        fields = ['recipient','shipping_label','note','attachment']
         widgets = {
             'note': Textarea(attrs={'cols': 30, 'rows': 6}),
         }

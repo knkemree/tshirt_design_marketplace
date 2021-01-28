@@ -26,8 +26,8 @@
         <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-start">
-              <li class="breadcrumb-item"><a class="text-nowrap" href="index.html"><i class="czi-home"></i>Home</a></li>
-              <li class="breadcrumb-item text-nowrap"><a href="shop-grid-ls.html">Shop</a>
+              <li class="breadcrumb-item"><a class="text-nowrap" href="#"><i class="czi-home"></i>Home</a></li>
+              <li class="breadcrumb-item text-nowrap"><a href="#">Shop</a>
               </li>
               <li class="breadcrumb-item text-nowrap active" aria-current="page">Checkout</li>
             </ol>
@@ -43,15 +43,15 @@
       <div class="row">
         <section class="col-lg-8">
           <!-- Steps-->
-          <div class="steps steps-light pt-2 pb-3 mb-5"><a class="step-item active" href="shop-cart.html">
+          <div class="steps steps-light pt-2 pb-3 mb-5"><a class="step-item active" href="#">
               <div class="step-progress"><span class="step-count">1</span></div>
-              <div class="step-label"><i class="czi-cart"></i>Cart</div></a><a class="step-item active current" href="checkout-details.html">
+              <div class="step-label"><i class="czi-cart"></i>Cart</div></a><a class="step-item active current" href="#">
               <div class="step-progress"><span class="step-count">2</span></div>
-              <div class="step-label"><i class="czi-package"></i>Shipping details</div></a><a class="step-item" href="checkout-shipping.html">
+              <div class="step-label"><i class="czi-package"></i>Shipping details</div></a><a class="step-item" href="#">
               <div class="step-progress"><span class="step-count">3</span></div>
-              {% comment %} <div class="step-label"><i class="czi-package"></i>Shipping</div></a><a class="step-item" href="checkout-payment.html"> {% endcomment %}
+              {% comment %} <div class="step-label"><i class="czi-package"></i>Shipping</div></a><a class="step-item" href="#"> {% endcomment %}
               <div class="step-progress"><span class="step-count">3</span></div>
-              <div class="step-label"><i class="czi-card"></i>Payment</div></a><a class="step-item" href="checkout-review.html">
+              <div class="step-label"><i class="czi-card"></i>Payment</div></a><a class="step-item" href="#">
               <div class="step-progress"><span class="step-count">4</span></div>
               <div class="step-label"><i class="czi-check-circle"></i>Review</div></a></div>
           <!-- Autor info-->
@@ -61,7 +61,7 @@
               <div class="media-body pl-3">
                 <h3 class="font-size-base mb-0">Susan Gardner</h3><span class="text-accent font-size-sm">s.gardner@example.com</span>
               </div>
-            </div><a class="btn btn-light btn-sm btn-shadow mt-3 mt-sm-0" href="account-profile.html"><i class="czi-edit mr-2"></i>Edit profile</a>
+            </div><a class="btn btn-light btn-sm btn-shadow mt-3 mt-sm-0" href="#"><i class="czi-edit mr-2"></i>Edit profile</a>
           </div> {% endcomment %}
           <!-- Shipping address-->
           <h2 class="h6 pt-1 pb-3 mb-3 border-bottom">Shipping info</h2>
@@ -70,7 +70,7 @@
             <div class="row">
               <div class="col-sm-6">
                 <div class="form-group">
-                  <label for="id_recipient">Your Customer's Fullname <small class="text-muted">( if any )</small></label>
+                  <label class="font-weight-medium" for="id_recipient">Your Customer's Fullname <small class="text-muted">( if any )</small></label>
                   <input class="form-control" type="text" name="recipient" maxlength="50" id="id_recipient" required="false">
                   {% comment %} <input class="form-control" type="text" id="checkout-fn"> {% endcomment %}
                 </div>
@@ -80,7 +80,7 @@
             <!-- Drag and drop file upload -->
             <div class="row">
               <div class="col-sm-12">
-                <label for="id_shipping_label">Shipping label <small class="text-muted">( if any )</small></label>
+                <label class="font-weight-medium" for="id_shipping_label">Shipping label <small class="text-muted">( if any )</small></label>
                 <div class="cz-file-drop-area">
                   <div class="cz-file-drop-icon czi-cloud-upload"></div>
                   <span class="cz-file-drop-message">Drag and drop shipping label to upload</span>
@@ -89,16 +89,21 @@
                 </div>
               </div>
             </div>
-            <div class="form-group mb-4">
+            <div class="form-group mb-4 mt-3">
               <label class="mb-3" for="note"><span class="badge badge-info font-size-xs mr-2">Note</span><span class="font-weight-medium">  Additional comments</span></label>
-              <textarea class="form-control" name="note" cols="30" rows="6" maxlength="1000" id="id_note" spellcheck="false"></textarea>
+              <textarea class="form-control" name="note" cols="30" rows="3" maxlength="1000" id="id_note" spellcheck="false"></textarea>
             </div>
+            <div class="form-group mb-4 mt-3">
+              <label class="mb-3" for="attachment"><span class="badge badge-info font-size-xs mr-2">Attachment</span></label>
+              <input type="file" name="attachment" id="id_attachment" class="form-control">
+            </div>
+            
             
             <!-- Navigation (desktop)-->
             <div class="d-none d-lg-flex pt-4 mt-3">
               <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="{% url 'cart:cart_detail' %}"><i class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Back to Cart</span><span class="d-inline d-sm-none">Back</span></a></div>
               <button class="w-50 btn btn-primary btn-block" type='submit'>Proceed to Payment<i class="czi-arrow-right mt-sm-0 ml-1"></i></button>
-              {% comment %} <div class="w-50 pl-2"><a class="btn btn-primary btn-block" href="checkout-shipping.html"><span class="d-none d-sm-inline">Proceed to Payment</span><span class="d-inline d-sm-none">Next</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></a></div> {% endcomment %}
+              {% comment %} <div class="w-50 pl-2"><a class="btn btn-primary btn-block" href="#"><span class="d-none d-sm-inline">Proceed to Payment</span><span class="d-inline d-sm-none">Next</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></a></div> {% endcomment %}
             </div>
           </form>
         </section>
@@ -108,9 +113,9 @@
             <div class="widget mb-3">
               <h2 class="widget-title text-center">Order summary</h2>
               {% for item in cart %}
-              <div class="media align-items-center pb-2 border-bottom"><a class="d-block mr-2" href="shop-single-v1.html"><img width="64" src="{{ item.end_product_img }}" alt="Product"/></a>
+              <div class="media align-items-center pb-2 border-bottom"><a class="d-block mr-2" href="#"><img width="64" src="{{ item.end_product_img }}" alt="Product"/></a>
                 <div class="media-body">
-                  <h6 class="widget-product-title"><a href="shop-single-v1.html">{{ item.product }}</a></h6>
+                  <h6 class="widget-product-title"><a href="#">{{ item.product }}</a></h6>
                   <div class="font-size-sm"><small><span class="text-muted mr-2">Size:</span>{{ item.size }}</small></div>
                   <div class="font-size-sm"><small><span class="text-muted mr-2">Color:</span>{{ item.color }}</small></div>
                   <div class="widget-product-meta"><span class="text-accent mr-2">${{ item.price }}</span><span class="text-muted">x {{ item.quantity}}</span></div>
@@ -146,8 +151,8 @@
       <div class="row d-lg-none">
         <div class="col-lg-8">
           <div class="d-flex pt-4 mt-3">
-            <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="shop-cart.html"><i class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Back to Cart</span><span class="d-inline d-sm-none">Back</span></a></div>
-            <div class="w-50 pl-2"><a class="btn btn-primary btn-block" href="checkout-review.html"><span class="d-none d-sm-inline">Proceed to Shipping</span><span class="d-inline d-sm-none">Next</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></a></div>
+            <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="#"><i class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Back to Cart</span><span class="d-inline d-sm-none">Back</span></a></div>
+            <div class="w-50 pl-2"><a class="btn btn-primary btn-block" href="#"><span class="d-none d-sm-inline">Proceed to Shipping</span><span class="d-inline d-sm-none">Next</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></a></div>
           </div>
         </div>
       </div>
