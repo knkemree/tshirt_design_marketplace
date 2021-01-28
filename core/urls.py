@@ -56,7 +56,7 @@ urlpatterns = [
     path('payment/', include('payment.urls', namespace='payment')),
     path('coupons/', include('coupons.urls', namespace='coupons')),
     path('essentials/', include("essentials.urls"), name="essentials"),
-    path('ajaxcolor/', views.ajaxcolor, name='ajaxcolor'),
+    
     path('__debug__/', include(debug_toolbar.urls)),   
 ]
 

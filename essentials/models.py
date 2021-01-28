@@ -54,8 +54,8 @@ class Product(models.Model):
 
     )
     category = models.ForeignKey(Category, on_delete=models.CASCADE) #many to one relation with Category
-    #method = models.ForeignKey(Method, on_delete=models.CASCADE, related_name='products', blank=True, null=True)
-    #placement = models.ForeignKey(Placement, on_delete=models.CASCADE, related_name='products', blank=True, null=True)
+    #clr = models.ForeignKey(Clr, on_delete=models.CASCADE, related_name='products', blank=True, null=True)
+    #sz = models.ForeignKey(Sz, on_delete=models.CASCADE, related_name='products', blank=True, null=True)
     title = models.CharField(max_length=150)
     slug = models.SlugField(null=False, unique=True)
     tags = TaggableManager()
@@ -107,6 +107,95 @@ class Product(models.Model):
     #     if reviews["count"] is not None:
     #         cnt = int(reviews["count"])
     #     return cnt
+
+class Size(models.Model):
+    name = models.CharField(max_length=20)
+    row_no = models.IntegerField(default=0)
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['row_no']
+
+class Color(models.Model):
+    group = models.CharField(max_length=40, blank=True,null=True, help_text='e.g. black adult tshirts, black youth tshirts, black hoodies (this field only for admins and not visible to customers)')
+    name = models.CharField(max_length=40, help_text='e.g black (this field is visible to customers)')
+    #color_tag = models.ImageField(upload_to='color_tags/', blank=True, null=True)
+    color_code = models.CharField(max_length=40, blank=True ,null=True, help_text='texture has priorty on color code. either color code or texture will be color option to customers')
+    texture = models.ImageField(upload_to='textures/', blank=True, null=True, help_text='texture has priorty on color code. either color code or texture will be color option to customers')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return str(self.group)
+
+    class Meta:
+        ordering = ['name']
+
+    # def image_tag(self):
+    #     img = self.color_tag
+    #     if img is not None:
+    #             return mark_safe('<img src="{}" height="50" />'.format(img.url,))
+
+# class SzBase(models.Model):
+#     name = models.CharField(max_length=30)
+#     row_no = models.IntegerField(default=0, blank=True, null=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
+#     def __str__(self):
+#         return self.name
+
+#     class Meta:
+#         verbose_name = "Sz -Test"
+#         verbose_name_plural = "Szs -Test"
+#         ordering = ['row_no']
+
+class Sz(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='szs', blank=True, null=True)
+    sz = models.ForeignKey(Size, on_delete=models.SET_NULL, blank=True, null=True)
+    price = models.DecimalField(max_digits=12, decimal_places=2,default=0, help_text="price for this printing method")
+    row_no = models.IntegerField(default=0, blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.sz.name
+
+    class Meta:
+        ordering = ['row_no']
+
+# class ClrBase(models.Model):
+#     name = models.CharField(max_length=30)
+#     color_code = models.CharField(max_length=40, blank=True ,null=True, help_text='texture has priorty on color code. either color code or texture will be color option to customers')
+#     texture = models.ImageField(upload_to='textures/', blank=True, null=True, help_text='texture has priorty on color code. either color code or texture will be color option to customers')
+#     row_no = models.IntegerField(default=0, blank=True, null=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
+#     def __str__(self):
+#         return self.name
+
+#     class Meta:
+#         verbose_name = "Clr -Test"
+#         verbose_name_plural = "Clrs -Test"
+#         ordering = ['row_no']
+
+
+class Clr(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='clrs', blank=True, null=True)
+    clr = models.ForeignKey(Color, on_delete=models.SET_NULL, blank=True, null=True)
+
+    row_no = models.IntegerField(default=0, blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.clr.name
+
+    class Meta:
+        ordering = ['row_no']
+
 
 class Font(models.Model):
     name = models.CharField(max_length=50) 
@@ -173,34 +262,7 @@ class Placement(models.Model):
     def placement_price(self):
         return self.price
 
-class Size(models.Model):
-    name = models.CharField(max_length=20)
-    row_no = models.IntegerField(default=0)
-    def __str__(self):
-        return self.name
 
-    class Meta:
-        ordering = ['row_no']
-
-class Color(models.Model):
-    group = models.CharField(max_length=40, blank=True,null=True, help_text='e.g. black adult tshirts, black youth tshirts, black hoodies (this field only for admins and not visible to customers)')
-    name = models.CharField(max_length=40, help_text='e.g black (this field is visible to customers)')
-    #color_tag = models.ImageField(upload_to='color_tags/', blank=True, null=True)
-    color_code = models.CharField(max_length=40, blank=True ,null=True, help_text='texture has priorty on color code. either color code or texture will be color option to customers')
-    texture = models.ImageField(upload_to='textures/', blank=True, null=True, help_text='texture has priorty on color code. either color code or texture will be color option to customers')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    def __str__(self):
-        return str(self.group)
-
-    class Meta:
-        ordering = ['name']
-
-    # def image_tag(self):
-    #     img = self.color_tag
-    #     if img is not None:
-    #             return mark_safe('<img src="{}" height="50" />'.format(img.url,))
 
 
 
@@ -217,7 +279,7 @@ class Variant(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['color']
+        ordering = ['size','color']
 
     # def __str__(self):
     #     return self.product.title+str(' / ')+self.size.name+str(' / ')+self.color.name

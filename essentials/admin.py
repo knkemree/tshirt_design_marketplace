@@ -8,6 +8,7 @@ from django.utils.safestring import mark_safe
 from mptt.admin import DraggableMPTTAdmin
 
 from .models import Category, Product, Color, Size, TechniqueBase, Variant, Design, Method, Placement, PlacementBase, Font
+from essentials.models import Clr, Sz
 
 
 
@@ -62,6 +63,16 @@ class VariantInline(admin.TabularInline):
     #     if img is not None:
     #         return mark_safe("""<img src="/images/%s.jpg" />""" % obj.image)
 
+class SzInline(admin.TabularInline):
+    model = Sz
+    extra = 0
+    show_change_link = True
+
+class ClrInline(admin.TabularInline):
+    model = Clr
+    extra = 0
+    show_change_link = True
+
 class MethodInline(admin.TabularInline):
     model = Method
     extra = 0
@@ -79,7 +90,9 @@ class ProductAdmin(admin.ModelAdmin):
     #readonly_fields = ('image_tag',)
     inlines = [VariantInline, 
     MethodInline, 
-    PlacementInline
+    PlacementInline,
+    SzInline,
+    ClrInline,
     ]
     prepopulated_fields = {'slug': ('title',)}
 
@@ -97,7 +110,7 @@ class SizeAdmin(admin.ModelAdmin):
     search_fields = ['name',]
 
 class VariantAdmin(admin.ModelAdmin):
-    list_display = ['__str__','size','color','price','quantity','created_at','updated_at',]
+    list_display = ['id','__str__','size','color','price','quantity','created_at','updated_at',]
     list_filter = ['product','size','color',]
     search_fields = ['size','color',]
     save_as =True
@@ -109,9 +122,13 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Color, ColorAdmin)
 admin.site.register(Size, SizeAdmin)
-admin.site.register(TechniqueBase)
 admin.site.register(Variant, VariantAdmin)
 #admin.site.register(Method)
 #admin.site.register(Placement)
+#admin.site.register(Sz)
+#admin.site.register(Clr)
+#admin.site.register(ClrBase)
+#admin.site.register(SzBase)
+admin.site.register(TechniqueBase)
 admin.site.register(PlacementBase)
 admin.site.register(Font)
