@@ -334,14 +334,10 @@ $(document).ready(function(){
       });
     };
 
-    $('#post-color').on('submit', function(e){
-      // e.preventDefault();
-      // ajax_change_color();
-    });
 
     $('input[name=colorid]', '#post-color').change(function(){
-      ajax_change_color();
-      // $('#post-color').submit();
+      setTimeout(ajax_change_color(),1000)
+      // ajax_change_color();
     });
 
     function add_to_cart() {

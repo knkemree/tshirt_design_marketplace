@@ -26,6 +26,17 @@ $(document).ready(function() {
             // aplly add to cart
             variant_add_to_cart_url = data.variant_add_to_cart_url
 
+            var texture = data.color_id.startsWith("/");
+
+            if (texture) {
+            document.getElementById("tshirt-div").style.backgroundImage = "url(" + data.color_id + ")";
+            $(".thumbnail_image").css("background-image", "url(" + data.color_id + ")");
+            
+            } else {
+            document.getElementById("tshirt-div").style.backgroundColor = data.color_id;
+            $(".thumbnail_image").css("background-color", data.color_id);
+            };
+
         },
         error: function (data) {
             alert("Got an error! " + data);
@@ -76,7 +87,7 @@ $(document).ready(function() {
         // $('#post-color').submit();
         // dogru variant'i checked olarak gostrebilmek icin change_size calistirmak gerekiyor
         
-        ajax_change_color();
+        setTimeout(ajax_change_color(),1000) 
         
        
         
