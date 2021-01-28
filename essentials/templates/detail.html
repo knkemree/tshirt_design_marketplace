@@ -316,7 +316,7 @@ $(document).ready(function(){
         dataType: 'json',
         success:  function(data){
             var texture = data.color_id.startsWith("/");
-
+            console.log('calisan burasi')
             if (texture) {
             document.getElementById("tshirt-div").style.backgroundImage = "url(" + data.color_id + ")";
             $(".thumbnail_image").css("background-image", "url(" + data.color_id + ")");
