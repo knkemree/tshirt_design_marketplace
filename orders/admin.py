@@ -68,7 +68,7 @@ class OrderItemInline(admin.TabularInline):
         #return mark_safe("""<img src="/images/%s.jpg" />""" % obj.end_product_img)
         img = obj.end_product_img
         if img is not None:
-            return mark_safe('<img src="{}" height="150" />'.format(img.url,))
+            return mark_safe('<img src="{}" height="300" />'.format(img.url,))
 
     def item(self, obj):
         return '{}'.format(obj.variant)
