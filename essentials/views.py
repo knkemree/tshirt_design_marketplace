@@ -107,8 +107,8 @@ def change_size(request):
             'variant':variant,
         }
         data = {'rendered_table': render_to_string('color_list.html', context=context, request=request),
-                'price_all_included': variant.variant_price()+placement.placement_price()+method.method_price(),
-                'variant':str(variant)+" "+variant.size.name+" "+variant.color.name+" "+method.technique.name+" "+placement.placement.name}
+                'price_all_included': variant.variant_price()+placement.placement_price()+method.method_price()}
+        data['variant_add_to_cart_url'] = "/cart/add/"+str(variant.id)+"/"
         #data = {'rendered_table':size_id}
         return JsonResponse(data)
     return JsonResponse(data)
@@ -145,22 +145,23 @@ def change_method(request):
         method = get_object_or_404(Method, id=method_id)
         variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0] #burda get  de kullanabilirdim ama olaki size id'si ve color id'si ayni olan variant olusturulursa ilki secilecek
         
-        data['ajax'] = 'true'
         data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price()
         return JsonResponse(data)
-    data['ajax'] = 'false'
-    return JsonResponse(data)
+
 
 
 def change_color(request):
     data = {}
     if request.is_ajax:
+        product_id = request.GET.get('product_id', None)
+        place_id = request.GET.get('place_id', None)
+        method_id = request.GET.get('method_id', None)
+        size_id = request.GET.get('size_id', None)
         color_id = request.GET.get('color_id', None)
-        # method_id = request.GET.get('method_id', None)
-        # place_id = request.GET.get('place_id', None)
-        # size_id = request.GET.get('size_id', None)
-        # color_id = request.GET.get('color_id', None)
-        # variant_id = request.GET.get('variant_id', None)
+        placement = get_object_or_404(Placement, id=place_id)
+        method = get_object_or_404(Method, id=method_id)
+        variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0] #burda get  de kullanabilirdim ama olaki size id'si ve color id'si ayni olan variant olusturulursa ilki secilecek
+        
         
 
         #variant, placement ve size price'i degistirmek icin gerekli
@@ -169,31 +170,9 @@ def change_color(request):
             data['color_id'] = color.texture
         else:
             data['color_id'] = color.color_code
-        #product = get_object_or_404(Product, id=product_id)
-        #variant = Variant.objects.get(id=variant_id) #burda get  de kullanabilirdim ama olaki size id'si ve color id'si ayni olan variant olusturulursa ilki secilecek
-        # placement = get_object_or_404(Placement, id=place_id)
-        # method = get_object_or_404(Method, id=method_id)
-        #print(product, 'product burda')
 
-        #print('hi', method,placement,variant, variant.id, variant.size, variant.color)
-        #print(variant.variant_price()+placement.placement_price()+method.method_price())
-        # sizes = Variant.objects.filter(product_id = product_id)
-        # colors = Variant.objects.filter(product_id=variant.product_id,size_id=variant.size_id )
-        # color = colors[0].color.name
-        
-        
-        # serialized_obj = serializers.serialize('json', [ variant, ])
-        # str_data = serialize('json', sizes, cls=DjangoJSONEncoder)
-
-        # context = {
-        #         'color_id':color,
-        #         }
-        
-        #return JsonResponse(data)
-        #data = {
-            #'product_gallery': render_to_string('product-gallery.html', context=context, request=request),
-                #'price_all_included': variant.variant_price()+placement.placement_price()+method.method_price()
-        #        }
+        data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price(),
+        data['variant_add_to_cart_url'] = "/cart/add/"+str(variant.id)+"/"
         return JsonResponse(data)
         #return render(request, 'product-gallery.html', context)
     return JsonResponse(data)

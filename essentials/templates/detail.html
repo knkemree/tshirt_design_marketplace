@@ -165,21 +165,7 @@ $(document).ready(function(){
 
 
     var variant_add_to_cart_url //set global variable otherwise undefined
-    function get_current_variant(){
-      $.ajax({
-        url: "{% url 'essentials:get_current_variant' %}",
-        data: {
-          'product_id': $('#productid').val(),
-          'size_id': $('#size-selector').val(),
-          'color_id': $('input[name=colorid]:checked', '#post-color').val(),
-        },
-        dataType: 'json',
-        success: function(data){
-          variant_add_to_cart_url = data.variant_add_to_cart_url
-        },
 
-      })
-    };
 
     function ajax_dynamic_canvas(){
       $.ajax({ 
@@ -210,7 +196,6 @@ $(document).ready(function(){
     function apply_placement_id(){
       var placement_id = $('.cz-thumblist-item.active').attr('id');
       $( "#id_placement" ).val(placement_id);
-      get_current_variant();
     };
 
     $('.cz-thumblist-item').on('click', function(event){
@@ -239,8 +224,7 @@ $(document).ready(function(){
           $('#price').text("$"+data.price_all_included);
         }
       });
-      get_current_variant();
-      apply_current_price();
+
     };
 
     // send ajax request on load print metodunu saptamak icin
@@ -282,12 +266,13 @@ $(document).ready(function(){
         success: function (data) {
             $('#appendHere').html(data.rendered_table);
             $('#price').text("$"+data.price_all_included);
+            variant_add_to_cart_url = data.variant_add_to_cart_url
         },
         error: function (data) {
             alert("Got an error! " + data);
         }
       });
-      get_current_variant();
+      
     };
 
     $(document).on('change', '#post-size',function(e){
@@ -299,6 +284,10 @@ $(document).ready(function(){
       $.ajax({ 
         url: "{% url 'essentials:change_color' %}",
         data: {
+            'product_id':$('#productid').val(),
+            'place_id': $('.cz-thumblist-item.active').attr('id'),
+            'method_id': $( "#technique" ).val(),
+            'size_id': $('#size-selector').val(),
             'color_id': $('input[name=colorid]:checked', '#post-color').val(),
             csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]', '#post-color').val(),
         },
@@ -306,6 +295,7 @@ $(document).ready(function(){
         success:  function(data){
             var texture = data.color_id.startsWith("/");
             console.log(texture)
+
             if (texture) {
             document.getElementById("tshirt-div").style.backgroundImage = "url(" + data.color_id + ")";
             $(".thumbnail_image").css("background-image", "url(" + data.color_id + ")");
@@ -314,21 +304,23 @@ $(document).ready(function(){
             document.getElementById("tshirt-div").style.backgroundColor = data.color_id;
             $(".thumbnail_image").css("background-color", data.color_id);
             };
-          console.log(data);
-          //console.log('hey there')
+
+            $('#price').text("$"+data.price_all_included);
+
+            variant_add_to_cart_url = data.variant_add_to_cart_url
+            console.log(data);
         }
       });
-      get_current_variant();
-      apply_current_price();
     };
 
     $('#post-color').on('submit', function(e){
-      e.preventDefault();
-      ajax_change_color();
+      // e.preventDefault();
+      // ajax_change_color();
     });
 
     $('input[name=colorid]', '#post-color').change(function(){
-      $('#post-color').submit();
+      ajax_change_color();
+      // $('#post-color').submit();
     });
 
     function add_to_cart() {

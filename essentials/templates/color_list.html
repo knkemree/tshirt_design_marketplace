@@ -2,24 +2,7 @@
 
 {% block javascript %}
 <script>
-$(document).ready(function() { 
-
-    function get_current_variant(){
-      $.ajax({
-        url: "{% url 'essentials:get_current_variant' %}",
-        data: {
-          'product_id': $('#productid').val(),
-          'size_id': $('#size-selector').val(),
-          'color_id': $('input[name=colorid]:checked', '#post-color').val(),
-        },
-        dataType: 'json',
-        success: function(data){
-            var variant_id = data.variant_id
-            console.log(data.variant_id)
-        },
-
-      })
-    };
+$(document).ready(function() {  
 
     function ajax_change_size(){
       $.ajax({
@@ -35,20 +18,56 @@ $(document).ready(function() {
         success: function (data) {
             $('#appendHere').html(data.rendered_table);
             $('#price').text("$"+data.price_all_included);
+            variant_add_to_cart_url = data.variant_add_to_cart_url
         },
         error: function (data) {
             alert("Got an error! " + data);
         }
       });
-      get_current_variant();
+      
+    };
+
+    function ajax_change_color(){
+      $.ajax({ 
+        url: "{% url 'essentials:change_color' %}",
+        data: {
+            'product_id':$('#productid').val(),
+            'place_id': $('.cz-thumblist-item.active').attr('id'),
+            'method_id': $( "#technique" ).val(),
+            'size_id': $('#size-selector').val(),
+            'color_id': $('input[name=colorid]:checked', '#post-color').val(),
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]', '#post-color').val(),
+        },
+        dataType: 'json',
+        success:  function(data){
+            var texture = data.color_id.startsWith("/");
+            console.log(texture)
+
+            if (texture) {
+            document.getElementById("tshirt-div").style.backgroundImage = "url(" + data.color_id + ")";
+            $(".thumbnail_image").css("background-image", "url(" + data.color_id + ")");
+            
+            } else {
+            document.getElementById("tshirt-div").style.backgroundColor = data.color_id;
+            $(".thumbnail_image").css("background-color", data.color_id);
+            };
+
+            $('#price').text("$"+data.price_all_included);
+
+            variant_add_to_cart_url = data.variant_add_to_cart_url
+            console.log(data);
+        }
+      });
     };
 
 
     $('input[name=colorid]', '#post-color').change(function(e){
-        $('#post-color').submit();
-
+        // $('#post-color').submit();
         // dogru variant'i checked olarak gostrebilmek icin change_size calistirmak gerekiyor
         ajax_change_size();
+        ajax_change_color();
+        
+       
         
     });
 });
