@@ -60,7 +60,7 @@ class OrderItemInline(admin.TabularInline):
     #exclude = ['json_data','cost','end_product_img','image']
     raw_id_fields = ['variant',]
     readonly_fields = ('item','size','color','preview','technique','placement','price','quantity','ready_to_ship','log_entry','details')
-    list_editable = ['ready_to_ship']
+    list_editable = ('ready_to_ship',)
     
 
 
@@ -78,7 +78,6 @@ class OrderItemInline(admin.TabularInline):
         return '{}'.format(obj.variant.color.name)
     def ready_to_ship(self,obj):
         return obj.ready_to_ship
-
     def details(self, obj):
         id = obj.id
         return mark_safe(f'<a href="/orders/admin/orderitem/{id}/">View</a>')

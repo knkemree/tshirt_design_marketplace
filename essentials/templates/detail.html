@@ -4,6 +4,7 @@
 {% block title %}{{ variant }}{% endblock %}
 
 {% block javascript %}
+
 <script>
 $(document).ready(function(){
     // Text formatting actions
@@ -133,135 +134,20 @@ $(document).ready(function(){
 </script>
 
 
-
 <script>
-  $('.cz-thumblist-item').on('click', function(event){
-    var place_id = $('.cz-thumblist-item.active').attr('id');
-    console.log(place_id);
-    $.ajax({ 
-    url: "{% url 'essentials:dynamic_canvas' %}",
-    data: {
-      'product_id': $('#productid').val(),
-    },
-    dataType: 'json',
-    success:  function(data){
-      console.log(data);
-      $("#drawingArea").css({ top: data[place_id].top });
-      $("#drawingArea").css({ left: data[place_id].left });
-      $("#drawingArea").css({ width: data[place_id].width });
-      $("#drawingArea").css({ height: data[place_id].height });
-      $("#canvas-container").css({ height: data[place_id].height });
-      $("#canvas-container").css({ width: data[place_id].width });
-      h = parseInt(data[place_id].height, 10)
-      w = parseInt(data[place_id].width, 10)
-      console.log(h)
-      canvas.setWidth(w);
-      canvas.setHeight(h)
-      
-      
-    },
-    });
-    
-   });
-</script>
-
-<script>
-  $(document).ready(function(){
-    $.ajax({ 
-    url: "{% url 'essentials:dynamic_canvas' %}",
-    data: {
-      'product_id': $('#productid').val(),
-    },
-    dataType: 'json',
-    success: function(data){
-      var place_id = $('.cz-thumblist-item:first').attr('id');
-      console.log(data[place_id].top); // another sanity check
-      $("#drawingArea").css({ top: data[place_id].top });
-      $("#drawingArea").css({ left: data[place_id].left });
-      $("#drawingArea").css({ width: data[place_id].width });
-      $("#drawingArea").css({ height: data[place_id].height });
-      $("#canvas-container").css({ height: data[place_id].height });
-      $("#canvas-container").css({ width: data[place_id].width });
-      h = parseInt(data[place_id].height, 10)
-      w = parseInt(data[place_id].width, 10)
-      canvas.setWidth(w);
-      canvas.setHeight(h)
-    }});
-
-    
-  });
-</script>
-
-<script>
-  $('.cz-thumblist-item').on('click', function(event){
-    var placement_id = $('.cz-thumblist-item.active').attr('id');
-    $( "#id_placement" ).val(placement_id);
-  });
-</script>
-
-<script>
-  $(document).ready(function(){
-    // var placement_id = $('.cz-thumblist-item:first').attr('id');
-    var placement_id = setTimeout($('.cz-thumblist-item.active').attr('id'),1000);
-    $( "#id_placement" ).val(placement_id);
-  });
-</script>
-
-<script>
-  // send ajax request on load printmetodunu saptamak icin
 $(document).ready(function(){
-  $.ajax({ 
-    url: "{% url 'essentials:change_method' %}",
-    data: {
-      'method_id': $( "#technique" ).val(),
-      'place_id':  $('.cz-thumblist-item:first').attr('id'),
-      'variant_id': $('input[name=variantid]', '#post-color').val()
-    },
-    dataType: 'json',
-    success: function(data){
-      // console.log(data.price_all_included); 
-      $('#price').text("$"+data.price_all_included);
-    }});
-});
-</script>
+    $( ".cz-preview-item:first" ).addClass('active');
+    $( ".cz-thumblist-item:first" ).addClass('active');
 
-<script>
-$( document ).ready(function(e) {
-  $( ".cz-preview-item:first" ).addClass('active')
-  $( ".cz-thumblist-item:first" ).addClass('active')
-});
-</script>
-
-<script>
-  // active image'i colora boya
-$(document).ready(function() {
-  var codeOrTexture = $('input[name=hexOrTexture]:checked', '#post-color').val();
-  var texture = codeOrTexture.startsWith("/");
-  if (texture) {
-    document.getElementById("tshirt-div").style.backgroundImage = "url(" + codeOrTexture + ")";
-    $(".thumbnail_image").css("background-image", "url(" + codeOrTexture + ")");
-   
-  } else {
-    document.getElementById("tshirt-div").style.backgroundColor = codeOrTexture;
-    $(".thumbnail_image").css("background-color", codeOrTexture);
-  };
-});
-</script>
-
-<script>
-// yandaki imageler tiklanildiginda fiyati degistir
-$('#post-placement').on('click', function(event){
-    event.preventDefault();
-    var placement_form = $('#post-placement');
-    var action = placement_form.attr('action');
-    var placement_data = placement_form.serialize();
-    
-    $.ajax({
+    function apply_current_price(){
+      $.ajax({
         url : '{% url "essentials:change_place" %}', // the endpoint
         data : {
+          'product_id':$('#productid').val(),
           'place_id': $('.cz-thumblist-item.active').attr('id'),
           'method_id': $( "#technique" ).val(),
-          'variant_id': $('input[name=variantid]', '#post-color').val()
+          'size_id': $('#size-selector').val(),
+          'color_id': $('input[name=colorid]:checked', '#post-color').val(),
         }, // data sent with the post request
         dataType: 'json',
         // handle a successful response
@@ -269,58 +155,221 @@ $('#post-placement').on('click', function(event){
             // console.log(data.price_all_included); 
             $('#price').text("$"+data.price_all_included);
         },       
+      });
+    };
+
+    $('#post-placement').on('click', function(event){
+      event.preventDefault(); 
+      apply_current_price();
     });
-  });
-</script>
-
-<script>
-// get technique id on load or on change. add it to the hidden technique input area. technique id will be added to cart session on add to cart submission
-$( document ).ready(function() {
-    var tech = $( "#technique" ).val();
-    $( "#id_technique" ).val(tech);
-});
-
-$(document).on('change', '#post-technique',function(e){
-   var tech = $( "#technique" ).val();
-   $( "#id_technique" ).val(tech);
-   $.ajax({ 
-    url: "{% url 'essentials:change_method' %}",
-    data: {
-      'method_id': $( "#technique" ).val(),
-      'place_id': $('.cz-thumblist-item:first').attr('id'),
-      'variant_id': $('input[name=variantid]', '#post-color').val()
-    },
-    dataType: 'json',
-    success: function(data){
-      console.log(data.price_all_included); // another sanity check
-      $('#price').text("$"+data.price_all_included);
-    }});
-})
-</script>
 
 
-<script>
-$(document).on('change', '#post-form',function(e){
-    e.preventDefault();
-    $(document.body).css({'cursor' : 'wait'});
-    $.ajax({
-        type:'GET',
-        url:'{% url "ajaxcolor" %}',
-        data:{
-            productid:$('#productid').val(),
-            size:$('#size').val(),
-            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
-            // action: 'post'
+    var variant_add_to_cart_url //set global variable otherwise undefined
+    function get_current_variant(){
+      $.ajax({
+        url: "{% url 'essentials:get_current_variant' %}",
+        data: {
+          'product_id': $('#productid').val(),
+          'size_id': $('#size-selector').val(),
+          'color_id': $('input[name=colorid]:checked', '#post-color').val(),
         },
-        data_type : 'html',
+        dataType: 'json',
+        success: function(data){
+          variant_add_to_cart_url = data.variant_add_to_cart_url
+        },
+
+      })
+    };
+
+    function ajax_dynamic_canvas(){
+      $.ajax({ 
+        url: "{% url 'essentials:dynamic_canvas' %}",
+        data: {
+          'product_id': $('#productid').val(),
+        },
+        dataType: 'json',
+        success: function(data){
+          var place_id = $('.cz-thumblist-item.active').attr('id') ;
+          console.log(data[place_id].top); // another sanity check
+          $("#drawingArea").css({ top: data[place_id].top });
+          $("#drawingArea").css({ left: data[place_id].left });
+          $("#drawingArea").css({ width: data[place_id].width });
+          $("#drawingArea").css({ height: data[place_id].height });
+          $("#canvas-container").css({ height: data[place_id].height });
+          $("#canvas-container").css({ width: data[place_id].width });
+          h = parseInt(data[place_id].height, 10)
+          w = parseInt(data[place_id].width, 10)
+          canvas.setWidth(w);
+          canvas.setHeight(h)
+        }}
+      )
+    };
+
+    setTimeout(ajax_dynamic_canvas(),1000);
+
+    function apply_placement_id(){
+      var placement_id = $('.cz-thumblist-item.active').attr('id');
+      $( "#id_placement" ).val(placement_id);
+      get_current_variant();
+    };
+
+    $('.cz-thumblist-item').on('click', function(event){
+      var place_id = $('.cz-thumblist-item.active').attr('id');
+      apply_placement_id();
+      ajax_dynamic_canvas();
+    });
+
+    setTimeout(apply_placement_id(),1000);
+
+    function ajax_change_method(){
+      var tech = $( "#technique" ).val();
+      $( "#id_technique" ).val(tech);
+      $.ajax({ 
+        url: "{% url 'essentials:change_method' %}",
+        data: {
+          'product_id':$('#productid').val(),
+          'place_id': $('.cz-thumblist-item.active').attr('id'),
+          'method_id': $( "#technique" ).val(),
+          'size_id': $('#size-selector').val(),
+          'color_id': $('input[name=colorid]:checked', '#post-color').val(),
+        },
+        dataType: 'json',
+        success: function(data){
+          // console.log(data.price_all_included); 
+          $('#price').text("$"+data.price_all_included);
+        }
+      });
+      get_current_variant();
+      apply_current_price();
+    };
+
+    // send ajax request on load print metodunu saptamak icin
+    ajax_change_method();
+
+    // send ajax request on change print metodunu saptamak icin
+    $(document).on('change', '#post-technique',function(e){
+      var tech = $( "#technique" ).val();
+      $( "#id_technique" ).val(tech);
+      ajax_change_method();
+    });
+
+    function change_image_color(){
+      var codeOrTexture = $('input[name=hexOrTexture]:checked', '#post-color').val();
+      var texture = codeOrTexture.startsWith("/");
+      if (texture) {
+        document.getElementById("tshirt-div").style.backgroundImage = "url(" + codeOrTexture + ")";
+        $(".thumbnail_image").css("background-image", "url(" + codeOrTexture + ")");
+
+      } else {
+        document.getElementById("tshirt-div").style.backgroundColor = codeOrTexture;
+        $(".thumbnail_image").css("background-color", codeOrTexture);
+      };
+    };
+
+    change_image_color();
+
+    function ajax_change_size(){
+      $.ajax({
+        url:'{% url "essentials:change_size" %}',
+        data:{
+            product_id:$('#productid').val(),
+            size:$('#size-selector').val(),
+            'method_id': $( "#technique" ).val(),
+            'place_id': $('.cz-thumblist-item.active').attr('id'),
+            'color_id': $('input[name=colorid]:checked', '#post-color').val(),
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]', '#post-size').val(),
+        },
         success: function (data) {
             $('#appendHere').html(data.rendered_table);
-            $(document.body).css({'cursor' : 'default'});
+            $('#price').text("$"+data.price_all_included);
         },
         error: function (data) {
-            $(document.body).css({'cursor' : 'default'});
             alert("Got an error! " + data);
         }
+      });
+      get_current_variant();
+    };
+
+    $(document).on('change', '#post-size',function(e){
+      e.preventDefault();
+      ajax_change_size();
+    });
+
+    function ajax_change_color(){
+      $.ajax({ 
+        url: "{% url 'essentials:change_color' %}",
+        data: {
+            'color_id': $('input[name=colorid]:checked', '#post-color').val(),
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]', '#post-color').val(),
+        },
+        dataType: 'json',
+        success:  function(data){
+            var texture = data.color_id.startsWith("/");
+            console.log(texture)
+            if (texture) {
+            document.getElementById("tshirt-div").style.backgroundImage = "url(" + data.color_id + ")";
+            $(".thumbnail_image").css("background-image", "url(" + data.color_id + ")");
+            
+            } else {
+            document.getElementById("tshirt-div").style.backgroundColor = data.color_id;
+            $(".thumbnail_image").css("background-color", data.color_id);
+            };
+          console.log(data);
+          //console.log('hey there')
+        }
+      });
+      get_current_variant();
+      apply_current_price();
+    };
+
+    $('#post-color').on('submit', function(e){
+      e.preventDefault();
+      ajax_change_color();
+    });
+
+    $('input[name=colorid]', '#post-color').change(function(){
+      $('#post-color').submit();
+    });
+
+    function add_to_cart() {
+      canvas.discardActiveObject();
+      canvas.renderAll();
+      $(document.body).css({'cursor' : 'wait'});
+      $( "#addtocartButton" ).addClass('disabled');
+      var add_to_cart_form = $('#addtocartform');
+      var action = add_to_cart_form.attr('action');
+      var method = add_to_cart_form.attr('method');
+      var cart_data = add_to_cart_form.serialize();
+      $.ajax({
+          url : variant_add_to_cart_url, // the endpoint
+          type : method, // http method
+          data : cart_data, // data sent with the post request
+          // handle a successful response
+          success : function(data) {
+              console.log("success"); // another sanity check
+              location.href = '/cart/'
+              $(document.body).css({'cursor' : 'default'});
+          },
+          // handle a non-successful response
+          error : function(xhr,errmsg,err) {
+            $(document.body).css({'cursor' : 'default'});
+              $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                  " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+              console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+          }
+      });
+    };
+
+    $('#addtocartform').on('submit', function(event){
+      event.preventDefault();
+      console.log("form submitted!"); 
+      rasterizeJSON();
+      setTimeout(add_to_cart(),3000);
+    });
+
+    $( "#addtocartform" ).mouseover(function() {
+      canvas.discardActiveObject();
+      canvas.renderAll();
     });
 });
 </script>
@@ -333,8 +382,8 @@ $(document).on('change', '#post-form',function(e){
   
   var deleteImg = document.createElement('img');
   deleteImg.src = deleteIcon;
-  // var cloneImg = document.createElement('img');
-  // cloneImg.src = cloneIcon;
+  var cloneImg = document.createElement('img');
+  cloneImg.src = cloneIcon;
 
   fabric.Object.prototype.transparentCorners = true;
   fabric.Object.prototype.cornerColor = '#B2CCFF';
@@ -375,7 +424,6 @@ $(document).on('change', '#post-form',function(e){
   document.addEventListener("keydown", function(e) {
       var keyCode = e.keyCode;
       if(keyCode == 46){
-          console.log("Removing selected element on Fabric.js on DELETE key !");
           canvas.remove(canvas.getActiveObject());
           $("#text-string").val("");
       }
@@ -511,7 +559,6 @@ $(document).on('change', '#post-form',function(e){
       canvas.getActiveObject().set("fontFamily", font);
       canvas.requestRenderAll();
       }).catch(function(e) {
-      console.log(e)
       alert("Can't load " + font +". Did you choose the text?");
       });
   };
@@ -600,7 +647,6 @@ $(document).on('change', '#post-form',function(e){
   });
 
   canvas.on('object:selected', function(options) {
-    console.log('hey')
       if (options.target) {
       $("textarea#add-text-value").val(options.target.text);
       $("#text-font-size").val(options.target.fontSize);
@@ -654,61 +700,12 @@ canvas.on('object:removed', function(e) {
 </script>
 
 <script>
-function add_to_cart() {
-      canvas.discardActiveObject();
-      canvas.renderAll();
-      $(document.body).css({'cursor' : 'wait'});
-      $( "#addtocartButton" ).addClass('disabled');
-      var add_to_cart_form = $('#addtocartform');
-      var action = add_to_cart_form.attr('action');
-      var method = add_to_cart_form.attr('method');
-      var cart_data = add_to_cart_form.serialize();
-      $.ajax({
-          url : action, // the endpoint
-          type : method, // http method
-          data : cart_data, // data sent with the post request
-          // handle a successful response
-          success : function(data) {
-              console.log("success"); // another sanity check
-              location.href = '/cart/'
-              $(document.body).css({'cursor' : 'default'});
-          },
-          // handle a non-successful response
-          error : function(xhr,errmsg,err) {
-            $(document.body).css({'cursor' : 'default'});
-              $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
-                  " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
-              console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-          }
-      });
-  };
+
 </script>
 
 <script>
 
-  $('#addtocartform').on('submit', function(event){
-    event.preventDefault();
-    console.log("form submitted!"); 
-    // const json = JSON.stringify(canvas);
-    // localStorage.setItem('Kanvas', json);
-    // const CANVAS = localStorage.getItem('Kanvas');
-    // $('#id_json_data').val(CANVAS);
-    rasterizeJSON();
-    // try {
-    //   rasterizeJSON();
-    // }
-    // catch(err) {
-    //   alert("Too big image")
-    // }
-    
-    setTimeout(add_to_cart(),3000);
-    // add_to_cart();
-  });
-
-  $( "#addtocartform" ).mouseover(function() {
-    canvas.discardActiveObject();
-    canvas.renderAll();
-  });
+  
 
   $('#save').on('click', function(event){
     canvas.discardActiveObject();
@@ -830,7 +827,7 @@ function add_to_cart() {
               <canvas id="tshirt-canvas" style="border: 1px dashed #B2CCFF;"></canvas>
             </div>
           </div>
-
+      
           <div class="cz-thumblist order-sm-1">
             <!-- cz-thumblist-item active -->
             <form id="post-placement" method="POST" action="{% url 'essentials:change_place' %}">
@@ -847,11 +844,13 @@ function add_to_cart() {
             <a class="cz-thumblist-item video-item" href="https://www.youtube.com/watch?v=nrQevwouWn0"><div class="cz-thumblist-item-text"><i class="czi-video"></i>Video</div></a>
           </div>
         </div>
+        
       </div>
     </div>
     <div class="col">
       <div class="row mb-3">
         <h2>{{ product.title }}</h2>
+        <h6>{{ variant }} {{ variant.id }} {{variant.size}} {{ variant.color}}</h6>
         <h6><a href="{{ product.category.get_absolute_url }}">{{ product.category }}</a></h6>
       </div>
 
@@ -1099,12 +1098,6 @@ function add_to_cart() {
             <div class="row mb-3">
             
               <div class="col-md-3 form-group">
-              {% comment %} {% for rs in colors %}
-                {% if variant.id == rs.id%}
-                  {{ rs.color.name}}
-                {% endif %}
-              {% endfor %}
-                {{ color }} {% endcomment %}
                 <form method="POST" id="post-technique">
                   <label for="size">Technique:</label>
                   {% csrf_token %}
@@ -1114,12 +1107,13 @@ function add_to_cart() {
                     {% endfor %}
                   </select>
                 </form>
-                <form method="POST" id="post-form">
+                <form method="POST" id="post-size">
                   <input type="hidden" name="productid" id="productid" value="{{ product.id }}">
                   <label for="size">Size:</label>
                   {% csrf_token %}
-                  <select class="form-control custom-select" name="size" id="size" required>
+                  <select class="form-control custom-select" name="size" id="size-selector" required>
                     {% for rs in sizes %}
+                    
                     <option {% if variant.size_id == rs.size_id %} selected {% endif %} value="{{ rs.size_id }}">{{ rs.size }}</option>
                     {% endfor %}
                   </select>
@@ -1134,13 +1128,13 @@ function add_to_cart() {
                   {% csrf_token %}
                   <label for="appendHere">Color:</label>
                   <div id="appendHere">
-                    <input type="hidden" name="size" id="size" value="{{ size_id }}">
                     {% for rs in colors %}
-                      <div class="custom-control custom-option custom-control-inline mb-2">
-                          <input type="radio" style="display: none;" name="hexOrTexture" value="{% if rs.color.texture %}{{ rs.color.texture.url }}{% else %}{{ rs.color.color_code }}{% endif %}" {% if variant.id == rs.id %} checked {% endif %}>
-                          <input class="custom-control-input" data-label="colorOption" type="radio" name="variantid" id="{{ rs.color.id }}" onchange="this.form.submit();"  value="{{ rs.id }}" {% if variant.id == rs.id %} checked {% endif %}>
-                          <label data-toggle="tooltip" data-placement="bottom" title="{{ rs.color.name }}" class="custom-option-label rounded-circle" for="{{ rs.color.id }}"><span class="custom-option-color rounded-circle" style="{% if rs.color.texture %}background-image: url({{ rs.color.texture.url }}){% else %}background-color: {{ rs.color.color_code }}{% endif %}"></span></label>
-                      </div>
+                        <div class="custom-control custom-option custom-control-inline mb-2">
+                            <input type="radio" style="display: none;" name="hexOrTexture" value="{% if rs.color.texture %}{{ rs.color.texture.url }}{% else %}{{ rs.color.color_code }}{% endif %}" {% if variant.id == rs.id %} checked {% endif %}>
+                            <input type="hidden" name="variantid" value="{{ rs.id }}" {% if variant.id == rs.id %} checked {% endif %}>
+                            <input class="custom-control-input" data-label="colorOption" type="radio" name="colorid" id="{{ rs.color.id }}" value="{{ rs.color.id }}" {% if variant.id == rs.id %} checked {% endif %}>
+                            <label data-toggle="tooltip" data-placement="bottom" title="{{ rs.color.name }}" class="custom-option-label rounded-circle" for="{{ rs.color.id }}"><span class="custom-option-color rounded-circle" style="{% if rs.color.texture %}background-image: url({{ rs.color.texture.url }}){% else %}background-color: {{ rs.color.color_code }}{% endif %}"></span></label>
+                        </div>
                     {% endfor %}
                   </div>
                 </form>
@@ -1148,7 +1142,7 @@ function add_to_cart() {
             </div>
             <div class="row mb-3 mt-3">
               <div class="col">
-                <form id="addtocartform" action="{% url 'cart:cart_add' variant.id %}" method="POST" enctype="multipart/form-data">
+                <form id="addtocartform" method="POST" enctype="multipart/form-data">
                   {{ cart_product_form.as_p }}
                   {% csrf_token %}
                   <input id='addtocartButton' type="submit" class="btn btn-primary" value="Add to Cart">

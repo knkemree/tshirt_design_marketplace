@@ -16,9 +16,6 @@ def cart_add(request, variant_id, art_id=None):
     data = {}
     cart = Cart(request)
     
-    # art_id = request.session.get('art_id')
-    # art = get_object_or_404(Design, id=art_id)
-    #variant = get_object_or_404(Variant, id=variant_id)
     if request.method == 'POST':
         form = CartAddProductForm(request.POST, request.FILES)
         if form.is_valid():
