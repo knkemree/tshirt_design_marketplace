@@ -16,9 +16,16 @@ $(document).ready(function() {
             csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]', '#post-size').val(),
         },
         success: function (data) {
+            
+            // apply color options
             $('#appendHere').html(data.rendered_table);
+
+            //apply price
             $('#price').text("$"+data.price_all_included);
+
+            // aplly add to cart
             variant_add_to_cart_url = data.variant_add_to_cart_url
+
         },
         error: function (data) {
             alert("Got an error! " + data);
@@ -41,7 +48,6 @@ $(document).ready(function() {
         dataType: 'json',
         success:  function(data){
             var texture = data.color_id.startsWith("/");
-            console.log(texture)
 
             if (texture) {
             document.getElementById("tshirt-div").style.backgroundImage = "url(" + data.color_id + ")";
@@ -55,16 +61,21 @@ $(document).ready(function() {
             $('#price').text("$"+data.price_all_included);
 
             variant_add_to_cart_url = data.variant_add_to_cart_url
-            console.log(data);
+            
         }
       });
     };
+
+    $('#size-selector').on('change', function() {
+        ajax_change_size();
+        // alert( this.value );
+    });
 
 
     $('input[name=colorid]', '#post-color').change(function(e){
         // $('#post-color').submit();
         // dogru variant'i checked olarak gostrebilmek icin change_size calistirmak gerekiyor
-        ajax_change_size();
+        
         ajax_change_color();
         
        

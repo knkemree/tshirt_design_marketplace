@@ -238,8 +238,11 @@ $(document).ready(function(){
     });
 
     function change_image_color(){
-      var codeOrTexture = $('input[name=hexOrTexture]:checked', '#post-color').val();
+      var codeOrTexture = $('input[name=hexOrTexture]', '#post-color').val();
+      console.log('code or texture?')
+      console.log(codeOrTexture)
       var texture = codeOrTexture.startsWith("/");
+      console.log(texture)
       if (texture) {
         document.getElementById("tshirt-div").style.backgroundImage = "url(" + codeOrTexture + ")";
         $(".thumbnail_image").css("background-image", "url(" + codeOrTexture + ")");
@@ -264,9 +267,28 @@ $(document).ready(function(){
             csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]', '#post-size').val(),
         },
         success: function (data) {
+
+            // apply color options
             $('#appendHere').html(data.rendered_table);
+
+            //apply price
             $('#price').text("$"+data.price_all_included);
+
+            // aplly add to cart
             variant_add_to_cart_url = data.variant_add_to_cart_url
+
+            // apply color
+            var texture = data.color_id.startsWith("/");
+            console.log(texture)
+
+            if (texture) {
+            document.getElementById("tshirt-div").style.backgroundImage = "url(" + data.color_id + ")";
+            $(".thumbnail_image").css("background-image", "url(" + data.color_id + ")");
+            
+            } else {
+            document.getElementById("tshirt-div").style.backgroundColor = data.color_id;
+            $(".thumbnail_image").css("background-color", data.color_id);
+            };
         },
         error: function (data) {
             alert("Got an error! " + data);
@@ -294,7 +316,6 @@ $(document).ready(function(){
         dataType: 'json',
         success:  function(data){
             var texture = data.color_id.startsWith("/");
-            console.log(texture)
 
             if (texture) {
             document.getElementById("tshirt-div").style.backgroundImage = "url(" + data.color_id + ")";
@@ -1122,7 +1143,7 @@ canvas.on('object:removed', function(e) {
                   <div id="appendHere">
                     {% for rs in colors %}
                         <div class="custom-control custom-option custom-control-inline mb-2">
-                            <input type="radio" style="display: none;" name="hexOrTexture" value="{% if rs.color.texture %}{{ rs.color.texture.url }}{% else %}{{ rs.color.color_code }}{% endif %}" {% if variant.id == rs.id %} checked {% endif %}>
+                            <input type="text" style="display: none;" name="hexOrTexture" value="{% if rs.color.texture %}{{ rs.color.texture.url }}{% else %}{{ rs.color.color_code }}{% endif %}" {% if variant.id == rs.id %} checked {% endif %}>
                             <input type="hidden" name="variantid" value="{{ rs.id }}" {% if variant.id == rs.id %} checked {% endif %}>
                             <input class="custom-control-input" data-label="colorOption" type="radio" name="colorid" id="{{ rs.color.id }}" value="{{ rs.color.id }}" {% if variant.id == rs.id %} checked {% endif %}>
                             <label data-toggle="tooltip" data-placement="bottom" title="{{ rs.color.name }}" class="custom-option-label rounded-circle" for="{{ rs.color.id }}"><span class="custom-option-color rounded-circle" style="{% if rs.color.texture %}background-image: url({{ rs.color.texture.url }}){% else %}background-color: {{ rs.color.color_code }}{% endif %}"></span></label>

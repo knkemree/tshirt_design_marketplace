@@ -91,25 +91,36 @@ def change_size(request):
         method_id = request.GET.get('method_id', None)
         color_id = request.GET.get('color_id', None)
 
-        #variant, placement ve size price'i degistirmek icin gerekli
-        variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0] #burda get  de kullanabilirdim ama olaki size id'si ve color id'si ayni olan variant olusturulursa ilki secilecek
-        print('variant ne', variant,variant.id, variant.size, variant.color, variant.color.id)
         placement = get_object_or_404(Placement, id=place_id)
         method = get_object_or_404(Method, id=method_id)
-
-        colors = Variant.objects.filter(product_id=product_id, size_id=size_id).order_by('color_id')
-        #variant = colors[0]
         
-        context = {
-            'size_id': size_id,
-        #    'productid': product_id,
-            'colors': colors,
-            'variant':variant,
-        }
-        data = {'rendered_table': render_to_string('color_list.html', context=context, request=request),
-                'price_all_included': variant.variant_price()+placement.placement_price()+method.method_price()}
+
+        #variant, placement ve size price'i degistirmek icin gerekli
+        variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0]
+        # try:
+        #     variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0] #burda get  de kullanabilirdim ama olaki size id'si ve color id'si ayni olan variant olusturulursa ilki secilecek
+        # except:
+        #     # eger size degistirildiginde secili renk o size'da yoksa ilk rengi sec
+        #     variant = Variant.objects.filter(product_id=product_id, size_id=size_id).order_by('color_id')[0]
+        #     # .exclude(color_id__texture__isnull=True)
+        #     print(variant.color)
+        #     print('burayi print ediyor mu')
+
+        
+        if variant.color.texture:
+            data['color_id'] = variant.color.texture.url
+        else:
+            data['color_id'] = variant.color.color_code    
+        
+        #color options
+        colors = Variant.objects.filter(product_id=product_id, size_id=size_id).order_by('color_id')
+        
+        context = {'size_id': size_id, 'colors': colors, 'variant':variant,}
+
+        data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price()
+        data['rendered_table'] =  render_to_string('color_list.html', context=context, request=request)
         data['variant_add_to_cart_url'] = "/cart/add/"+str(variant.id)+"/"
-        #data = {'rendered_table':size_id}
+        
         return JsonResponse(data)
     return JsonResponse(data)
 
@@ -167,7 +178,7 @@ def change_color(request):
         #variant, placement ve size price'i degistirmek icin gerekli
         color = get_object_or_404(Color, id=color_id)
         if color.texture:
-            data['color_id'] = color.texture
+            data['color_id'] = color.texture.url
         else:
             data['color_id'] = color.color_code
 
