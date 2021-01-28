@@ -241,7 +241,7 @@ $(document).ready(function(){
       var codeOrTexture = $('input[name=hexOrTexture]', '#post-color').val();
       console.log('code or texture?')
       console.log(codeOrTexture)
-      var texture = codeOrTexture.startsWith("/");
+      let texture = codeOrTexture.startsWith("/");
       console.log(texture)
       if (texture) {
         document.getElementById("tshirt-div").style.backgroundImage = "url(" + codeOrTexture + ")";
@@ -278,7 +278,7 @@ $(document).ready(function(){
             variant_add_to_cart_url = data.variant_add_to_cart_url
 
             // apply color
-            var texture = data.color_id.startsWith("/");
+            let texture = data.color_id.startsWith("/");
             console.log(texture)
 
             if (texture) {
@@ -286,8 +286,12 @@ $(document).ready(function(){
             $(".thumbnail_image").css("background-image", "url(" + data.color_id + ")");
             
             } else {
-            document.getElementById("tshirt-div").style.backgroundColor = data.color_id;
-            $(".thumbnail_image").css("background-color", data.color_id);
+              if(document.getElementById("tshirt-div").style.backgroundImage){
+                $("#tshirt-div").css('background-image', 'none');
+                $(".thumbnail_image").css('background-image', 'none');
+              };
+              document.getElementById("tshirt-div").style.backgroundColor = data.color_id;
+              $(".thumbnail_image").css("background-color", data.color_id);
             };
         },
         error: function (data) {
@@ -315,15 +319,21 @@ $(document).ready(function(){
         },
         dataType: 'json',
         success:  function(data){
-            var texture = data.color_id.startsWith("/");
+            let texture = data.color_id.startsWith("/");
             console.log('calisan burasi')
+            console.log(data.color_id)  
+            console.log(texture)
             if (texture) {
             document.getElementById("tshirt-div").style.backgroundImage = "url(" + data.color_id + ")";
             $(".thumbnail_image").css("background-image", "url(" + data.color_id + ")");
             
             } else {
-            document.getElementById("tshirt-div").style.backgroundColor = data.color_id;
-            $(".thumbnail_image").css("background-color", data.color_id);
+              if(document.getElementById("tshirt-div").style.backgroundImage){
+                $("#tshirt-div").css('background-image', 'none');
+                $(".thumbnail_image").css('background-image', 'none');
+              };
+              document.getElementById("tshirt-div").style.backgroundColor = data.color_id;
+              $(".thumbnail_image").css("background-color", data.color_id);
             };
 
             $('#price').text("$"+data.price_all_included);

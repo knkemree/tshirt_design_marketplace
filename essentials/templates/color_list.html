@@ -26,15 +26,19 @@ $(document).ready(function() {
             // aplly add to cart
             variant_add_to_cart_url = data.variant_add_to_cart_url
 
-            var texture = data.color_id.startsWith("/");
+            let texture = data.color_id.startsWith("/");
 
             if (texture) {
             document.getElementById("tshirt-div").style.backgroundImage = "url(" + data.color_id + ")";
             $(".thumbnail_image").css("background-image", "url(" + data.color_id + ")");
             
             } else {
-            document.getElementById("tshirt-div").style.backgroundColor = data.color_id;
-            $(".thumbnail_image").css("background-color", data.color_id);
+                if(document.getElementById("tshirt-div").style.backgroundImage){
+                    $("#tshirt-div").css('background-image', 'none');
+                    $(".thumbnail_image").css('background-image', 'none');
+                };
+                document.getElementById("tshirt-div").style.backgroundColor = data.color_id;
+                $(".thumbnail_image").css("background-color", data.color_id);
             };
 
         },
@@ -58,15 +62,19 @@ $(document).ready(function() {
         },
         dataType: 'json',
         success:  function(data){
-            var texture = data.color_id.startsWith("/");
+            let texture = data.color_id.startsWith("/");
 
             if (texture) {
             document.getElementById("tshirt-div").style.backgroundImage = "url(" + data.color_id + ")";
             $(".thumbnail_image").css("background-image", "url(" + data.color_id + ")");
             
             } else {
-            document.getElementById("tshirt-div").style.backgroundColor = data.color_id;
-            $(".thumbnail_image").css("background-color", data.color_id);
+                if(document.getElementById("tshirt-div").style.backgroundImage){
+                    $("#tshirt-div").css('background-image', 'none');
+                    $(".thumbnail_image").css('background-image', 'none');
+                };
+                document.getElementById("tshirt-div").style.backgroundColor = data.color_id;
+                $(".thumbnail_image").css("background-color", data.color_id);
             };
 
             $('#price').text("$"+data.price_all_included);

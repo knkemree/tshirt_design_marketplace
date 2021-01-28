@@ -96,15 +96,15 @@ def change_size(request):
         
 
         #variant, placement ve size price'i degistirmek icin gerekli
-        variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0]
-        # try:
-        #     variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0] #burda get  de kullanabilirdim ama olaki size id'si ve color id'si ayni olan variant olusturulursa ilki secilecek
-        # except:
-        #     # eger size degistirildiginde secili renk o size'da yoksa ilk rengi sec
-        #     variant = Variant.objects.filter(product_id=product_id, size_id=size_id).order_by('color_id')[0]
-        #     # .exclude(color_id__texture__isnull=True)
-        #     print(variant.color)
-        #     print('burayi print ediyor mu')
+        #variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0]
+        try:
+            variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0] #burda get  de kullanabilirdim ama olaki size id'si ve color id'si ayni olan variant olusturulursa ilki secilecek
+        except:
+            # eger size degistirildiginde secili renk o size'da yoksa ilk rengi sec
+            variant = Variant.objects.filter(product_id=product_id, size_id=size_id, color__texture__isnull=False).order_by('color_id')[0]
+            
+            print(variant.color)
+            print('burayi print ediyor mu')
 
         
         if variant.color.texture:
