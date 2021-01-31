@@ -68,7 +68,7 @@ def product_detail(request, id, slug):
         qty = 7
     else:
         qty = len(others)
-    others = random.sample(others, qty)
+    others = random.sample(others, 7)
 
     #color = colors[0].color.name
     
