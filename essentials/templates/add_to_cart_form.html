@@ -1,6 +1,32 @@
 {{ variant}} {{ variant.size}} {{ variant.color }}
 <script>
 $(document).ready(function(){
+  var canvasModifiedCallback = function() {
+        console.log('canvas modified!');
+        var dataUrl = canvas.toDataURL();
+        $('#id_design').val(dataUrl);
+        canvas.renderAll();
+        
+        var node = document.getElementById('tshirt-div');
+        domtoimage.toPng(node).then(function (dataUrl) {
+            
+            var img = new Image();
+            var options = {
+            quality: 0.99,
+            };
+            img.src = dataUrl;
+            //document.body.appendChild(img);
+            $('#id_end_product_img').val(dataUrl) 
+            
+        }).catch(function (error) {
+          console.error('oops, something went wrong!', error);
+        });
+    };
+
+    canvas.on('object:added', canvasModifiedCallback);
+    canvas.on('object:removed', canvasModifiedCallback);
+    canvas.on('object:modified', canvasModifiedCallback);
+
     function ajax_change_color(){
         $.ajax({ 
           url: "{% url 'essentials:change_color' %}",
@@ -112,6 +138,55 @@ $(document).ready(function(){
       });
   
       setTimeout(apply_placement_id(),1000);
+
+      function rasterizeJSON(){
+      // raterized = JSON.stringify(canvas.toObject());
+      raterized = JSON.stringify(canvas.toDatalessJSON());
+      // localStorage.setItem('Kanvas', raterized);
+      // sessionStorage.setItem("lastname", raterized);
+      $('#id_json_data').val(raterized);
+    };
+
+      function add_to_cart() {
+      canvas.discardActiveObject();
+      canvas.renderAll();
+      $(document.body).css({'cursor' : 'wait'});
+      $( "#addtocartButton" ).addClass('disabled');
+      var add_to_cart_form = $('#addtocartform');
+      var action = add_to_cart_form.attr('action');
+      var method = add_to_cart_form.attr('method');
+      var cart_data = add_to_cart_form.serialize();
+      $.ajax({
+          url : action, // the endpoint
+          type : method, // http method
+          data : cart_data, // data sent with the post request
+          // handle a successful response
+          success : function(data) {
+              console.log("success"); // another sanity check
+              location.href = '/cart/'
+              $(document.body).css({'cursor' : 'default'});
+          },
+          // handle a non-successful response
+          error : function(xhr,errmsg,err) {
+            $(document.body).css({'cursor' : 'default'});
+              $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                  " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+              console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+          }
+      });
+    };
+
+    $('#addtocartform').on('submit', function(event){
+      event.preventDefault();
+      console.log("form submitted!"); 
+      rasterizeJSON();
+      setTimeout(add_to_cart(),3000);
+    });
+
+    $( "#addtocartform" ).mouseover(function() {
+      canvas.discardActiveObject();
+      canvas.renderAll();
+    });
 });
 </script>
 <form id="addtocartform" method="POST" enctype="multipart/form-data" action="{% url 'cart:cart_add' id %}">
