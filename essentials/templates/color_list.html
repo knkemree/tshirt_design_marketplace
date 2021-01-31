@@ -26,7 +26,7 @@ $(document).ready(function() {
             $('#price').text("$"+data.price_all_included);
 
             // aplly add to cart
-            variant_add_to_cart_url = data.variant_add_to_cart_url
+            $('#addToCartAppend').html(data.variant_add_to_cart_url);
 
             let texture = data.color_id.startsWith("/");
 
@@ -52,6 +52,7 @@ $(document).ready(function() {
     };
 
     function ajax_change_color(){
+        
       $.ajax({ 
         url: "{% url 'essentials:change_color' %}",
         data: {
@@ -81,19 +82,20 @@ $(document).ready(function() {
 
             $('#price').text("$"+data.price_all_included);
 
-            variant_add_to_cart_url = data.variant_add_to_cart_url
+            $('#addToCartAppend').html(data.variant_add_to_cart_url);
             
         }
       });
     };
 
-    $('#size-selector').on('change', function() {
-        ajax_change_size();
+    $('#size-selector').on('change', function(e) {
+        e.preventDefault();
+       // ajax_change_size();
         // alert( this.value );
     });
 
 
-    $('input[name=colorid]', '#post-color').change(function(e){
+    $('input[name=colorid]', '#post-color').change(function(){
         // $('#post-color').submit();
         // dogru variant'i checked olarak gostrebilmek icin change_size calistirmak gerekiyor
         
