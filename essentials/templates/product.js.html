@@ -15,8 +15,8 @@ $(document).ready(function(){
     
     var deleteImg = document.createElement('img');
     deleteImg.src = deleteIcon;
-    var cloneImg = document.createElement('img');
-    cloneImg.src = cloneIcon;
+    // var cloneImg = document.createElement('img');
+    // cloneImg.src = cloneIcon;
     
     fabric.Object.prototype.transparentCorners = true;
     fabric.Object.prototype.cornerColor = '#B2CCFF';
@@ -26,6 +26,7 @@ $(document).ready(function(){
     var fonts = ["Graduate",'Bangers','Boogaloo','Caveat','Caveat Brush','Chela One','Cherry Swash','Coiny','Concert One','Creepster','Fredoka One','Germania One','Knewave','Montserrat','Open Sans','Oswald','Permanent Marker','Rammetto One','Shrikhand','Spicy Rice','Vampiro One','Vollkorn','Wendy One'];
     
     // When the user clicks on upload a custom picture
+    
     document.getElementById('id_uploaded_image').addEventListener("change", function(e){
         console.log('image changed')
         var reader = new FileReader();  
@@ -33,7 +34,7 @@ $(document).ready(function(){
         reader.onload = function (event){
             var imgObj = new Image();
             imgObj.src = event.target.result;
-            $('#id_design').val(e.target.result);
+            //$('#id_design').val(e.target.result);
             // When the picture loads, create the image in Fabric.js
             imgObj.onload = function () {
                 var img = new fabric.Image(imgObj);
@@ -124,18 +125,18 @@ $(document).ready(function(){
         cornerSize: 18
     });
     
-    fabric.Object.prototype.controls.clone = new fabric.Control({
-        x: -0.5,
-        y: -0.5,
-        // offsetY: -16,
-        // offsetX: -16,
-        offsetY: -12,
-        offsetX: -12,
-        cursorStyle: 'pointer',
-        mouseUpHandler: cloneObject,
-        render: renderIcon(cloneImg),
-        cornerSize: 14
-    });
+    // fabric.Object.prototype.controls.clone = new fabric.Control({
+    //     x: -0.5,
+    //     y: -0.5,
+    //     // offsetY: -16,
+    //     // offsetX: -16,
+    //     offsetY: -12,
+    //     offsetX: -12,
+    //     cursorStyle: 'pointer',
+    //     mouseUpHandler: cloneObject,
+    //     render: renderIcon(cloneImg),
+    //     cornerSize: 14
+    // });
     
     function deleteObject(eventData, target) {
             var cnv = target.canvas;
@@ -143,14 +144,14 @@ $(document).ready(function(){
             cnv.requestRenderAll();
     };
     
-    function cloneObject(eventData, target) {
-        var canvas = target.canvas;
-        target.clone(function(cloned) {
-        cloned.left += 10;
-        cloned.top += 10;
-        canvas.add(cloned);
-        });
-    };
+    // function cloneObject(eventData, target) {
+    //     var canvas = target.canvas;
+    //     target.clone(function(cloned) {
+    //     cloned.left += 10;
+    //     cloned.top += 10;
+    //     canvas.add(cloned);
+    //     });
+    // };
   
 
   $('#fill').spectrum({
@@ -709,7 +710,6 @@ $(document).ready(function(){
       });
   
       function ajax_change_color(){
-        var cart_data = add_to_cart_form.serialize();
         $.ajax({ 
           url: "{% url 'essentials:change_color' %}",
           data: {
