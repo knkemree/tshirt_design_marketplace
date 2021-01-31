@@ -502,7 +502,7 @@
                     <a class="card-img-top d-block overflow-hidden" href="{{ product.get_design_url }}"><img src="{{ product.image.url }}" alt="Product"></a>
                     <div class="card-body py-2"><a class="product-meta d-block font-size-xs pb-1" href="#">{{ product.category }}</a>
                       <h3 class="product-title font-size-sm"><a href="{{ product.get_design_url }}">{{ product.title }}</a></h3>
-                      <div class="product-price"><span class="text-accent">${{ product.variants.first.price }} </span></div>
+                      <div class="product-price"><span class="text-accent">${{ other.variants.first.price }} </span></div>
                     </div>
                     <div class="product-floating-btn">
                       <button class="btn btn-primary btn-shadow btn-sm" type="button" data-toggle="toast" data-target="#cart-toast">+<i class="czi-cart font-size-base ml-1"></i></button>
