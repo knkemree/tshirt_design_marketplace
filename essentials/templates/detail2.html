@@ -139,7 +139,7 @@
     <!-- Navbar-->
     <header class="bg-light box-shadow-sm fixed-top">
       <div class="navbar navbar-expand-lg navbar-light">
-        <div class="container-fluid"><a class="navbar-brand d-none d-sm-block mr-3 mr-xl-4 flex-shrink-0" href="index.html" style="min-width: 7rem;"><img width="142" src="{% static 'img/logo-dark.png' %}" alt="Cartzilla"/></a><a class="navbar-brand d-sm-none mr-2" href="index.html" style="min-width: 4.625rem;"><img width="74" src="{% static 'img/logo-icon.png' %}" alt="Cartzilla"/></a>
+        <div class="container-fluid"><a class="navbar-brand d-none d-sm-block mr-3 mr-xl-4 flex-shrink-0" href="index.html" style="min-width: 7rem;"><img width="142" src="{% static 'img\illustrations\CONTEX (1).png' %}" alt="Cartzilla"/></a><a class="navbar-brand d-sm-none mr-2" href="index.html" style="min-width: 4.625rem;"><img width="74" src="{% static 'img/logo-icon.png' %}" alt="Context Custom"/></a>
           <!-- Search-->
           <div class="input-group-overlay d-none d-lg-block mx-4">
             <div class="input-group-prepend-overlay"><span class="input-group-text"><i class="czi-search"></i></span></div>
@@ -505,7 +505,9 @@
                       <div class="product-price"><span class="text-accent">${{ other.variants.first.price }} </span></div>
                     </div>
                     <div class="product-floating-btn">
-                      <button class="btn btn-primary btn-shadow btn-sm" type="button" data-toggle="toast" data-target="#cart-toast">+<i class="czi-cart font-size-base ml-1"></i></button>
+                      <form action="{{ other.get_design_url }}">
+                      <input class="btn btn-primary btn-shadow btn-sm" type="submit" value="Edit">
+                      </form>
                     </div>
                   </div>
                 </div>
@@ -523,7 +525,7 @@
           <div class="mx-auto px-3" style="max-width: 80rem;">
             <div class="row">
               <div class="col-xl-2 col-lg-3 col-sm-4 pb-2 mb-4">
-                <div class="mt-n1"><a class="d-inline-block align-middle" href="#"><img class="d-block mb-4" width="117" src="{% static 'img/footer-logo-light.png' %}" alt="Cartzilla"/></a></div>
+                <div class="mt-n1"><a class="d-inline-block align-middle" href="#"><img class="d-block mb-4" width="117" src="{% static 'img\illustrations\CONTEX (1).png' %}" alt="Context Custom"/></a></div>
                 <div class="btn-group dropdown disable-autohide">
                   <button class="btn btn-outline-light border-light btn-sm dropdown-toggle px-2" type="button" data-toggle="dropdown"><img class="mr-2" width="20" src="{% static 'img/flags/en.png' %}" alt="English"/>Eng / $
                   </button>
