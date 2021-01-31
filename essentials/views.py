@@ -15,6 +15,7 @@ from django.core.serializers import serialize
 from django.core import serializers
 from essentials.models import Color
 from cart.forms import CartAddProductForm
+import random
 
 
 
@@ -61,6 +62,14 @@ def product_detail(request, id, slug):
     variant = Variant.objects.get(id=variants[0].id)
     sizes = Variant.objects.filter(product_id = product.id).order_by('size_id').distinct('size__id')
     colors = Variant.objects.filter(product_id=id,size_id=variants[0].size_id ).order_by('color_id').distinct('color__id')
+
+    others = list(Product.objects.all())
+    if len(others) > 7:
+        qty = 7
+    else:
+        qty = len(others)
+    others = random.sample(others, qty)
+
     #color = colors[0].color.name
     
     # if request.method == 'POST':
@@ -79,7 +88,7 @@ def product_detail(request, id, slug):
     #     color = colors[0].color.name
     
     cart_product_form = CartAddProductForm()
-    context = {'product': product,'cart_product_form': cart_product_form,'sizes':sizes, 'colors':colors,  'variant':variant,}
+    context = {'product': product,'cart_product_form': cart_product_form,'sizes':sizes, 'colors':colors,  'variant':variant, 'others':others}
     return render(request,'detail2.html',context)
 
 def change_size(request):
