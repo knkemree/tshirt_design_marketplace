@@ -130,7 +130,7 @@ def change_size(request):
         colors = Variant.objects.filter(product_id=product_id, size_id=size_id).order_by('color_id')
         
         context = {'size_id': size_id, 'colors': colors, 'variant':variant}
-        context2 = {'id':variant.id,'form':form}
+        context2 = {'ajax_variant':variant,'form':form}
         data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price()
         data['rendered_table'] =  render_to_string('color_list.html', context=context, request=request)
         data['variant_add_to_cart_url'] = render_to_string('add_to_cart_form.html',context=context2, request=request)
@@ -200,7 +200,7 @@ def change_color(request):
             data['color_id'] = color.color_code
 
         data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price(),
-        context = {'id':variant.id,'form':form}
+        context = {'ajax_variant':variant,'form':form}
         data['variant_add_to_cart_url'] = render_to_string('add_to_cart_form.html',context=context, request=request)
         return JsonResponse(data)
         #return render(request, 'product-gallery.html', context)
@@ -236,7 +236,7 @@ def get_current_variant(request):
         variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0] #burda get  de kullanabilirdim ama olaki size id'si ve color id'si ayni olan variant olusturulursa ilki secilecek
         data['variant_id'] = variant.id
         
-        context = {'id':variant.id,'form':form}
+        context = {'ajax_variant':variant,'form':form}
         data['variant_add_to_cart_url'] = render_to_string('add_to_cart_form.html',context=context, request=request)
         return JsonResponse(data)
 

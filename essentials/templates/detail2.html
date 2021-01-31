@@ -66,6 +66,7 @@
   </head>
   <!-- Body-->
   <body class="bg-secondary">
+    
     <!-- Sign in / sign up modal-->
     <div class="modal fade" id="signin-modal" tabindex="-1" role="dialog">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -444,7 +445,10 @@
 
                 <!-- qty ve add to cart butonunun oldugu yer -->
                 <div id="addToCartAppend">
+                  
+                </div>
                 <form id="addtocartform" method="POST" enctype="multipart/form-data" action="{% url 'cart:cart_add' variant.id %}">
+                  
                 <div class="d-flex align-items-center pt-4 pb-4">
                     
                     {{ cart_product_form }}
@@ -453,7 +457,8 @@
                     
                 </div>
                 </form>
-                </div>
+              
+                
                  <!-- END qty ve add to cart butonunun oldugu yer -->
 
                 <!-- teknigin oldugu yer -->
@@ -471,6 +476,7 @@
                     </div>
                 </form>
                 <!-- END teknigin oldugu yer -->
+                
 
                 <!-- size seceneklerinin oldugu yer -->
                 <div class="d-flex justify-content-between align-items-center pb-1">
