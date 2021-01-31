@@ -1,0 +1,125 @@
+{{ variant}} {{ variant.size}} {{ variant.color }}
+<script>
+$(document).ready(function(){
+    function ajax_change_color(){
+        $.ajax({ 
+          url: "{% url 'essentials:change_color' %}",
+          data: {
+              'product_id':$('#productid').val(),
+              'place_id': $('.cz-thumblist-item.active').attr('id'),
+              'method_id': $( "#technique" ).val(),
+              'size_id': $('#size-selector').val(),
+              'color_id': $('input[name=colorid]:checked', '#post-color').val(),
+              csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]', '#post-color').val(),
+          },
+          dataType: 'json',
+          success:  function(data){
+              let texture = data.color_id.startsWith("/");
+              console.log('calisan burasi')
+              console.log(data.color_id)  
+              console.log(texture)
+              if (texture) {
+              document.getElementById("tshirt-div").style.backgroundImage = "url(" + data.color_id + ")";
+              $(".thumbnail_image").css("background-image", "url(" + data.color_id + ")");
+              
+              } else {
+                if(document.getElementById("tshirt-div").style.backgroundImage){
+                  $("#tshirt-div").css('background-image', 'none');
+                  $(".thumbnail_image").css('background-image', 'none');
+                };
+                document.getElementById("tshirt-div").style.backgroundColor = data.color_id;
+                $(".thumbnail_image").css("background-color", data.color_id);
+              };
+  
+              $('#price').text("$"+data.price_all_included);
+  
+              $('#addToCartAppend').html(data.variant_add_to_cart_url);
+              console.log(data);
+          }
+        });
+      };
+  
+  
+      $('input[name=colorid]', '#post-color').change(function(){
+        setTimeout(ajax_change_color(),1000)
+        // ajax_change_color();
+      });
+
+      function ajax_change_method(){
+        var tech = $( "#technique" ).val();
+        $( "#id_technique" ).val(tech);
+        $.ajax({ 
+          url: "{% url 'essentials:change_method' %}",
+          data: {
+            'product_id':$('#productid').val(),
+            'place_id': $('.cz-thumblist-item.active').attr('id'),
+            'method_id': $( "#technique" ).val(),
+            'size_id': $('#size-selector').val(),
+            'color_id': $('input[name=colorid]:checked', '#post-color').val(),
+          },
+          dataType: 'json',
+          success: function(data){
+            // console.log(data.price_all_included); 
+            $('#price').text("$"+data.price_all_included);
+          }
+        });
+  
+      };
+  
+      // send ajax request on load print metodunu saptamak icin
+      ajax_change_method();
+  
+      // send ajax request on change print metodunu saptamak icin
+      $(document).on('change', '#post-technique',function(e){
+        var tech = $( "#technique" ).val();
+        $( "#id_technique" ).val(tech);
+        ajax_change_method();
+      });
+
+      function apply_current_price(){
+        $.ajax({
+          url : '{% url "essentials:change_place" %}', // the endpoint
+          data : {
+            'product_id':$('#productid').val(),
+            'place_id': $('.cz-thumblist-item.active').attr('id'),
+            'method_id': $( "#technique" ).val(),
+            'size_id': $('#size-selector').val(),
+            'color_id': $('input[name=colorid]:checked', '#post-color').val(),
+          }, // data sent with the post request
+          dataType: 'json',
+          // handle a successful response
+          success : function(data) {
+              // console.log(data.price_all_included); 
+              $('#price').text("$"+data.price_all_included);
+          },       
+        });
+      };
+  
+      $('#post-placement').on('click', function(event){
+        event.preventDefault(); 
+        apply_current_price();
+      });
+
+      function apply_placement_id(){
+        var placement_id = $('.cz-thumblist-item.active').attr('id');
+        $( "#id_placement" ).val(placement_id);
+      };
+  
+      $('.cz-thumblist-item').on('click', function(event){
+        var place_id = $('.cz-thumblist-item.active').attr('id');
+        apply_placement_id();
+        ajax_dynamic_canvas();
+      });
+  
+      setTimeout(apply_placement_id(),1000);
+});
+</script>
+<form id="addtocartform" method="POST" enctype="multipart/form-data" action="{% url 'cart:cart_add' id %}">
+    <div class="d-flex align-items-center pt-4 pb-4">
+        
+        {{ form }}
+        {% csrf_token %}
+        <input id='addtocartButton' type="submit" class="btn btn-primary btn-shadow btn-block" value="Add to cart">
+        
+    </div>
+</form>

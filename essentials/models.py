@@ -92,6 +92,9 @@ class Product(models.Model):
     # # def get_absolute_url(self):
     # #     return reverse('category_detail', kwargs={'slug': self.slug})
     def get_absolute_url(self):
+        return reverse('essentials:blank_single_item',args=[self.id, self.slug])
+
+    def get_design_url(self):
         return reverse('essentials:product_detail',args=[self.id, self.slug])
 
     # def avaregereview(self):

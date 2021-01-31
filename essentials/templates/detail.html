@@ -720,47 +720,43 @@ canvas.on('object:removed', function(e) {
 
 <script>
 
-</script>
-
-<script>
-
   
 
-  $('#save').on('click', function(event){
-    canvas.discardActiveObject();
-    canvas.renderAll();
-    var node = document.getElementById('tshirt-div');
-    domtoimage.toPng(node).then(function (dataUrl) {
-        var img = new Image();
-        var options = {
-        quality: 0.99,
-        };
-        img.src = dataUrl;
-        document.body.appendChild(img);
-        $('#id_end_product_img').val(dataUrl) 
-    }).catch(function (error) {
-      console.error('oops, something went wrong!', error);
-    });
-    var node2 = document.getElementById('tshirt-canvas');
-    canvas.backgroundImage = null;
-    canvas.renderAll();
-    domtoimage.toPng(node2).then(function (dataUrl) {
-        var img1 = new Image();
-        var options = {
-        quality: 0.99, 
-        width: 2000,
-        height: 2000,
-        };
-        img1.src = dataUrl;
-        document.body.appendChild(img1);
-        $('#id_design').val(dataUrl); 
-    }).catch(function (error) {
-      console.error('oops, something went wrong!', error);
-    });
-    var mockup_id = $(".cz-preview-item.active :input").val();
-    $('#id_mockup').val(mockup_id)
-    alert('Your design saved');
-  });
+  // $('#save').on('click', function(event){
+  //   canvas.discardActiveObject();
+  //   canvas.renderAll();
+  //   var node = document.getElementById('tshirt-div');
+  //   domtoimage.toPng(node).then(function (dataUrl) {
+  //       var img = new Image();
+  //       var options = {
+  //       quality: 0.99,
+  //       };
+  //       img.src = dataUrl;
+  //       document.body.appendChild(img);
+  //       $('#id_end_product_img').val(dataUrl) 
+  //   }).catch(function (error) {
+  //     console.error('oops, something went wrong!', error);
+  //   });
+  //   var node2 = document.getElementById('tshirt-canvas');
+  //   canvas.backgroundImage = null;
+  //   canvas.renderAll();
+  //   domtoimage.toPng(node2).then(function (dataUrl) {
+  //       var img1 = new Image();
+  //       var options = {
+  //       quality: 0.99, 
+  //       width: 2000,
+  //       height: 2000,
+  //       };
+  //       img1.src = dataUrl;
+  //       document.body.appendChild(img1);
+  //       $('#id_design').val(dataUrl); 
+  //   }).catch(function (error) {
+  //     console.error('oops, something went wrong!', error);
+  //   });
+  //   var mockup_id = $(".cz-preview-item.active :input").val();
+  //   $('#id_mockup').val(mockup_id)
+  //   alert('Your design saved');
+  // });
 
   var canvasModifiedCallback = function() {
     console.log('canvas modified!');
@@ -859,8 +855,6 @@ canvas.on('object:removed', function(e) {
               </a>
               {% endfor %}
             </form>
-            
-            <a class="cz-thumblist-item video-item" href="https://www.youtube.com/watch?v=nrQevwouWn0"><div class="cz-thumblist-item-text"><i class="czi-video"></i>Video</div></a>
           </div>
         </div>
         
@@ -1181,4 +1175,6 @@ canvas.on('object:removed', function(e) {
     </div>
   </div>
 </div>
+
+
 {% endblock %}

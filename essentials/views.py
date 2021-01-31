@@ -14,6 +14,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.core.serializers import serialize
 from django.core import serializers
 from essentials.models import Color
+from cart.forms import CartAddProductForm
 
 
 
@@ -79,10 +80,11 @@ def product_detail(request, id, slug):
     
     cart_product_form = CartAddProductForm()
     context = {'product': product,'cart_product_form': cart_product_form,'sizes':sizes, 'colors':colors,  'variant':variant,}
-    return render(request,'detail.html',context)
+    return render(request,'detail2.html',context)
 
 def change_size(request):
     data = {}
+    form = CartAddProductForm()
     #if request.POST.get('action') == 'post':
     if request.is_ajax:
         size_id = request.GET.get('size')
@@ -90,6 +92,9 @@ def change_size(request):
         place_id = request.GET.get('place_id', None)
         method_id = request.GET.get('method_id', None)
         color_id = request.GET.get('color_id', None)
+        cart_data = request.GET.get('cart_data', None)
+
+        print(cart_data)    
 
         placement = get_object_or_404(Placement, id=place_id)
         method = get_object_or_404(Method, id=method_id)
@@ -115,11 +120,12 @@ def change_size(request):
         #color options
         colors = Variant.objects.filter(product_id=product_id, size_id=size_id).order_by('color_id')
         
-        context = {'size_id': size_id, 'colors': colors, 'variant':variant,}
-
+        context = {'size_id': size_id, 'colors': colors, 'variant':variant}
+        context2 = {'id':variant.id,'form':form}
         data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price()
         data['rendered_table'] =  render_to_string('color_list.html', context=context, request=request)
-        data['variant_add_to_cart_url'] = "/cart/add/"+str(variant.id)+"/"
+        data['variant_add_to_cart_url'] = render_to_string('add_to_cart_form.html',context=context2, request=request)
+        #"/cart/add/"+str(variant.id)+"/"
         
         return JsonResponse(data)
     return JsonResponse(data)
@@ -163,17 +169,19 @@ def change_method(request):
 
 def change_color(request):
     data = {}
+    form = CartAddProductForm()
     if request.is_ajax:
         product_id = request.GET.get('product_id', None)
         place_id = request.GET.get('place_id', None)
         method_id = request.GET.get('method_id', None)
         size_id = request.GET.get('size_id', None)
         color_id = request.GET.get('color_id', None)
+        cart_data = request.GET.get('cart_data', None)
         placement = get_object_or_404(Placement, id=place_id)
         method = get_object_or_404(Method, id=method_id)
         variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0] #burda get  de kullanabilirdim ama olaki size id'si ve color id'si ayni olan variant olusturulursa ilki secilecek
         
-        
+        print(cart_data)
 
         #variant, placement ve size price'i degistirmek icin gerekli
         color = get_object_or_404(Color, id=color_id)
@@ -183,7 +191,8 @@ def change_color(request):
             data['color_id'] = color.color_code
 
         data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price(),
-        data['variant_add_to_cart_url'] = "/cart/add/"+str(variant.id)+"/"
+        context = {'id':variant.id,'form':form}
+        data['variant_add_to_cart_url'] = render_to_string('add_to_cart_form.html',context=context, request=request)
         return JsonResponse(data)
         #return render(request, 'product-gallery.html', context)
     return JsonResponse(data)
@@ -208,6 +217,7 @@ def dynamic_canvas(request):
 
 def get_current_variant(request):
     data = {}
+    form = CartAddProductForm(request.POST)
     if request.is_ajax:
         color_id = request.GET.get('color_id', None)
         size_id = request.GET.get('size_id', None)
@@ -216,10 +226,25 @@ def get_current_variant(request):
         #variant, placement ve size price'i degistirmek icin gerekli
         variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0] #burda get  de kullanabilirdim ama olaki size id'si ve color id'si ayni olan variant olusturulursa ilki secilecek
         data['variant_id'] = variant.id
-        data['variant_add_to_cart_url'] = "/cart/add/"+str(variant.id)+"/"
+        
+        context = {'id':variant.id,'form':form}
+        data['variant_add_to_cart_url'] = render_to_string('add_to_cart_form.html',context=context, request=request)
         return JsonResponse(data)
 
 
 
 def product_design(request):
     return render(request,'product_design.html')
+
+def blank_single_item(request, id, slug):
+    query = request.GET.get('q')
+    product = get_object_or_404(Product,id=id,slug=slug,active=True)
+
+    variants = Variant.objects.filter(product_id=id).order_by('color_id')
+    variant = Variant.objects.get(id=variants[0].id)
+    sizes = Variant.objects.filter(product_id = product.id).order_by('size_id').distinct('size__id')
+    colors = Variant.objects.filter(product_id=id,size_id=variants[0].size_id ).order_by('color_id').distinct('color__id')
+    
+    cart_product_form = CartAddProductForm()
+    context = {'product': product,'cart_product_form': cart_product_form,'sizes':sizes, 'colors':colors,  'variant':variant,}
+    return render(request,'blank-single-item.html',context)

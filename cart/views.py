@@ -15,7 +15,9 @@ from django.core.mail import mail_admins
 def cart_add(request, variant_id, art_id=None):
     data = {}
     cart = Cart(request)
-    
+    print('cartta nee var')
+    print(cart)
+    print(variant_id)
     if request.method == 'POST':
         form = CartAddProductForm(request.POST, request.FILES)
         if form.is_valid():

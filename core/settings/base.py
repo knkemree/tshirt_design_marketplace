@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'phonenumber_field',
+    'fontawesome-free',
     
     #'allauth',
     #'allauth.account',

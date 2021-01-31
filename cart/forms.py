@@ -5,7 +5,8 @@ class CartAddProductForm(forms.Form):
                                 choices=PRODUCT_QUANTITY_CHOICES,
                                 coerce=int,
                                 #widget=forms.Select(attrs={'onchange':'this.form.submit();'})
-                                widget=forms.Select(attrs={'class':'form-control'})
+                                widget=forms.Select(attrs={'class':"custom-select mr-3",'style':"width: 5rem;"}),
+                                label=''
                                 )
     override = forms.BooleanField(required=False,
                                   initial=False,

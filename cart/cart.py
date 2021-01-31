@@ -30,16 +30,21 @@ class Cart(object):
 
         art_id = str(art.id)
 
+        
+
         # burasi olmazsa update ederken hata veriyor
         try:
             placement = get_object_or_404(Placement, id=placement)
             method = get_object_or_404(Method, id=technique)
+            print('placement burda')
+            print(placement)
         except:
+            print('placement bulunamiyor')
             pass
         if art_id not in self.cart:
             self.cart[art_id] = {'variant':str(variant),
                                     'variant_id':str(variant.id),
-                                    'price': str(variant.variant_price()+placement.placement_price()+method.method_price()),
+                                    'price': str(variant.variant_price()+placement.price+method.method_price()),
                                     'quantity': 0,
                                     'size':str(variant.size),
                                     'color':str(variant.color),

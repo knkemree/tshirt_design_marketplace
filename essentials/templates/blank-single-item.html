@@ -1,0 +1,1344 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ variant }}{% endblock %}
+
+{% block javascript %}
+
+<script>
+$(document).ready(function(){
+
+    // Text formatting actions
+
+  $('#btn-underline').on('click', function(){
+    dtEditText('underline');
+  });
+  $('#btn-bold').on('click', function(){
+    dtEditText('bold');
+  });
+  $('#btn-italic').on('click', function(){
+    dtEditText('italic');
+  }); 
+
+  // Functions
+  function dtEditText(action) {
+      var a = action;
+      var o = canvas.getActiveObject();
+      var t;
+
+      // If object selected, what type?
+      if (o) {
+          t = o.get('type');
+      }
+
+      if (o && t === 'i-text') {
+          switch(a) {
+              case 'bold':				
+                  var isBold = dtGetStyle(o, 'fontWeight') === 'bold';
+                  dtSetStyle(o, 'fontWeight', isBold ? '' : 'bold');
+              break;
+
+              case 'italic':
+                  var isItalic = dtGetStyle(o, 'fontStyle') === 'italic';
+                  dtSetStyle(o, 'fontStyle', isItalic ? '' : 'italic');
+              break;
+
+              case 'underline':
+                  var isUnderline = dtGetStyle(o, 'textDecoration') === 'underline';
+                  dtSetStyle(o, 'textDecoration', isUnderline ? '' : 'underline');
+              break;
+              canvas.renderAll();
+          }
+      }
+  }
+
+  // Get the style
+  function dtGetStyle(object, styleName) {
+      return object[styleName];
+  }
+
+  // Set the style
+  function dtSetStyle(object, styleName, value) {
+      object[styleName] = value;
+      object.set({dirty: true});
+      canvas.renderAll();
+  }
+})  
+</script>
+<script>
+  function rasterizeJSON(){
+    // raterized = JSON.stringify(canvas.toObject());
+    raterized = JSON.stringify(canvas.toDatalessJSON());
+    // localStorage.setItem('Kanvas', raterized);
+    // sessionStorage.setItem("lastname", raterized);
+    $('#id_json_data').val(raterized);
+  }
+</script>
+
+<script>
+  function saveCanvasToJSON() {
+    const json = JSON.stringify(canvas);
+    localStorage.setItem('Kanvas', json);
+
+  }
+</script>
+
+<script>
+  function loadCanvasFromJSON() {
+    const CANVAS = localStorage.getItem('Kanvas');
+    canvas.loadFromJSON(CANVAS, () => {
+      console.log('CANVAS untar');
+      console.log(CANVAS);
+
+      // making sure to render canvas at the end
+      canvas.renderAll();
+
+      // and checking if object's "name" is preserved
+      console.log('this.canvas.item(0).name');
+      console.log(canvas);
+    });
+  }
+</script>
+
+<script>
+  $('#loadFromJSON').on('click', function(){
+    loadCanvasFromJSON();
+  })
+</script>
+
+<script>
+  $('#saveToLocal').on('click', function(){
+    saveCanvasToJSON();
+  })
+</script>
+
+<script>
+  $('#toJson').on('click', function(){
+    console.log(JSON.stringify(canvas.toSVG()))
+  })
+</script>
+
+
+<script>
+  $('#add-text').on('click', function(){
+    var text = $('#text-string').val();
+    if(text != ''){
+      Addtext(text);
+      $('#text-string').val('')
+    }else{
+      alert('Text area empty')
+      $('#text-string').val('')
+    };
+
+    
+  })
+</script>
+
+
+<script>
+$(document).ready(function(){
+    $( ".cz-preview-item:first" ).addClass('active');
+    $( ".cz-thumblist-item:first" ).addClass('active');
+
+    function apply_current_price(){
+      $.ajax({
+        url : '{% url "essentials:change_place" %}', // the endpoint
+        data : {
+          'product_id':$('#productid').val(),
+          'place_id': $('.cz-thumblist-item.active').attr('id'),
+          'method_id': $( "#technique" ).val(),
+          'size_id': $('#size-selector').val(),
+          'color_id': $('input[name=colorid]:checked', '#post-color').val(),
+        }, // data sent with the post request
+        dataType: 'json',
+        // handle a successful response
+        success : function(data) {
+            // console.log(data.price_all_included); 
+            $('#price').text("$"+data.price_all_included);
+        },       
+      });
+    };
+
+    $('#post-placement').on('click', function(event){
+      event.preventDefault(); 
+      apply_current_price();
+    });
+
+
+    var variant_add_to_cart_url //set global variable otherwise undefined
+
+
+    function ajax_dynamic_canvas(){
+      $.ajax({ 
+        url: "{% url 'essentials:dynamic_canvas' %}",
+        data: {
+          'product_id': $('#productid').val(),
+        },
+        dataType: 'json',
+        success: function(data){
+          var place_id = $('.cz-thumblist-item.active').attr('id') ;
+          console.log(data[place_id].top); // another sanity check
+          $("#drawingArea").css({ top: data[place_id].top });
+          $("#drawingArea").css({ left: data[place_id].left });
+          $("#drawingArea").css({ width: data[place_id].width });
+          $("#drawingArea").css({ height: data[place_id].height });
+          $("#canvas-container").css({ height: data[place_id].height });
+          $("#canvas-container").css({ width: data[place_id].width });
+          h = parseInt(data[place_id].height, 10)
+          w = parseInt(data[place_id].width, 10)
+          canvas.setWidth(w);
+          canvas.setHeight(h)
+        }}
+      )
+    };
+
+    setTimeout(ajax_dynamic_canvas(),1000);
+
+    function apply_placement_id(){
+      var placement_id = $('.cz-thumblist-item.active').attr('id');
+      $( "#id_placement" ).val(placement_id);
+    };
+
+    $('.cz-thumblist-item').on('click', function(event){
+      var place_id = $('.cz-thumblist-item.active').attr('id');
+      apply_placement_id();
+      ajax_dynamic_canvas();
+    });
+
+    setTimeout(apply_placement_id(),1000);
+
+    function ajax_change_method(){
+      var tech = $( "#technique" ).val();
+      $( "#id_technique" ).val(tech);
+      $.ajax({ 
+        url: "{% url 'essentials:change_method' %}",
+        data: {
+          'product_id':$('#productid').val(),
+          'place_id': $('.cz-thumblist-item.active').attr('id'),
+          'method_id': $( "#technique" ).val(),
+          'size_id': $('#size-selector').val(),
+          'color_id': $('input[name=colorid]:checked', '#post-color').val(),
+        },
+        dataType: 'json',
+        success: function(data){
+          // console.log(data.price_all_included); 
+          $('#price').text("$"+data.price_all_included);
+        }
+      });
+
+    };
+
+    // send ajax request on load print metodunu saptamak icin
+    ajax_change_method();
+
+    // send ajax request on change print metodunu saptamak icin
+    $(document).on('change', '#post-technique',function(e){
+      var tech = $( "#technique" ).val();
+      $( "#id_technique" ).val(tech);
+      ajax_change_method();
+    });
+
+    function change_image_color(){
+      var codeOrTexture = $('input[name=hexOrTexture]', '#post-color').val();
+      console.log('code or texture?')
+      console.log(codeOrTexture)
+      let texture = codeOrTexture.startsWith("/");
+      console.log(texture)
+      if (texture) {
+        document.getElementById("tshirt-div").style.backgroundImage = "url(" + codeOrTexture + ")";
+        $(".thumbnail_image").css("background-image", "url(" + codeOrTexture + ")");
+
+      } else {
+        document.getElementById("tshirt-div").style.backgroundColor = codeOrTexture;
+        $(".thumbnail_image").css("background-color", codeOrTexture);
+      };
+    };
+
+    change_image_color();
+
+    function ajax_change_size(){
+      $.ajax({
+        url:'{% url "essentials:change_size" %}',
+        data:{
+            product_id:$('#productid').val(),
+            size:$('#size-selector').val(),
+            'method_id': $( "#technique" ).val(),
+            'place_id': $('.cz-thumblist-item.active').attr('id'),
+            'color_id': $('input[name=colorid]:checked', '#post-color').val(),
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]', '#post-size').val(),
+        },
+        success: function (data) {
+
+            // apply color options
+            $('#appendHere').html(data.rendered_table);
+
+            //apply price
+            $('#price').text("$"+data.price_all_included);
+
+            // aplly add to cart
+            variant_add_to_cart_url = data.variant_add_to_cart_url
+
+            // apply color
+            let texture = data.color_id.startsWith("/");
+            console.log(texture)
+
+            if (texture) {
+            document.getElementById("tshirt-div").style.backgroundImage = "url(" + data.color_id + ")";
+            $(".thumbnail_image").css("background-image", "url(" + data.color_id + ")");
+            
+            } else {
+              if(document.getElementById("tshirt-div").style.backgroundImage){
+                $("#tshirt-div").css('background-image', 'none');
+                $(".thumbnail_image").css('background-image', 'none');
+              };
+              document.getElementById("tshirt-div").style.backgroundColor = data.color_id;
+              $(".thumbnail_image").css("background-color", data.color_id);
+            };
+        },
+        error: function (data) {
+            alert("Got an error! " + data);
+        }
+      });
+      
+    };
+
+    $(document).on('change', '#post-size',function(e){
+      e.preventDefault();
+      ajax_change_size();
+    });
+
+    function ajax_change_color(){
+      $.ajax({ 
+        url: "{% url 'essentials:change_color' %}",
+        data: {
+            'product_id':$('#productid').val(),
+            'place_id': $('.cz-thumblist-item.active').attr('id'),
+            'method_id': $( "#technique" ).val(),
+            'size_id': $('#size-selector').val(),
+            'color_id': $('input[name=colorid]:checked', '#post-color').val(),
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]', '#post-color').val(),
+        },
+        dataType: 'json',
+        success:  function(data){
+            let texture = data.color_id.startsWith("/");
+            console.log('calisan burasi')
+            console.log(data.color_id)  
+            console.log(texture)
+            if (texture) {
+            document.getElementById("tshirt-div").style.backgroundImage = "url(" + data.color_id + ")";
+            $(".thumbnail_image").css("background-image", "url(" + data.color_id + ")");
+            
+            } else {
+              if(document.getElementById("tshirt-div").style.backgroundImage){
+                $("#tshirt-div").css('background-image', 'none');
+                $(".thumbnail_image").css('background-image', 'none');
+              };
+              document.getElementById("tshirt-div").style.backgroundColor = data.color_id;
+              $(".thumbnail_image").css("background-color", data.color_id);
+            };
+
+            $('#price').text("$"+data.price_all_included);
+
+            variant_add_to_cart_url = data.variant_add_to_cart_url
+            console.log(data);
+        }
+      });
+    };
+
+
+    $('input[name=colorid]', '#post-color').change(function(){
+      setTimeout(ajax_change_color(),1000)
+      // ajax_change_color();
+    });
+
+    function add_to_cart() {
+      canvas.discardActiveObject();
+      canvas.renderAll();
+      $(document.body).css({'cursor' : 'wait'});
+      $( "#addtocartButton" ).addClass('disabled');
+      var add_to_cart_form = $('#addtocartform');
+      var action = add_to_cart_form.attr('action');
+      var method = add_to_cart_form.attr('method');
+      var cart_data = add_to_cart_form.serialize();
+      $.ajax({
+          url : variant_add_to_cart_url, // the endpoint
+          type : method, // http method
+          data : cart_data, // data sent with the post request
+          // handle a successful response
+          success : function(data) {
+              console.log("success"); // another sanity check
+              location.href = '/cart/'
+              $(document.body).css({'cursor' : 'default'});
+          },
+          // handle a non-successful response
+          error : function(xhr,errmsg,err) {
+            $(document.body).css({'cursor' : 'default'});
+              $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                  " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+              console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+          }
+      });
+    };
+
+    $('#addtocartform').on('submit', function(event){
+      event.preventDefault();
+      console.log("form submitted!"); 
+      rasterizeJSON();
+      setTimeout(add_to_cart(),3000);
+    });
+
+    $( "#addtocartform" ).mouseover(function() {
+      canvas.discardActiveObject();
+      canvas.renderAll();
+    });
+});
+</script>
+
+<script>
+  let canvas = new fabric.Canvas('tshirt-canvas');
+  
+  var deleteIcon = "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='595.275px' height='595.275px' viewBox='200 215 230 470' xml:space='preserve'%3E%3Ccircle style='fill:%23F44336;' cx='299.76' cy='439.067' r='218.516'/%3E%3Cg%3E%3Crect x='267.162' y='307.978' transform='matrix(0.7071 -0.7071 0.7071 0.7071 -222.6202 340.6915)' style='fill:white;' width='65.545' height='262.18'/%3E%3Crect x='266.988' y='308.153' transform='matrix(0.7071 0.7071 -0.7071 0.7071 398.3889 -83.3116)' style='fill:white;' width='65.544' height='262.179'/%3E%3C/g%3E%3C/svg%3E";
+  var cloneIcon = "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='iso-8859-1'%3F%3E%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 55.699 55.699' width='100px' height='100px' xml:space='preserve'%3E%3Cpath style='fill:%23010002;' d='M51.51,18.001c-0.006-0.085-0.022-0.167-0.05-0.248c-0.012-0.034-0.02-0.067-0.035-0.1 c-0.049-0.106-0.109-0.206-0.194-0.291v-0.001l0,0c0,0-0.001-0.001-0.001-0.002L34.161,0.293c-0.086-0.087-0.188-0.148-0.295-0.197 c-0.027-0.013-0.057-0.02-0.086-0.03c-0.086-0.029-0.174-0.048-0.265-0.053C33.494,0.011,33.475,0,33.453,0H22.177 c-3.678,0-6.669,2.992-6.669,6.67v1.674h-4.663c-3.678,0-6.67,2.992-6.67,6.67V49.03c0,3.678,2.992,6.669,6.67,6.669h22.677 c3.677,0,6.669-2.991,6.669-6.669v-1.675h4.664c3.678,0,6.669-2.991,6.669-6.669V18.069C51.524,18.045,51.512,18.025,51.51,18.001z M34.454,3.414l13.655,13.655h-8.985c-2.575,0-4.67-2.095-4.67-4.67V3.414z M38.191,49.029c0,2.574-2.095,4.669-4.669,4.669H10.845 c-2.575,0-4.67-2.095-4.67-4.669V15.014c0-2.575,2.095-4.67,4.67-4.67h5.663h4.614v10.399c0,3.678,2.991,6.669,6.668,6.669h10.4 v18.942L38.191,49.029L38.191,49.029z M36.777,25.412h-8.986c-2.574,0-4.668-2.094-4.668-4.669v-8.985L36.777,25.412z M44.855,45.355h-4.664V26.412c0-0.023-0.012-0.044-0.014-0.067c-0.006-0.085-0.021-0.167-0.049-0.249 c-0.012-0.033-0.021-0.066-0.036-0.1c-0.048-0.105-0.109-0.205-0.194-0.29l0,0l0,0c0-0.001-0.001-0.002-0.001-0.002L22.829,8.637 c-0.087-0.086-0.188-0.147-0.295-0.196c-0.029-0.013-0.058-0.021-0.088-0.031c-0.086-0.03-0.172-0.048-0.263-0.053 c-0.021-0.002-0.04-0.013-0.062-0.013h-4.614V6.67c0-2.575,2.095-4.67,4.669-4.67h10.277v10.4c0,3.678,2.992,6.67,6.67,6.67h10.399 v21.616C49.524,43.26,47.429,45.355,44.855,45.355z'/%3E%3C/svg%3E%0A"
+  
+  var deleteImg = document.createElement('img');
+  deleteImg.src = deleteIcon;
+  var cloneImg = document.createElement('img');
+  cloneImg.src = cloneIcon;
+
+  fabric.Object.prototype.transparentCorners = true;
+  fabric.Object.prototype.cornerColor = '#B2CCFF';
+  fabric.Object.prototype.cornerStyle = 'circle';
+  fabric.Object.prototype.cornerSize = 10;
+
+  var fonts = ["Graduate",'Bangers','Boogaloo','Caveat','Caveat Brush','Chela One','Cherry Swash','Coiny','Concert One','Creepster','Fredoka One','Germania One','Knewave','Montserrat','Open Sans','Oswald','Permanent Marker','Rammetto One','Shrikhand','Spicy Rice','Vampiro One','Vollkorn','Wendy One'];
+
+  // When the user clicks on upload a custom picture
+  document.getElementById('id_uploaded_image').addEventListener("change", function(e){
+    console.log('image changed')
+      var reader = new FileReader();  
+      
+      reader.onload = function (event){
+          var imgObj = new Image();
+          imgObj.src = event.target.result;
+          $('#id_design').val(e.target.result);
+          // When the picture loads, create the image in Fabric.js
+          imgObj.onload = function () {
+              var img = new fabric.Image(imgObj);
+
+              img.scaleToHeight(100);
+              img.scaleToWidth(100);  
+              canvas.centerObject(img);
+              canvas.add(img);
+              canvas.renderAll();
+          };
+      };
+
+      // If the user selected a picture, load it
+      if(e.target.files[0]){
+          reader.readAsDataURL(e.target.files[0]);
+      }
+  }, false);
+
+  // When the user selects a picture that has been added and press the DEL key
+  // The object will be removed !
+  document.addEventListener("keydown", function(e) {
+      var keyCode = e.keyCode;
+      if(keyCode == 46){
+          canvas.remove(canvas.getActiveObject());
+          $("#text-string").val("");
+      }
+  }, false);
+
+  $('#fill').change(function(){
+      var obj = canvas.getActiveObject();
+
+      if(obj){
+          // old api
+          // obj.setFill($(this).val());
+          obj.set("fill", this.value);
+      }
+      canvasModifiedCallback();
+      canvas.renderAll();
+      });
+
+  $('#stroke').change(function(){
+  var obj = canvas.getActiveObject();
+
+  if(obj){
+      // old api
+      // obj.setFill($(this).val());
+      obj.set("stroke", this.value);
+  }
+  canvasModifiedCallback();
+  canvas.renderAll();
+  });
+
+  $('#shadow').change(function(){
+  var obj = canvas.getActiveObject();
+
+  if(obj){
+      // old api
+      // obj.setFill($(this).val());
+      // Create shadow object 
+      var shadow = new fabric.Shadow({ 
+          color: this.value, 
+          affectStroke: false,
+          
+          blur: 5, 
+      });
+      obj.set("shadow", shadow);
+  }
+  canvasModifiedCallback();
+  canvas.renderAll();
+
+  });
+
+  
+  // Add text
+  function Addtext(text) {
+      var iTextSample = new fabric.IText(text, {
+          left: 50,
+          top: 50,
+          width: 150,
+          fontSize: 50,
+          fontFamily: 'Times New Roman',
+          fill: '#333',
+          // lineHeight: 1.1,
+          strokeWidth: 4,
+          shadow: shadow,
+          paintFirst: 'stroke', // stroke behind fill
+          // styles: {
+          //     0: {
+          //     0: { textDecoration: 'underline', fontSize: 80 },
+          //     1: { textBackgroundColor: 'red' }
+          //     },
+          //     1: {
+          //     0: { textBackgroundColor: 'rgba(0,255,0,0.5)' },
+          //     4: { fontSize: 20 }
+          //     }
+          // }
+          });
+      iTextSample.setControlsVisibility({
+          mt: false, // middle top disable
+          mb: false, // midle bottom
+          ml: false, // middle left
+          mr: false, // I think you get it
+      });
+      
+      
+
+      canvas.on('text:changed', function(opt) {
+          
+          var iTextSample = opt.target;
+          if ( iTextSample.width >  250) {
+                  iTextSample.fontSize *=  250 / ( iTextSample.width + 1);
+                  iTextSample.width =  250;
+          };
+            
+
+        });
+      
+      canvas.add(iTextSample).setActiveObject(iTextSample);
+      canvas.centerObject(iTextSample);
+      
+  };
+
+  
+
+  fonts.unshift('Times New Roman');
+  // Populate the fontFamily select
+  var select = document.getElementById("font-family");
+      fonts.forEach(function(font) {
+      var option = document.createElement('option');
+      option.innerHTML = font;
+      option.value = font;
+      option.style.fontFamily = font;
+      select.appendChild(option);
+  });
+  
+
+  // Apply selected font on change
+  document.getElementById('font-family').onchange = function() {
+  if (this.value !== 'Times New Roman') {
+      loadAndUse(this.value);
+      canvasModifiedCallback();
+      canvas.requestRenderAll();
+  } else {
+      canvas.getActiveObject().set("stroke", this.value);
+      canvas.requestRenderAll();
+  }
+  };
+
+  
+
+  function loadAndUse(font) {
+  var myfont = new FontFaceObserver(font)
+  myfont.load()
+      .then(function() {
+      // when font is loaded, use it.
+      canvas.getActiveObject().set("fontFamily", font);
+      canvas.requestRenderAll();
+      }).catch(function(e) {
+      alert("Can't load " + font +". Did you choose the text?");
+      });
+  };
+
+  function  renderIcon(icon){                            
+      return function renderIcon(ctx, left, top, styleOverride, fabricObject) {
+      var size = this.cornerSize;
+      ctx.save();
+      ctx.translate(left, top);
+      ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+      ctx.drawImage(icon, -size/2, -size/2, size, size);
+      ctx.restore();
+      }
+  }
+
+  fabric.Object.prototype.controls.deleteControl = new fabric.Control({
+      x: 0.5,
+      y: -0.5,
+      // offsetY: -16,
+      // offsetX: 16,
+      offsetY: 0,
+      offsetX: 0,
+      cursorStyle: 'pointer',
+      mouseUpHandler: deleteObject,
+      render: renderIcon(deleteImg),
+      cornerSize: 18
+  });
+
+  fabric.Object.prototype.controls.clone = new fabric.Control({
+      x: -0.5,
+      y: -0.5,
+      // offsetY: -16,
+      // offsetX: -16,
+      offsetY: -12,
+      offsetX: -12,
+      cursorStyle: 'pointer',
+      mouseUpHandler: cloneObject,
+      render: renderIcon(cloneImg),
+      cornerSize: 14
+  });
+
+  function deleteObject(eventData, target) {
+          var canvas = target.canvas;
+              canvas.remove(target);
+          canvas.requestRenderAll();
+      }
+
+  function cloneObject(eventData, target) {
+      var canvas = target.canvas;
+      target.clone(function(cloned) {
+      cloned.left += 10;
+      cloned.top += 10;
+      canvas.add(cloned);
+      });
+  }
+
+  $(document).ready(function() {
+  $('#text-font-size').keyup(function() {
+      var val = $(this).val();
+      if (isNaN(val)) {
+      alert('please enter number');
+      $(this).val('');
+      }
+      var activeObject = canvas.getActiveObject();
+      activeObject.fontSize = val;
+      canvas.renderAll();
+  });
+  $('#add-text-btn').click(function() {
+      if ($('#text-font-size').val()) {
+      var txtfontsize = $('#text-font-size').val();
+      } else {
+      var txtfontsize = 40;
+      }
+      var message = $('#add-text-value').val();
+      var txtfontfamily = $('#font-family').val();
+      var new_text = new fabric.IText(message, {
+      left: 100,
+      top: 100,
+      fontSize: txtfontsize,
+      lockUniScaling: true,
+      fontFamily: txtfontfamily,
+      fill: '#000'
+      });
+      canvas.add(new_text);
+      canvas.setActiveObject(new_text);
+  });
+
+  canvas.on('object:selected', function(options) {
+      if (options.target) {
+      $("textarea#add-text-value").val(options.target.text);
+      $("#text-font-size").val(options.target.fontSize);
+      }
+  });
+
+  canvas.on('object:scaling', function(event) {
+      if (event.target) {
+      $("textarea#add-text-value").val(event.target.text);
+      $("#text-font-size").val((event.target.fontSize * event.target.scaleX).toFixed(0));
+      }
+  });
+
+  canvas.on('object:modified', function(event) {
+      if (event.target) {
+      event.target.fontSize *= event.target.scaleX;
+      event.target.fontSize = event.target.fontSize.toFixed(0);
+      event.target.scaleX = 1;
+      event.target.scaleY = 1;
+      event.target._clearCache();
+      $("textarea#add-text-value").val(event.target.text);
+      $("#text-font-size").val(event.target.fontSize);
+      }
+  });
+  canvas.on({
+			 'object:moving': function(e) {		  	
+			    e.target.opacity = 0.5;
+			  },
+			  'object:modified': function(e) {		  	
+			    e.target.opacity = 1;
+			  },
+			 
+			 'selection:cleared':onSelectedCleared
+		 });
+
+  });
+
+  
+canvas.on('mouse:move', function(e) {
+  //turn off selection
+  canvas.selection = false;
+});
+canvas.on('object:removed', function(e) {
+  //turn off selection
+  canvas.getActiveObject();
+  canvas.selection = false;
+});
+
+  
+  
+</script>
+
+<script>
+
+</script>
+
+<script>
+
+  
+
+  $('#save').on('click', function(event){
+    canvas.discardActiveObject();
+    canvas.renderAll();
+    var node = document.getElementById('tshirt-div');
+    domtoimage.toPng(node).then(function (dataUrl) {
+        var img = new Image();
+        var options = {
+        quality: 0.99,
+        };
+        img.src = dataUrl;
+        document.body.appendChild(img);
+        $('#id_end_product_img').val(dataUrl) 
+    }).catch(function (error) {
+      console.error('oops, something went wrong!', error);
+    });
+    var node2 = document.getElementById('tshirt-canvas');
+    canvas.backgroundImage = null;
+    canvas.renderAll();
+    domtoimage.toPng(node2).then(function (dataUrl) {
+        var img1 = new Image();
+        var options = {
+        quality: 0.99, 
+        width: 2000,
+        height: 2000,
+        };
+        img1.src = dataUrl;
+        document.body.appendChild(img1);
+        $('#id_design').val(dataUrl); 
+    }).catch(function (error) {
+      console.error('oops, something went wrong!', error);
+    });
+    var mockup_id = $(".cz-preview-item.active :input").val();
+    $('#id_mockup').val(mockup_id)
+    alert('Your design saved');
+  });
+
+  var canvasModifiedCallback = function() {
+    console.log('canvas modified!');
+    var dataUrl = canvas.toDataURL();
+    $('#id_design').val(dataUrl);
+    canvas.renderAll();
+    var mockup_id = $(".cz-preview-item.active :input").val();
+    $('#id_mockup').val(mockup_id)
+    
+    var node = document.getElementById('tshirt-div');
+    domtoimage.toPng(node).then(function (dataUrl) {
+        
+        var img = new Image();
+        var options = {
+        quality: 0.99,
+        };
+        img.src = dataUrl;
+        document.body.appendChild(img);
+        $('#id_end_product_img').val(dataUrl) 
+        
+    }).catch(function (error) {
+      console.error('oops, something went wrong!', error);
+    });
+  };
+
+  canvas.on('object:added', canvasModifiedCallback);
+  canvas.on('object:removed', canvasModifiedCallback);
+  canvas.on('object:modified', canvasModifiedCallback);
+  
+  
+</script>
+{% endblock %}
+
+{% block css %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Boogaloo&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Chela+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cherry+Swash:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Coiny&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Concert+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Germania+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Graduate&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Knewave&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rammetto+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Shrikhand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Spicy+Rice&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Vampiro+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Vollkorn:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Vollkorn:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Wendy+One&display=swap');
+</style>
+{% endblock %}
+
+{% block blank %}
+
+<!-- Page title-->
+    <!-- Custom page title-->
+    <div class="page-title-overlap bg-dark pt-4">
+      <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+        <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-start">
+              <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i>Home</a></li>
+              {% if product.category.parent %}<li class="breadcrumb-item text-nowrap"><a href="#">{{ product.category.parent }}</a>{% endif %}
+              <li class="breadcrumb-item text-nowrap"><a href="{{ product.category.get_absolute_url }}">{{ product.category }}</a>
+              </li>
+              <li class="breadcrumb-item text-nowrap active" aria-current="page">{{ product.title }}</li>
+            </ol>
+          </nav>
+        </div>
+        <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+          <h1 class="h3 text-light mb-2">{{ product.title }}</h1>
+          <div>
+            <div class="star-rating"><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i>
+            </div>
+            <!-- <span class="d-inline-block font-size-sm text-white opacity-70 align-middle mt-1 ml-1">74 Reviews</span> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Page Content-->
+    <div class="container">
+      <div class="bg-light box-shadow-lg rounded-lg">
+        <!-- Tabs-->
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="nav-item"><a class="nav-link p-4 active" href="#general" data-toggle="tab" role="tab">General Info</a></li>
+          <li class="nav-item"><a class="nav-link p-4" href="#specs" data-toggle="tab" role="tab">Tee Specs</a></li>
+          <li class="nav-item"><a class="nav-link p-4" href="#real-life" data-toggle="tab" role="tab">Real Life</a></li>
+          <li class="nav-item"><a class="nav-link p-4" href="#reviews" data-toggle="tab" role="tab">Reviews <span class="font-size-sm opacity-60"></span></a></li>
+        </ul>
+        <div class="px-4 pt-lg-3 pb-3 mb-5">
+          <div class="tab-content px-lg-3">
+            <!-- General info tab-->
+            <div class="tab-pane fade show active" id="general" role="tabpanel">
+              <div class="row">
+                <!-- Product gallery-->
+                <div class="col-lg-7 pr-lg-0">
+                  <div class="cz-product-gallery">
+                    <div id="tshirt-div" class="cz-preview order-sm-2">
+                      {% for place in product.placements.all %}
+                      <div class="cz-preview-item" id="place{{ place.id }}">
+                        <img id="tshirt-backgroundpicture" class="cz-image-zoom" src="{{ place.image.url }}" data-zoom="{{ place.image.url }}" alt="Product image">
+                        <input type="hidden" value="{{ place.id }}">
+                        <div class="cz-image-zoom-pane"></div>
+                      </div>
+                      {% endfor %}
+                      <!-- <div id="drawingArea" style="position: absolute;z-index: 10;">
+                        <canvas id="tshirt-canvas" style="border: 1px dashed #B2CCFF;"></canvas>
+                      </div> -->
+                    </div>
+
+                    <!-- thumbnail'larin oldugu yer -->
+                    <div class="cz-thumblist order-sm-1">
+                      <form id="post-placement" method="POST" action="{% url 'essentials:change_place' %}">
+                        {% csrf_token %}
+                        {% for place in product.placements.all %}
+                        <small><span class="badge badge-dark badge-shadow">{{ place }}</span></small> 
+                        <a class="cz-thumblist-item" href="#place{{place.id}}" id="{{ place.id }}">
+                          <input type="hidden" value="{{ place.id }}" name="place_id">
+                          <img data-toggle="tooltip" data-placement="right" title="{{ place }}"  src="{{ place.image.url }}" alt="Product thumb" class="thumbnail_image"><span>hi</span>
+                        </a>
+                        {% endfor %}
+                      </form>
+                    </div>
+                    <!-- END thumbnail'larin oldugu yer -->
+                  </div>
+                </div>
+
+                <!-- Product details-->
+                <div class="col-lg-5 pt-4 pt-lg-0">
+                  <div class="product-details ml-auto pb-3">
+
+                    <!-- price'in oldugu yer -->
+                    <div id="price" class="h3 font-weight-normal text-accent mb-3 mr-1">
+                      <div class="spinner-border" role="status"></div>
+                    </div>
+                    <!-- END price'in oldugu yer -->
+
+
+                    <!-- teknigin oldugu yer -->
+                    <div class="d-flex justify-content-between align-items-center pb-1">
+                      <label class="font-weight-medium" for="technique">Technique:</label>
+                      
+                    </div>
+                    <form method="POST" id="post-technique">
+                      <div class="d-flex align-items-center pt-1 pb-4">
+                        {% csrf_token %}
+                      <select class="form-control custom-select" name="technique" id="technique" required>
+                        {% for technique in product.methods.all %}
+                        <option value="{{ technique.id }}">{{ technique }}</option>
+                        {% endfor %}
+                      </select>
+                      </div>
+                    </form>
+                    <!-- END teknigin oldugu yer -->
+
+                    <!-- size seceneklerinin oldugu yer -->
+                    <div class="d-flex justify-content-between align-items-center pb-1">
+                      <label class="font-weight-medium" for="size">Size:</label>
+                    </div>
+                    <form method="POST" id="post-size">
+                    <div class="d-flex align-items-center pt-1 pb-4">
+                        <input type="hidden" name="productid" id="productid" value="{{ product.id }}">
+                        <select class="custom-select" name="size" required id="size-selector">
+                          {% for rs in sizes %}
+                          <option {% if variant.size_id == rs.size_id %} selected {% endif %} value="{{ rs.size_id }}">{{ rs.size }}</option>
+                          {% endfor %}
+                        </select>
+                    </div>
+                    </form>
+                    <!-- END size seceneklerinin oldugu yer -->
+
+                    <!-- color seceneklerinin oldugu yer -->
+                    <div class="font-size-sm mb-3"><span class="text-heading font-weight-medium mr-1">Color:</span></div>
+                    <div class="position-relative mr-n4 mb-3">
+                      <form method="post" action="?q=selectvariant" id="post-color">
+                        {% csrf_token %}
+                        <div id="appendHere">
+                          {% for rs in colors %}
+                              <div class="custom-control custom-option custom-control-inline mb-2">
+                                  <input type="text" style="display: none;" name="hexOrTexture" value="{% if rs.color.texture %}{{ rs.color.texture.url }}{% else %}{{ rs.color.color_code }}{% endif %}" {% if variant.id == rs.id %} checked {% endif %}>
+                                  <input type="hidden" name="variantid" value="{{ rs.id }}" {% if variant.id == rs.id %} checked {% endif %}>
+                                  <input class="custom-control-input" data-label="colorOption" type="radio" name="colorid" id="{{ rs.color.id }}" value="{{ rs.color.id }}" {% if variant.id == rs.id %} checked {% endif %}>
+                                  <label data-toggle="tooltip" data-placement="bottom" title="{{ rs.color.name }}" class="custom-option-label rounded-circle" for="{{ rs.color.id }}"><span class="custom-option-color rounded-circle" style="{% if rs.color.texture %}background-image: url({{ rs.color.texture.url }}){% else %}background-color: {{ rs.color.color_code }}{% endif %}"></span></label>
+                              </div>
+                          {% endfor %}
+                        </div>
+                      </form>
+                    </div>
+                    <!-- END color seceneklerinin oldugu yer -->
+                    
+                    <!-- qty ve add to cart butonunun oldugu yer -->
+                    <!-- <form id="addtocartform" method="POST" enctype="multipart/form-data"> -->
+                    <div class="d-flex align-items-center pt-2 pb-4">
+                      
+                        {{ cart_product_form }}
+                        {% csrf_token %}
+                        <input id='addtocartButton' type="submit" class="btn btn-primary btn-block disabled" value="Buy Plain ( coming soon... )">
+                      
+                    </div>
+                    <!-- </form> -->
+                    <!-- END qty ve add to cart butonunun oldugu yer -->
+
+
+                    <!-- start designing butonu burda -->
+                    <form action="{% url 'essentials:product_detail' product.id  product.slug %}">
+                      <div class="d-flex align-items-center pt-2 pb-4">
+                        <input id='startDesigningButton' type="submit" class="btn btn-success btn-shadow btn-block" value="Start Designing">
+                      </div>
+                    </form>
+                    <!-- END start designing butonu burda -->
+
+
+                    <!-- Product panels-->
+                    <div class="accordion mb-4" id="productPanels">
+                      <div class="card">
+                        <div class="card-header">
+                          <h3 class="accordion-heading"><a href="#shippingOptions" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="shippingOptions"><i class="czi-delivery text-muted lead align-middle mt-n1 mr-2"></i>Shipping options<span class="accordion-indicator"></span></a></h3>
+                        </div>
+                        <div class="collapse show" id="shippingOptions" data-parent="#productPanels">
+                          <div class="card-body font-size-sm">
+                            <div class="d-flex justify-content-between border-bottom pb-2">
+                              <div>
+                                <div class="font-weight-semibold text-dark">Use your marketplace shipping label</div>
+                                <div class="font-size-sm text-muted">Ships in 3 business days</div>
+                              </div>
+                              <div>$0.00</div>
+                            </div>
+                            <div class="d-flex justify-content-between pt-2">
+                              <div>
+                                <div class="font-weight-semibold text-dark">Local pickup from store</div>
+                                <div class="font-size-sm text-muted">Pick up next day after 3 p.m.</div>
+                              </div>
+                              <div>$0.00</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Sharing-->
+                    <h6 class="d-inline-block align-middle font-size-base my-2 mr-2">Share:</h6><a class="share-btn sb-youtube mr-2 my-2" href="#"><i class="czi-youtube"></i>Youtube</a><a class="share-btn sb-instagram mr-2 my-2" href="#"><i class="czi-instagram"></i>Instagram</a><a class="share-btn sb-facebook my-2" href="#"><i class="czi-facebook"></i>Facebook</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Tech specs tab-->
+            <div class="tab-pane fade" id="specs" role="tabpanel">
+              <div class="d-md-flex justify-content-between align-items-start pb-4 mb-4 border-bottom">
+                <div class="media align-items-center mr-md-3"><img src="{{ product.image.url }}" width="90" alt="Product thumb">
+                  <div class="mdeia-body pl-3">
+                    <h6 class="font-size-base mb-2">{{ product.title }}</h6>
+                    <!-- <div class="h4 font-weight-normal text-accent">$124.<small>99</small></div> -->
+                  </div>
+                </div>
+                <!-- <div class="d-flex align-items-center pt-3">
+                  <select class="custom-select mr-2" style="width: 5rem;">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+                  <button class="btn btn-primary btn-shadow mr-2" type="button"><i class="czi-cart font-size-lg mr-sm-2"></i><span class="d-none d-sm-inline">Add to Cart</span></button>
+                  <div class="mr-2">
+                    <button class="btn btn-secondary btn-icon" type="button" data-toggle="tooltip" title="Add to Wishlist"><i class="czi-heart font-size-lg"></i></button>
+                  </div>
+                  <div>
+                    <button class="btn btn-secondary btn-icon" type="button" data-toggle="tooltip" title="Compare"><i class="czi-compare font-size-lg"></i></button>
+                  </div>
+                </div> -->
+              </div>
+              <!-- Specs table-->
+              <div class="row pt-2">
+                <div class="col-lg-5 col-sm-6">
+                  <h3 class="h6">General specs</h3>
+                  <ul class="list-unstyled font-size-sm pb-2">
+                    <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Model:</span><span>Amazfit Smartwatch</span></li>
+                    <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Gender:</span><span>Unisex</span></li>
+                    <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Smartphone app:</span><span>Amazfit Watch</span></li>
+                    <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">OS campitibility:</span><span>Android / iOS</span></li>
+                  </ul>
+                  <h3 class="h6">Physical specs</h3>
+                  <ul class="list-unstyled font-size-sm pb-2">
+                    <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Shape:</span><span>Rectangular</span></li>
+                    <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Body material:</span><span>Plastics / Ceramics</span></li>
+                    <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Band material:</span><span>Silicone</span></li>
+                  </ul>
+                  <h3 class="h6">Display</h3>
+                  <ul class="list-unstyled font-size-sm pb-2">
+                    <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Display type:</span><span>Color</span></li>
+                    <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Display size:</span><span>1.28"</span></li>
+                    <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Screen resolution:</span><span>176 x 176</span></li>
+                    <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Touch screen:</span><span>No</span></li>
+                  </ul>
+                </div>
+                <div class="col-lg-5 col-sm-6 offset-lg-1">
+                  <h3 class="h6">Functions</h3>
+                  <ul class="list-unstyled font-size-sm pb-2">
+                    <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Phone calls:</span><span>Incoming call notification</span></li>
+                    <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Monitoring:</span><span>Heart rate / Physical activity</span></li>
+                    <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">GPS support:</span><span>Yes</span></li>
+                    <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Sensors:</span><span>Heart rate, Gyroscope, Geomagnetic, Light sensor</span></li>
+                  </ul>
+                  <h3 class="h6">Battery</h3>
+                  <ul class="list-unstyled font-size-sm pb-2">
+                    <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Battery:</span><span>Li-Pol</span></li>
+                    <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Battery capacity:</span><span>190 mAh</span></li>
+                  </ul>
+                  <h3 class="h6">Dimensions</h3>
+                  <ul class="list-unstyled font-size-sm pb-2">
+                    <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Dimensions:</span><span>195 x 20 mm</span></li>
+                    <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Weight:</span><span>32 g</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <!-- Reviews tab-->
+            <div class="tab-pane fade" id="reviews" role="tabpanel">
+              <div class="d-md-flex justify-content-between align-items-start pb-4 mb-4 border-bottom">
+                <div class="media align-items-center mr-md-3"><img src="{{ product.image.url }}" width="90" alt="Product thumb">
+                  <div class="mdeia-body pl-3">
+                    <h6 class="font-size-base mb-2">{{ product.title }}</h6>
+                    <!-- <div class="h4 font-weight-normal text-accent">$124.<small>99</small></div> -->
+                  </div>
+                </div>
+                <!-- <div class="d-flex align-items-center pt-3">
+                  <select class="custom-select mr-2" style="width: 5rem;">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+                  <button class="btn btn-primary btn-shadow mr-2" type="button"><i class="czi-cart font-size-lg mr-sm-2"></i><span class="d-none d-sm-inline">Add to Cart</span></button>
+                  <div class="mr-2">
+                    <button class="btn btn-secondary btn-icon" type="button" data-toggle="tooltip" title="Add to Wishlist"><i class="czi-heart font-size-lg"></i></button>
+                  </div>
+                  <div>
+                    <button class="btn btn-secondary btn-icon" type="button" data-toggle="tooltip" title="Compare"><i class="czi-compare font-size-lg"></i></button>
+                  </div>
+                </div> -->
+              </div>
+              <!-- Reviews-->
+              <div class="row pt-2 pb-3">
+                <div class="col-lg-4 col-md-5">
+                  <!-- <h2 class="h3 mb-4">74 Reviews</h2> -->
+                  <div class="star-rating mr-2"><i class="czi-star-filled font-size-sm text-accent mr-1"></i><i class="czi-star-filled font-size-sm text-accent mr-1"></i><i class="czi-star-filled font-size-sm text-accent mr-1"></i><i class="czi-star-filled font-size-sm text-accent mr-1"></i><i class="czi-star font-size-sm text-muted mr-1"></i></div><span class="d-inline-block align-middle">4.1 Overall rating</span>
+                  <p class="pt-3 font-size-sm text-muted">58 out of 74 (77%)<br>Customers recommended this product</p>
+                </div>
+                <div class="col-lg-8 col-md-7">
+                  <div class="d-flex align-items-center mb-2">
+                    <div class="text-nowrap mr-3"><span class="d-inline-block align-middle text-muted">5</span><i class="czi-star-filled font-size-xs ml-1"></i></div>
+                    <div class="w-100">
+                      <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div><span class="text-muted ml-3">43</span>
+                  </div>
+                  <div class="d-flex align-items-center mb-2">
+                    <div class="text-nowrap mr-3"><span class="d-inline-block align-middle text-muted">4</span><i class="czi-star-filled font-size-xs ml-1"></i></div>
+                    <div class="w-100">
+                      <div class="progress" style="height: 4px;">
+                        <div class="progress-bar" role="progressbar" style="width: 27%; background-color: #a7e453;" aria-valuenow="27" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div><span class="text-muted ml-3">16</span>
+                  </div>
+                  <div class="d-flex align-items-center mb-2">
+                    <div class="text-nowrap mr-3"><span class="d-inline-block align-middle text-muted">3</span><i class="czi-star-filled font-size-xs ml-1"></i></div>
+                    <div class="w-100">
+                      <div class="progress" style="height: 4px;">
+                        <div class="progress-bar" role="progressbar" style="width: 17%; background-color: #ffda75;" aria-valuenow="17" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div><span class="text-muted ml-3">9</span>
+                  </div>
+                  <div class="d-flex align-items-center mb-2">
+                    <div class="text-nowrap mr-3"><span class="d-inline-block align-middle text-muted">2</span><i class="czi-star-filled font-size-xs ml-1"></i></div>
+                    <div class="w-100">
+                      <div class="progress" style="height: 4px;">
+                        <div class="progress-bar" role="progressbar" style="width: 9%; background-color: #fea569;" aria-valuenow="9" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div><span class="text-muted ml-3">4</span>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <div class="text-nowrap mr-3"><span class="d-inline-block align-middle text-muted">1</span><i class="czi-star-filled font-size-xs ml-1"></i></div>
+                    <div class="w-100">
+                      <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: 4%;" aria-valuenow="4" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div><span class="text-muted ml-3">2</span>
+                  </div>
+                </div>
+              </div>
+              <hr class="mt-4 pb-4 mb-3">
+              <div class="row pb-4">
+                <!-- Reviews list-->
+                <div class="col-md-7">
+                  <div class="d-flex justify-content-end pb-4">
+                    <div class="form-inline flex-nowrap">
+                      <label class="text-muted text-nowrap mr-2 d-none d-sm-block" for="sort-reviews">Sort by:</label>
+                      <select class="custom-select custom-select-sm" id="sort-reviews">
+                        <option>Newest</option>
+                        <option>Oldest</option>
+                        <option>Popular</option>
+                        <option>High rating</option>
+                        <option>Low rating</option>
+                      </select>
+                    </div>
+                  </div>
+                  <!-- Review-->
+                  <div class="product-review pb-4 mb-4 border-bottom">
+                    <div class="d-flex mb-3">
+                      <div class="media media-ie-fix align-items-center mr-4 pr-2"><img class="rounded-circle" width="50" src="img/shop/reviews/01.jpg" alt="Rafael Marquez"/>
+                        <div class="media-body pl-3">
+                          <h6 class="font-size-sm mb-0">Rafael Marquez</h6><span class="font-size-ms text-muted">June 28, 2019</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div class="star-rating"><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star"></i>
+                        </div>
+                        <div class="font-size-ms text-muted">83% of users found this review helpful</div>
+                      </div>
+                    </div>
+                    <p class="font-size-md mb-2">Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est...</p>
+                    <ul class="list-unstyled font-size-ms pt-1">
+                      <li class="mb-1"><span class="font-weight-medium">Pros:&nbsp;</span>Consequuntur magni, voluptatem sequi, tempora</li>
+                      <li class="mb-1"><span class="font-weight-medium">Cons:&nbsp;</span>Architecto beatae, quis autem</li>
+                    </ul>
+                    <div class="text-nowrap">
+                      <button class="btn-like" type="button">15</button>
+                      <button class="btn-dislike" type="button">3</button>
+                    </div>
+                  </div>
+                  <!-- Review-->
+                  <div class="product-review pb-4 mb-4 border-bottom">
+                    <div class="d-flex mb-3">
+                      <div class="media media-ie-fix align-items-center mr-4 pr-2"><img class="rounded-circle" width="50" src="img/shop/reviews/02.jpg" alt="Barbara Palson"/>
+                        <div class="media-body pl-3">
+                          <h6 class="font-size-sm mb-0">Barbara Palson</h6><span class="font-size-ms text-muted">May 17, 2019</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div class="star-rating"><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i>
+                        </div>
+                        <div class="font-size-ms text-muted">99% of users found this review helpful</div>
+                      </div>
+                    </div>
+                    <p class="font-size-md mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <ul class="list-unstyled font-size-ms pt-1">
+                      <li class="mb-1"><span class="font-weight-medium">Pros:&nbsp;</span>Consequuntur magni, voluptatem sequi, tempora</li>
+                      <li class="mb-1"><span class="font-weight-medium">Cons:&nbsp;</span>Architecto beatae, quis autem</li>
+                    </ul>
+                    <div class="text-nowrap">
+                      <button class="btn-like" type="button">34</button>
+                      <button class="btn-dislike" type="button">1</button>
+                    </div>
+                  </div>
+                  <!-- Review-->
+                  <div class="product-review pb-4 mb-4 border-bottom">
+                    <div class="d-flex mb-3">
+                      <div class="media media-ie-fix align-items-center mr-4 pr-2"><img class="rounded-circle" width="50" src="img/shop/reviews/03.jpg" alt="Daniel Adams"/>
+                        <div class="media-body pl-3">
+                          <h6 class="font-size-sm mb-0">Daniel Adams</h6><span class="font-size-ms text-muted">May 8, 2019</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div class="star-rating"><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star"></i><i class="sr-star czi-star"></i>
+                        </div>
+                        <div class="font-size-ms text-muted">75% of users found this review helpful</div>
+                      </div>
+                    </div>
+                    <p class="font-size-md mb-2">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem.</p>
+                    <ul class="list-unstyled font-size-ms pt-1">
+                      <li class="mb-1"><span class="font-weight-medium">Pros:&nbsp;</span>Consequuntur magni, voluptatem sequi</li>
+                      <li class="mb-1"><span class="font-weight-medium">Cons:&nbsp;</span>Architecto beatae,  quis autem, voluptatem sequ</li>
+                    </ul>
+                    <div class="text-nowrap">
+                      <button class="btn-like" type="button">26</button>
+                      <button class="btn-dislike" type="button">9</button>
+                    </div>
+                  </div>
+                  <div class="text-center">
+                    <button class="btn btn-outline-accent" type="button"><i class="czi-reload mr-2"></i>Load more reviews</button>
+                  </div>
+                </div>
+                <!-- Leave review form-->
+                <div class="col-md-5 mt-2 pt-4 mt-md-0 pt-md-0">
+                  <div class="bg-secondary py-grid-gutter px-grid-gutter rounded-lg">
+                    <h3 class="h4 pb-2">Write a review</h3>
+                    <form class="needs-validation" method="post" novalidate>
+                      <div class="form-group">
+                        <label for="review-name">Your name<span class="text-danger">*</span></label>
+                        <input class="form-control" type="text" required id="review-name">
+                        <div class="invalid-feedback">Please enter your name!</div><small class="form-text text-muted">Will be displayed on the comment.</small>
+                      </div>
+                      <div class="form-group">
+                        <label for="review-email">Your email<span class="text-danger">*</span></label>
+                        <input class="form-control" type="email" required id="review-email">
+                        <div class="invalid-feedback">Please provide valid email address!</div><small class="form-text text-muted">Authentication only - we won't spam you.</small>
+                      </div>
+                      <div class="form-group">
+                        <label for="review-rating">Rating<span class="text-danger">*</span></label>
+                        <select class="custom-select" required id="review-rating">
+                          <option value="">Choose rating</option>
+                          <option value="5">5 stars</option>
+                          <option value="4">4 stars</option>
+                          <option value="3">3 stars</option>
+                          <option value="2">2 stars</option>
+                          <option value="1">1 star</option>
+                        </select>
+                        <div class="invalid-feedback">Please choose rating!</div>
+                      </div>
+                      <div class="form-group">
+                        <label for="review-text">Review<span class="text-danger">*</span></label>
+                        <textarea class="form-control" rows="6" required id="review-text"></textarea>
+                        <div class="invalid-feedback">Please write a review!</div><small class="form-text text-muted">Your review must be at least 50 characters.</small>
+                      </div>
+                      <div class="form-group">
+                        <label for="review-pros">Pros</label>
+                        <textarea class="form-control" rows="2" placeholder="Separated by commas" id="review-pros"></textarea>
+                      </div>
+                      <div class="form-group mb-4">
+                        <label for="review-cons">Cons</label>
+                        <textarea class="form-control" rows="2" placeholder="Separated by commas" id="review-cons"></textarea>
+                      </div>
+                      <button class="btn btn-primary btn-shadow btn-block" type="submit">Submit a Review</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Product description-->
+    <div class="container pt-lg-3 pb-4 pb-sm-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <h2 class="h3 pb-2">Choose your style</h2>
+          <img style="height: 250px;" src="{{ product.image.url }}" alt="Product description">
+          <p>{{ product.description|safe }}</p>
+        </div>
+      </div>
+    </div>
+    <hr class="pb-5">
+    <!-- Product carousel (You may also like)-->
+    <div class="container pt-lg-2 pb-5 mb-md-3">
+      <h2 class="h3 text-center pb-4">You may also like</h2>
+      <div class="cz-carousel cz-controls-static cz-controls-outside">
+        <div class="cz-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;controls&quot;: true, &quot;nav&quot;: false, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1},&quot;500&quot;:{&quot;items&quot;:2, &quot;gutter&quot;: 18},&quot;768&quot;:{&quot;items&quot;:3, &quot;gutter&quot;: 20}, &quot;1100&quot;:{&quot;items&quot;:4, &quot;gutter&quot;: 30}}}">
+          <!-- Product-->
+          <div>
+            <div class="card product-card card-static">
+              <button class="btn-wishlist btn-sm" type="button" data-toggle="tooltip" data-placement="left" title="Add to wishlist"><i class="czi-heart"></i></button><a class="card-img-top d-block overflow-hidden" href="#"><img src="{% static 'img/shop/catalog/66.jpg' %}" alt="Product"></a>
+              <div class="card-body py-2"><a class="product-meta d-block font-size-xs pb-1" href="#">Smartwatches</a>
+                <h3 class="product-title font-size-sm"><a href="#">Health &amp; Fitness Smartwatch</a></h3>
+                <div class="d-flex justify-content-between">
+                  <div class="product-price"><span class="text-accent">$250.<small>00</small></span></div>
+                  <div class="star-rating"><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
