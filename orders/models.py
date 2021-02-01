@@ -11,6 +11,7 @@ import json
 from django.utils.safestring import mark_safe
 
 from django.contrib.admin.models import LogEntry
+from django.core.mail import EmailMultiAlternatives
 
 class Order(models.Model):
     ordered_by = models.ForeignKey(Seller, on_delete=models.CASCADE)
@@ -30,7 +31,7 @@ class Order(models.Model):
     shipping_fee = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     profit = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     paid = models.BooleanField(default=False)
-    fulfillment = models.BooleanField(default=False)
+    fulfillment = models.BooleanField(default=False, help_text="Customer will be notified via email if marked.")
     stripe_id = models.CharField(max_length=150, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -59,6 +60,22 @@ class Order(models.Model):
     def get_absolute_url(self):
         return reverse('order_details',
                        args=[self.id])
+
+    def save(self, *args, **kw):
+        old = type(self).objects.get(pk=self.pk) if self.pk else None
+        super(Order, self).save(*args, **kw)
+
+        if old and old.fulfillment == False and old.fulfillment != self.fulfillment: # if field changed
+            print('buna email gonder')
+            print(self.ordered_by)
+            subject, from_email, to = 'Order #{} Ready!'.format(self.id), settings.DEFAULT_FROM_EMAIL, self.ordered_by
+            text_content = 'Order #{} has been processed. See details'.format(self.id)
+            html_content = "<p>Order #{} has been processed. See your <a href='https://contextcustom.com/orders/order/'>order history.</a></p>".format(self.id)
+            msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+
+
 
 
 
