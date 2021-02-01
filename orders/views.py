@@ -13,7 +13,7 @@ from django.http import HttpResponse
 from django.utils.safestring import mark_safe
 from .models import OrderItem, Order
 from .forms import OrderCreateForm
-from . tasks import order_created
+from .tasks import order_created
 from cart.cart import Cart
 from account.models import Seller
 from essentials.models import Design
@@ -98,7 +98,10 @@ def order_create(request):
             # clear the cart
             cart.clear()
             # launch asynchronous task
-            #order_created.delay(order.id)
+            try:
+              order_created.delay(order.id)
+            except:
+              pass
             # set the order in the session
             request.session['order_id'] = order.id
             # redirect for payment
