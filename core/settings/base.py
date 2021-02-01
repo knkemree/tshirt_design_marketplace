@@ -195,7 +195,7 @@ DEFAULT_FROM_EMAIL = 'Context Custom <noreply@contextcustom.com>'
 EMAIL_SUBJECT_PREFIX = 'Context Custom - '
 
 LOGIN_REDIRECT_URL = 'home'
-LOGIN_URL = 'login'
+LOGIN_URL = 'signup'
 LOGOUT_URL = 'logout'
 
 #Authentication backends
