@@ -103,7 +103,6 @@
             <div class="d-none d-lg-flex pt-4 mt-3">
               <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="{% url 'cart:cart_detail' %}"><i class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Back to Cart</span><span class="d-inline d-sm-none">Back</span></a></div>
               <button class="w-50 btn btn-primary btn-block" type='submit'>Proceed to Payment<i class="czi-arrow-right mt-sm-0 ml-1"></i></button>
-              {% comment %} <div class="w-50 pl-2"><a class="btn btn-primary btn-block" href="#"><span class="d-none d-sm-inline">Proceed to Payment</span><span class="d-inline d-sm-none">Next</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></a></div> {% endcomment %}
             </div>
           </form>
         </section>
@@ -151,8 +150,8 @@
       <div class="row d-lg-none">
         <div class="col-lg-8">
           <div class="d-flex pt-4 mt-3">
-            <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="#"><i class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Back to Cart</span><span class="d-inline d-sm-none">Back</span></a></div>
-            <div class="w-50 pl-2"><a class="btn btn-primary btn-block" href="#"><span class="d-none d-sm-inline">Proceed to Shipping</span><span class="d-inline d-sm-none">Next</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></a></div>
+            <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="{% url 'cart:cart_detail' %}"><i class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Back to Cart</span><span class="d-inline d-sm-none">Back</span></a></div>
+            <div class="w-50 pl-2"><a class="btn btn-primary btn-block" href="{% url 'payment:process' %}"><span class="d-none d-sm-inline">Proceed to Payment</span><span class="d-inline d-sm-none">Next</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></a></div>
           </div>
         </div>
       </div>

@@ -8,12 +8,12 @@
             <li class="breadcrumb-item"><a class="text-nowrap" href="#"><i class="czi-home"></i>Home</a></li>
             <li class="breadcrumb-item text-nowrap"><a href="#">Shop</a>
             </li>
-            <li class="breadcrumb-item text-nowrap active" aria-current="page">Ready-to-Customize</li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">Catalog</li>
           </ol>
         </nav>
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
-        <h1 class="h3 text-light mb-0">Ready-to-Customize</h1>
+        <h1 class="h3 text-light mb-0">Catalog</h1>
       </div>
     </div>
   </div>
@@ -493,8 +493,8 @@
           {% for object in products %}
           <div class="col-md-4 col-sm-6 px-2 mb-4">
             <div class="card product-card"><span class="badge badge-danger badge-shadow">Sale</span>
-              <button class="btn-wishlist btn-sm" type="button" data-toggle="tooltip" data-placement="left" title="Add to wishlist"><i class="czi-heart"></i></button><a class="card-img-top d-block overflow-hidden" href="{{ object.get_absolute_url }}"><img  src="{{object.image.url}}" alt="Product" style="height:236px;"></a>
-              <div class="card-body py-2"><a class="product-meta d-block font-size-xs pb-1" href="{{ object.image.url }}">{{ object.category }}</a>
+              <button class="btn-wishlist btn-sm" type="button" data-toggle="tooltip" data-placement="left" title="Add to wishlist"><i class="czi-heart"></i></button><a class="card-img-top d-block overflow-hidden" href="{{ object.get_absolute_url }}"><img  src="{{object.image.url}}" alt="Product" style="height:236px; display:block; margin:auto;"></a>
+              <div class="card-body py-2"><a class="product-meta d-block font-size-xs pb-1 center" href="{{ object.image.url }}">{{ object.category }}</a>
                 <h3 class="product-title font-size-sm"><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></h3>
                 <div class="d-flex justify-content-between">
                   <div class="product-price"><span class="text-accent">${{ object.get_lowest_price.price__min|floatformat:-2 }}</span>
@@ -505,7 +505,7 @@
                 </div>
               </div>
               <div class="card-body card-body-hidden">
-                <input class="btn btn-primary btn-sm btn-block mb-2" type="button" onclick="window.location='{{ object.get_absolute_url }}';" value="Customize">
+                <input class="btn btn-primary btn-sm btn-block mb-2" type="button" onclick="window.location='{{ object.get_absolute_url }}';" value="Design & Buy">
                 <!-- <button class="btn btn-primary btn-sm btn-block mb-2" type="button" data-toggle="toast" href="{{ object.get_absolute_url }}"><i class="czi-edit font-size-sm mr-1"></i>Customize</button> -->
               </div>
             </div>

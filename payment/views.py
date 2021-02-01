@@ -20,18 +20,15 @@ def payment_process(request):
     order_id = request.session.get('order_id')
     order = get_object_or_404(Order, id=order_id)
     total_cost = order.get_total_cost()
-    print("musterinin odedigi miktari gosteriyor dogru mu diye kontrol et")
-    print(total_cost)
     if request.method == 'POST':
         # retrieve token
         token = request.POST.get('stripeToken')
-        print("token burda")
-        print(token)
         # create and submit transaction
         result = stripe.Charge.create(
             #amount=100,
             amount=int(total_cost*100),
             currency="usd",
+            #customer = order.ordered_by.seller.seller.stripe_id,
             source=token,
             description="Payment for Context Custom",
         )
@@ -45,12 +42,16 @@ def payment_process(request):
             order.save()
             subject = "New Order"
             message = "Order"
-            mail_admins(subject, message, html_message="We got new order. Go to orders: contextcustom.com/admin/orders/order/")
+            mail_admins(subject, message, html_message="{} has just placed an order. <a href='https://contextcustom.com/admin/orders/order/{}/change/'>Check Now!</a>".format(order.customer_name(), order.id))
+            del request.session['order_id']
+            request.session.modified = True
             # cart.clear()
             # launch asynchronous task
             # payment_completed.delay(order.id)
             return redirect('payment:done')
         else:
+            del request.session['order_id']
+            request.session.modified = True
             return redirect('payment:canceled')
     else:
         # generate token

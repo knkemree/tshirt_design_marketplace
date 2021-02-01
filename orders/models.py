@@ -66,8 +66,6 @@ class Order(models.Model):
         super(Order, self).save(*args, **kw)
 
         if old and old.fulfillment == False and old.fulfillment != self.fulfillment: # if field changed
-            print('buna email gonder')
-            print(self.ordered_by)
             subject, from_email, to = 'Order #{} Ready!'.format(self.id), settings.DEFAULT_FROM_EMAIL, self.ordered_by
             text_content = 'Order #{} has been processed. See details'.format(self.id)
             html_content = "<p>Order #{} has been processed. See your <a href='https://contextcustom.com/orders/order/'>order history.</a></p>".format(self.id)
