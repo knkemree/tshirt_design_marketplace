@@ -89,9 +89,9 @@ def pay_order(request, id):
             # store the unique transaction id
             order.stripe_id = result.id
             order.save()
-            subject = "New Order"
+            subject = "Order Paid"
             message = "Order"
-            #mail_admins(subject, message, html_message="{} has just placed an order. <a href='https://contextcustom.com/admin/orders/order/{}/change/'>Check Now!</a>".format(order.customer_name(), order.id))
+            mail_admins(subject, message, html_message="{} has just made a payment for order #{}. <a href='https://contextcustom.com/admin/orders/order/{}/change/'>Check Now!</a>".format(order.customer_name(), order.id, order.id))
             # cart.clear()
             # launch asynchronous task
             # payment_completed.delay(order.id)
