@@ -89,8 +89,8 @@ class OrderItemInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'customer_name','recipient', 
                     'total', 'paid', 'fulfillment',
-                    'updated',
-                    order_detail,
+                    'updated','created',
+                    #order_detail,
                     order_pdf,
                     ]
     list_editable = ['fulfillment']
