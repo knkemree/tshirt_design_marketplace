@@ -87,7 +87,7 @@
                 {% if object.paid %}
                 <td class="py-3"><span class="badge badge-success m-0">Paid</span></td>
                 {% else %}
-                <td class="py-3"><span class="badge badge-danger m-0">Not Paid</span></td>
+                <td class="py-3"><a href="{% url 'payment:pay_order' object.id %}">Pay Now</a></td>
                 {% endif %}
                 {% if object.fulfillment %}
                 <td class="py-3"><span class="badge badge-success m-0">Shipped</span></td>
