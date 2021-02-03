@@ -206,54 +206,6 @@ $(document).ready(function(){
     canvas.on('object:added', canvasModifiedCallback);
     canvas.on('object:removed', canvasModifiedCallback);
     canvas.on('object:modified', canvasModifiedCallback);
-    
-    // canvas.on('object:selected', function(options) {
-    //     if (options.target) {
-    //     $("textarea#add-text-value").val(options.target.text);
-    //     $("#text-font-size").val(options.target.fontSize);
-    //     }
-    // });
-    
-    // canvas.on('object:scaling', function(event) {
-    //     if (event.target) {
-    //     $("textarea#add-text-value").val(event.target.text);
-    //     $("#text-font-size").val((event.target.fontSize * event.target.scaleX).toFixed(0));
-    //     }
-    // });
-    
-    // canvas.on('object:modified', function(event) {
-    //     if (event.target) {
-    //     event.target.fontSize *= event.target.scaleX;
-    //     event.target.fontSize = event.target.fontSize.toFixed(0);
-    //     event.target.scaleX = 1;
-    //     event.target.scaleY = 1;
-    //     event.target._clearCache();
-    //     $("textarea#add-text-value").val(event.target.text);
-    //     $("#text-font-size").val(event.target.fontSize);
-    //     }
-    // });
-
-    // canvas.on({
-    //         'object:moving': function(e) {		  	
-    //         e.target.opacity = 0.5;
-    //         },
-    //         'object:modified': function(e) {		  	
-    //         e.target.opacity = 1;
-    //         },
-    // }); 
-    
-    // canvas.on('mouse:move', function(e) {
-    // //turn off selection
-    //   canvas.selection = false;
-    // });
-
-    // canvas.on('object:removed', function(e) {
-    //   //turn off selection
-    //   canvas.getActiveObject();
-    //   canvas.selection = false;
-    // });
-
-     
 
     function rasterizeJSON(){
       // raterized = JSON.stringify(canvas.toObject());
@@ -532,8 +484,11 @@ $(document).ready(function(){
 <!-- product ayarlari buranin asagisindan -->
 <script>
   $(document).ready(function(){
-      
+
       console.log('product js html calisti ')
+      wd = $('#tshirt-div').width()
+      console.log(wd, 'genislik')
+      console.log($('#tshirt-div').height(), 'yukseklik')
       $( ".cz-preview-item:first" ).addClass('active');
       $( ".cz-thumblist-item:first" ).addClass('active');
   
@@ -559,7 +514,13 @@ $(document).ready(function(){
       $('#post-placement').on('click', function(event){
         event.preventDefault(); 
         apply_current_price();
+        wd = $('#tshirt-div').width()
+        console.log(wd*10/100, 'genislik')
+        console.log($('#tshirt-div').height(), 'yukseklik')
       });
+
+
+      
   
   
       
@@ -574,17 +535,32 @@ $(document).ready(function(){
           dataType: 'json',
           success: function(data){
             var place_id = $('.cz-thumblist-item.active').attr('id') ;
-            console.log(data[place_id].top); // another sanity check
+
+            //yenisi
+            wd = $('#tshirt-div').width()
+            canvasWd = $('#tshirt-div').width()*data[place_id].width/100
+            hg = $('#tshirt-div').height()
+            canvasHg = $('#tshirt-div').height()*data[place_id].height/100
             $("#drawingArea").css({ top: data[place_id].top });
             $("#drawingArea").css({ left: data[place_id].left });
-            $("#drawingArea").css({ width: data[place_id].width });
-            $("#drawingArea").css({ height: data[place_id].height });
-            $("#canvas-container").css({ height: data[place_id].height });
-            $("#canvas-container").css({ width: data[place_id].width });
-            h = parseInt(data[place_id].height, 10)
-            w = parseInt(data[place_id].width, 10)
-            canvas.setWidth(w);
-            canvas.setHeight(h)
+            $("#drawingArea").css({ width: canvasWd });
+            $("#drawingArea").css({ height: canvasHg });
+            $("#canvas-container").css({ height: canvasHg });
+            $("#canvas-container").css({ width: canvasWd });
+            canvas.setWidth(canvasWd);
+            canvas.setHeight(canvasHg)
+
+            //eskisi
+            // $("#drawingArea").css({ top: data[place_id].top });
+            // $("#drawingArea").css({ left: data[place_id].left });
+            // $("#drawingArea").css({ width: data[place_id].width });
+            // $("#drawingArea").css({ height: data[place_id].height });
+            // $("#canvas-container").css({ height: data[place_id].height });
+            // $("#canvas-container").css({ width: data[place_id].width });
+            // h = parseInt(data[place_id].height, 10)
+            // w = parseInt(data[place_id].width, 10)
+            // canvas.setWidth(w);
+            // canvas.setHeight(h)
           }}
         )
       };
@@ -756,3 +732,12 @@ $(document).ready(function(){
   });
   </script>
   <!-- END product ayarlari -->
+
+  <!-- window resize edildiginde canvas'i ayarla -->
+  <script>
+    $( window ).resize(function(e) {
+      e.preventDefault();
+      ajax_dynamic_canvas();
+    })
+  </script>
+<!-- END window resize edildiginde canvas'i ayarla -->
