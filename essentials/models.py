@@ -53,7 +53,8 @@ class Product(models.Model):
         ('Size-Color', 'Size-Color'),
 
     )
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True) #many to one relation with Category
+    category = models.ManyToManyField(Category, related_name='products', blank=True, null=True)
+    #category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True) #many to one relation with Category
     #clr = models.ForeignKey(Clr, on_delete=models.CASCADE, related_name='products', blank=True, null=True)
     #sz = models.ForeignKey(Sz, on_delete=models.CASCADE, related_name='products', blank=True, null=True)
     title = models.CharField(max_length=150)
@@ -284,10 +285,10 @@ class Variant(models.Model):
     class Meta:
         ordering = ['size','color']
 
-    # def __str__(self):
-    #     return self.product.title+str(' / ')+self.size.name+str(' / ')+self.color.name
     def __str__(self):
-        return str(self.product.title)
+        return '{} / {} / {}'.format(self.product.title, self.size.name, self.color.name)
+    # def __str__(self):
+    #     return str(self.product.title)
 
     def variant_price(self):
         return self.price

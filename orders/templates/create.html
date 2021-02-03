@@ -114,7 +114,7 @@
               {% for item in cart %}
               <div class="media align-items-center pb-2 border-bottom"><a class="d-block mr-2" href="#"><img width="64" src="{{ item.end_product_img }}" alt="Product"/></a>
                 <div class="media-body">
-                  <h6 class="widget-product-title"><a href="#">{{ item.product }}</a></h6>
+                  <h6 class="widget-product-title"><a href="#">{{ item.variant }}</a></h6>
                   <div class="font-size-sm"><small><span class="text-muted mr-2">Size:</span>{{ item.size }}</small></div>
                   <div class="font-size-sm"><small><span class="text-muted mr-2">Color:</span>{{ item.color }}</small></div>
                   <div class="widget-product-meta"><span class="text-accent mr-2">${{ item.price }}</span><span class="text-muted">x {{ item.quantity}}</span></div>

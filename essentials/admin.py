@@ -85,7 +85,7 @@ class PlacementInline(admin.TabularInline):
 
 @admin_thumbnails.thumbnail('image')
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['title','category', 'active','image_tag']
+    list_display = ['title','active','image_tag']
     list_filter = ['category']
     #readonly_fields = ('image_tag',)
     inlines = [VariantInline, 
