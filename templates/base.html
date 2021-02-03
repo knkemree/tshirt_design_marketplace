@@ -116,83 +116,17 @@
             <ul class="navbar-nav mega-nav pr-lg-2 mr-lg-2">
               <li class="nav-item dropdown"><a class="nav-link dropdown-toggle pl-0" href="#" data-toggle="dropdown"><i class="czi-menu align-middle mt-n1 mr-2"></i>Categories</a>
                 <ul class="dropdown-menu py-1">
-                  <li class="dropdown"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Photos</a>
+                  {% for parent in parent_categories %}
+                  <li class="dropdown"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">{{ parent }}</a>
                     <ul class="dropdown-menu">
-                      <li class="dropdown-item product-title font-weight-medium"><a href="#">All Photos<i class="czi-arrow-right font-size-xs ml-1"></i></a></li>
+                      <li class="dropdown-item product-title font-weight-medium"><a href="#">All {{ parent }}<i class="czi-arrow-right font-size-xs ml-1"></i></a></li>
                       <li class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="#">Abstract</a></li>
-                      <li><a class="dropdown-item" href="#">Animals</a></li>
-                      <li><a class="dropdown-item" href="#">Architecture</a></li>
-                      <li><a class="dropdown-item" href="#">Beauty &amp; Fashion</a></li>
-                      <li><a class="dropdown-item" href="#">Business</a></li>
-                      <li><a class="dropdown-item" href="#">Education</a></li>
-                      <li><a class="dropdown-item" href="#">Food &amp; Drink</a></li>
-                      <li><a class="dropdown-item" href="#">Holidays</a></li>
-                      <li><a class="dropdown-item" href="#">Industrial</a></li>
-                      <li><a class="dropdown-item" href="#">People</a></li>
-                      <li><a class="dropdown-item" href="#">Sports</a></li>
-                      <li><a class="dropdown-item" href="#">Technology</a></li>
+                      {% for subcat in parent.children.all %}
+                      <li><a class="dropdown-item" href="#">{{ subcat }}</a></li>
+                      {% endfor %}
                     </ul>
                   </li>
-                  <li class="dropdown"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Graphics</a>
-                    <ul class="dropdown-menu">
-                      <li class="dropdown-item product-title font-weight-medium"><a href="#">All Graphics<i class="czi-arrow-right font-size-xs ml-1"></i></a></li>
-                      <li class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="#">Icons</a></li>
-                      <li><a class="dropdown-item" href="#">Illustartions</a></li>
-                      <li><a class="dropdown-item" href="#">Patterns</a></li>
-                      <li><a class="dropdown-item" href="#">Textures</a></li>
-                      <li><a class="dropdown-item" href="#">Web Elements</a></li>
-                    </ul>
-                  </li>
-                  <li class="dropdown"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">UI Design</a>
-                    <ul class="dropdown-menu">
-                      <li class="dropdown-item product-title font-weight-medium"><a href="#">All UI Design<i class="czi-arrow-right font-size-xs ml-1"></i></a></li>
-                      <li class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="#">PSD Templates</a></li>
-                      <li><a class="dropdown-item" href="#">Sketch Templates</a></li>
-                      <li><a class="dropdown-item" href="#">Adobe XD Templates</a></li>
-                      <li><a class="dropdown-item" href="#">Figma Templates</a></li>
-                    </ul>
-                  </li>
-                  <li class="dropdown"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Web Themes</a>
-                    <ul class="dropdown-menu">
-                      <li class="dropdown-item product-title font-weight-medium"><a href="#">All Web Themes<i class="czi-arrow-right font-size-xs ml-1"></i></a></li>
-                      <li class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="#">WordPress Themes</a></li>
-                      <li><a class="dropdown-item" href="#">Bootstrap Themes</a></li>
-                      <li><a class="dropdown-item" href="#">eCommerce Templates</a></li>
-                      <li><a class="dropdown-item" href="#">Muse Templates</a></li>
-                      <li><a class="dropdown-item" href="#">Plugins</a></li>
-                    </ul>
-                  </li>
-                  <li class="dropdown"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Fonts</a>
-                    <ul class="dropdown-menu">
-                      <li class="dropdown-item product-title font-weight-medium"><a href="#">All Fonts<i class="czi-arrow-right font-size-xs ml-1"></i></a></li>
-                      <li class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="#">Blackletter</a></li>
-                      <li><a class="dropdown-item" href="#">Display</a></li>
-                      <li><a class="dropdown-item" href="#">Non Western</a></li>
-                      <li><a class="dropdown-item" href="#">Sans Serif</a></li>
-                      <li><a class="dropdown-item" href="#">Script</a></li>
-                      <li><a class="dropdown-item" href="#">Serif</a></li>
-                      <li><a class="dropdown-item" href="#">Slab Serif</a></li>
-                      <li><a class="dropdown-item" href="#">Symbols</a></li>
-                    </ul>
-                  </li>
-                  <li class="dropdown"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Add-Ons</a>
-                    <ul class="dropdown-menu">
-                      <li class="dropdown-item product-title font-weight-medium"><a href="#">All Add-Ons<i class="czi-arrow-right font-size-xs ml-1"></i></a></li>
-                      <li class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="#">Photoshop Add-Ons</a></li>
-                      <li><a class="dropdown-item" href="#">Illustrator Add-Ons</a></li>
-                      <li><a class="dropdown-item" href="#">Sketch Plugins</a></li>
-                      <li><a class="dropdown-item" href="#">Procreate Brushes</a></li>
-                      <li><a class="dropdown-item" href="#">InDesign Palettes</a></li>
-                      <li><a class="dropdown-item" href="#">Lightroom Presets</a></li>
-                      <li><a class="dropdown-item" href="#">Other Software</a></li>
-                    </ul>
-                  </li>
+                  {% endfor %}
                 </ul>
               </li>
             </ul>

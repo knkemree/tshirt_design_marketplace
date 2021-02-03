@@ -10,7 +10,7 @@ class HomeView(TemplateView):
 
 def home_page(request):
     context = {
-        
+        'hi':'hi'
     }
     return render(request, "home_page.html", context)
 
