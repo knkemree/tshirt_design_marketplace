@@ -42,7 +42,7 @@ def product_list(request, category_slug=None):
     categories = Category.objects.filter(active=True)
     parent_categories = Category.objects.filter(active=True, parent=None) 
 
-    products = Product.objects.filter(active=True).order_by('category')
+    products = Product.objects.filter(active=True)
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
         products = products.filter(category=category)
