@@ -29,7 +29,11 @@ class Category(MPTTModel):
     updated_at=models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.title
+        #self.title
+        if self.parent:
+            return '{} -> {}'.format(self.parent, self.title)
+        else:
+            return self.title
 
     class MPTTMeta:
         order_insertion_by = ['title']
