@@ -87,6 +87,7 @@ class PlacementInline(admin.TabularInline):
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['id','image_tag','title','brand','variant_type','active','created_at','updated_at']
     list_filter = ['category']
+    list_editable = ['brand','active']
     #readonly_fields = ('image_tag',)
     inlines = [VariantInline, 
     MethodInline, 
