@@ -65,6 +65,7 @@ class Product(models.Model):
     slug = models.SlugField(null=False, unique=True)
     tags = TaggableManager()
     variant_type = models.CharField(max_length=10,choices=VARIANTS, default='None')
+    brand = models.CharField(max_length=150, blank=True, null=True)
     description =RichTextUploadingField(null=True, blank=True)
     image = models.ImageField(upload_to='images/',null=False)
     active = models.BooleanField(default=True)
