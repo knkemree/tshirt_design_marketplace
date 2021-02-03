@@ -53,7 +53,7 @@ class Product(models.Model):
         ('Size-Color', 'Size-Color'),
 
     )
-    category = models.ForeignKey(Category, on_delete=models.CASCADE) #many to one relation with Category
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True) #many to one relation with Category
     #clr = models.ForeignKey(Clr, on_delete=models.CASCADE, related_name='products', blank=True, null=True)
     #sz = models.ForeignKey(Sz, on_delete=models.CASCADE, related_name='products', blank=True, null=True)
     title = models.CharField(max_length=150)
