@@ -93,13 +93,13 @@ class OrderAdmin(admin.ModelAdmin):
                     #order_detail,
                     order_pdf,
                     ]
-    list_editable = ['status']
+    #list_editable = ['status']
     search_fields = ['id',]
     list_display_links =['id',]
     list_filter = ['ordered_by','paid', 'customer_notified','created', 'updated']
     inlines = [OrderItemInline]
     actions = [export_to_csv]
-    readonly_fields = ('paid','stripe_id','note','status')
+    readonly_fields = ('paid','stripe_id','note')
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
