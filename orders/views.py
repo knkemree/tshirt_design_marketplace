@@ -18,6 +18,7 @@ from cart.cart import Cart
 from account.models import Seller
 from essentials.models import Design
 import weasyprint
+from django.core.mail import mail_admins
 
 
 @staff_member_required
@@ -142,4 +143,7 @@ def order_cancel(request, order_id):
     order.ordered_by.credit = order.ordered_by.credit + order.total
     order.save()
     order.ordered_by.save()
+    subject = "Order #{} Cancelled".format(order.id)
+    message = "Order"
+    mail_admins(subject, message, html_message="{} has cancelled order #{}. <a href='https://contextcustom.com/admin/orders/order/{}/change/'>Check Now!</a>".format(order.customer_name(), order.id, order.id))
     return redirect('orders:order_list')
