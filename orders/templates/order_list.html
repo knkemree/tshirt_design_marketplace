@@ -172,9 +172,9 @@
       {% endfor %}
       <!-- Footer-->
       <div class="modal-footer flex-wrap justify-content-between bg-secondary font-size-md">
-        <!-- eger in queue ise iptal edilebilir butonunu goster -->
+        <!-- eger in queue ve odendiyse ise iptal edilebilir butonunu goster -->
         
-        {% if object.status == '1' %}
+        {% if object.status == '1' and object.paid == True %}
         <div class="px-2 py-1">
           <form action="{% url 'orders:order_cancel' object.id %}" method="POST">
             {% csrf_token %}
