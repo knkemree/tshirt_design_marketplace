@@ -46,7 +46,7 @@ def product_list(request, category_slug=None):
     products_list = Product.objects.filter(active=True).order_by('id').distinct('id')
     page = request.GET.get('page', 1)
 
-    paginator = Paginator(products_list, 10)
+    paginator = Paginator(products_list, 12)
     try:
         products = paginator.page(page)
     except PageNotAnInteger:
@@ -59,7 +59,7 @@ def product_list(request, category_slug=None):
         category = get_object_or_404(Category, slug=category_slug)
         products_list = Product.objects.filter(active=True, category=category).order_by('id').distinct('id')
         page = request.GET.get('page', 1)
-        paginator = Paginator(products_list, 10)
+        paginator = Paginator(products_list, 12)
         try:
             products = paginator.page(page)
         except PageNotAnInteger:
