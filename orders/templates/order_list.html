@@ -168,7 +168,7 @@
       <!-- Footer-->
       <div class="modal-footer flex-wrap justify-content-between bg-secondary font-size-md">
         <!-- eger cancel edilmedi veya fulfill edilmediyse cancel butonu gosterilir -->
-        {% if not object.status == 3 and not object.fulfillment %}
+        {% if not object.status == '3' and not object.fulfillment %}
         <div class="px-2 py-1">
           <form action="{% url 'orders:order_cancel' object.id %}" method="POST">
             {% csrf_token %}
