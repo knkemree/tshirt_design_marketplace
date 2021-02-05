@@ -457,13 +457,25 @@
           </div>
           {% if products.has_other_pages %}
           <div class="d-flex pb-3">
-            {% if products.has_previous %}<a class="nav-link-style nav-link-light mr-3" href="?page={{ products.previous_page_number }}">
+            {% if products.has_previous %}
+            <a class="nav-link-style nav-link-light mr-3" href="?page={{ products.previous_page_number }}">
               <i class="czi-arrow-left"></i>
-            </a>{% endif %}
+            </a>
+            {% else %}
+            <a class="nav-link-style nav-link-light mr-3" href="#">
+              <i class="czi-arrow-left"></i>
+            </a>
+            {% endif %}
             <span class="font-size-md text-light">1 / 5</span>
-            {% if products.has_next %}<a class="nav-link-style nav-link-light ml-3" href="?page={{ products.next_page_number }}">
+            {% if products.has_next %}
+            <a class="nav-link-style nav-link-light ml-3" href="?page={{ products.next_page_number }}">
               <i class="czi-arrow-right"></i>
-            </a>{% endif %}
+            </a>
+            {% else %}
+            <a class="nav-link-style nav-link-light ml-3" href="#">
+              <i class="czi-arrow-right"></i>
+            </a>
+            {% endif %}
           </div>
           {% endif %}
           <div class="d-none d-sm-flex pb-3"><a class="btn btn-icon nav-link-style bg-light text-dark disabled opacity-100 mr-2" href="#"><i class="czi-view-grid"></i></a><a class="btn btn-icon nav-link-style nav-link-light" href="#"><i class="czi-view-list"></i></a></div>
