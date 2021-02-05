@@ -599,7 +599,7 @@
             <li class="page-item"><a class="page-link" href="#" aria-label="Next">Next<i class="czi-arrow-right ml-2"></i></a></li>
           </ul>
         </nav>
-        {{products.paginator.page_range.last }}
+        {{products.paginator.page_range|last }}
         {% if products.has_other_pages %}
         <ul class="pagination">
           {% if products.has_previous %}
