@@ -597,9 +597,6 @@
           </ul>
           {% endif %}
           <ul class="pagination">
-
-
-            <li class="page-item d-sm-none"><span class="page-link page-link-static">1 / 5</span></li>
             {% for i in products.paginator.page_range %}
             {% if products.number == i %}
               <li class="page-item active d-none d-sm-block" aria-current="page"><span class="page-link">{{ i }}<span class="sr-only">(current)</span></span></li>
@@ -608,7 +605,6 @@
             {% endif %}
             {% endfor %}
           </ul>
-
           {% if products.has_next %}
           <ul class="pagination">
             <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}" aria-label="Next">Next<i class="czi-arrow-right ml-2"></i></a></li>
@@ -619,31 +615,6 @@
           </ul>
           {% endif %}
         </nav>
-        {% endif %}
-
-
-        {% if products.has_other_pages %}
-        <ul class="pagination">
-          {% if products.has_previous %}
-            <li><a href="?page={{ products.previous_page_number }}">&laquo;</a></li>
-          {% else %}
-            <li class="disabled"><span>&laquo;</span></li>
-          {% endif %}
-
-          {% for i in products.paginator.page_range %}
-            {% if products.number == i %}
-              <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-            {% else %}
-              <li><a href="?page={{ i }}">{{ i }}</a></li>
-            {% endif %}
-          {% endfor %}
-
-          {% if products.has_next %}
-            <li><a href="?page={{ products.next_page_number }}">&raquo;</a></li>
-          {% else %}
-            <li class="disabled"><span>&raquo;</span></li>
-          {% endif %}
-        </ul>
         {% endif %}
       </section>
     </div>
