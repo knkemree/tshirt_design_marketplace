@@ -1,0 +1,30 @@
+{% extends "admin/change_list.html" %}
+
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript">
+(function($) {
+    $(document).ready(function() {
+        console.log('order list sayfasi burada');
+
+        $('#result_list .field-status').each(function() {
+            if($(this).html() === 'Cancelled' ){
+                $(this).css('background-color', 'red')
+                console.log('cancelled');
+            }
+            else if($(this).html() === 'Fulfilled'){
+                $(this).css('background-color', '#70BF2B')
+            }
+            else if($(this).html() === 'In Queue'){
+                $(this).css('background-color', 'aqua')
+            }
+            else if($(this).html() === 'In Progress'){
+                $(this).css('background-color', 'yellow')
+            }
+            
+        });
+
+    });
+})(django.jQuery);
+</script>
+{% endblock %}
