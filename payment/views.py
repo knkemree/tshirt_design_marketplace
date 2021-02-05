@@ -109,18 +109,23 @@ def payment_canceled(request):
 def pay_order(request, id):
     order = get_object_or_404(Order, id=id)
     total_cost = order.get_total_cost()
-    
-    if request.method == 'POST':
+
+    credit = order.ordered_by.credit
+        
+
+    if request.method == 'POST' and total_cost >= credit:
+        after_credit = total_cost-credit
+        
         # retrieve token
         token = request.POST.get('stripeToken')
         # create and submit transaction
         result = stripe.Charge.create(
             #amount=100,
-            amount=int(total_cost*100),
+            amount=int(after_credit*100),
             currency="usd",
             #customer = order.ordered_by.seller.seller.stripe_id,
             source=token,
-            description="Payment for Context Custom by {}".format(order.ordered_by),
+            description="Payment for Context Custom",
         )
         print("result burda")
         print(result)
@@ -129,10 +134,17 @@ def pay_order(request, id):
             order.paid = True
             # store the unique transaction id
             order.stripe_id = result.id
-            order.save()
             subject = "Order Paid"
             message = "Order"
             mail_admins(subject, message, html_message="{} has just made a payment for order #{}. <a href='https://contextcustom.com/admin/orders/order/{}/change/'>Check Now!</a>".format(order.customer_name(), order.id, order.id))
+
+
+            order.ordered_by.credit = 0 
+            #credit_record = Credit.objects.create(user=order.ordered_by, order_id=order.id, amount=credit*-1)
+            order.save()
+            order.ordered_by.save()
+            #credit_record.save()
+            print(after_credit, 'ne kadar charge edildi')
             # cart.clear()
             # launch asynchronous task
             # payment_completed.delay(order.id)
@@ -140,9 +152,30 @@ def pay_order(request, id):
         else:
             return redirect('payment:canceled')
     else:
-        # generate token
-        return render(request,
-                      'process.html',
+
+        if request.method == 'POST' and total_cost < credit:
+            after_credit = 0.00
+            subject = "Order Paid"
+            message = "Order"
+            mail_admins(subject, message, html_message="{} has just made a payment for order #{}. <a href='https://contextcustom.com/admin/orders/order/{}/change/'>Check Now!</a>".format(order.customer_name(), order.id, order.id))
+
+            
+            order.paid = True
+
+            order.ordered_by.credit = credit - total_cost
+            #credit_record = Credit.objects.create(user=order.ordered_by, order_id=order.id, amount=total_cost*-1)
+            #credit_record.save()
+            order.save()
+            order.ordered_by.save()
+            return redirect('payment:done')
+        
+        else:
+            if total_cost >= credit:
+                after_credit = total_cost-credit
+            else:
+                after_credit = 0.00
+            return render(request,
+                      'pay_in_order_history.html',
                       {'order': order,
-                      
+                      'after_credit':after_credit,
                        'publish_key':STRIPE_PUBLIC_KEY})

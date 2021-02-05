@@ -5,7 +5,22 @@
 {% block blank %}
                             
 <div class="container py-5">
-    <h4 class="checkout-title">Pay Order</h4>
+    <div class="row">
+      <h4 class="checkout-title">Pay Order</h4>
+    </div>
+    {% if credit_amount > 0.00 %}
+    <div class="row">
+      Credit: ${{ order.ordered_by.credit }}
+    </div>
+    <div class="row">
+      Order Total: ${{ order.total }}
+    </div>  
+    {% endif %}  
+    <div class="row">
+     <p>You'll be charged <strong> ${{ after_credit|floatformat:2 }}</strong></p> 
+    </div>    
+    
+    {% if after_credit != 0.00 %}
     <div class="row">
       <div class="col-12 mb-20">
         <style>
@@ -43,14 +58,11 @@
         </style>
         <script src="https://js.stripe.com/v3/"></script>
         
+        
+        
         <form method="post" id="payment-form" data-token="{{ publish_key }}">
           {% csrf_token %}
           <div class="form-row">
-            <p>
-              <label for="card-element">
-                You'll be charged <strong>${{ order.total }}</strong>
-              </label>
-            </p>
             <!-- <p>
               <label for="card-element">
                 Credit or debit card
@@ -141,9 +153,20 @@
             form.submit();
           }
         </script>
-
       </div>
     </div>
+    {% else %}
+    <div class="row mt-2">
+      <form method="POST" action="{% url 'payment:pay_order' order.id %}" id="with-credit">
+        {% csrf_token %}
+        <input type="submit" name="pay-now" value="Place Order" class="form-control btn btn-primary">
+      </form>
+    </div>
+    {% endif%}
+      
+
+      
+    
 </div>  
 
 {% endblock %}

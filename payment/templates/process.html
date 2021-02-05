@@ -8,7 +8,7 @@
     <div class="row">
       <h4 class="checkout-title">Pay Order</h4>
     </div>
-    {% if credit_amount > 0 %}
+    {% if credit_amount > 0.00 %}
     <div class="row">
       Credit: ${{ order.ordered_by.credit }}
     </div>
@@ -20,7 +20,7 @@
      <p>You'll be charged <strong> ${{ after_credit|floatformat:2 }}</strong></p> 
     </div>    
     
-    {% if after_credit != 0%}
+    {% if after_credit != 0.00 %}
     <div class="row">
       <div class="col-12 mb-20">
         <style>
