@@ -451,7 +451,7 @@
                 <option>Average Rating</option>
                 <option>A - Z Order</option>
                 <option>Z - A Order</option>
-              </select><span class="font-size-sm text-light opacity-75 text-nowrap ml-2 d-none d-md-block">of 287 products</span>
+              </select><span class="font-size-sm text-light opacity-75 text-nowrap ml-2 d-none d-md-block">of {{ products|length}} products</span>
             </div>
           </div>
           <div class="d-flex pb-3"><a class="nav-link-style nav-link-light mr-3" href="#"><i class="czi-arrow-left"></i></a><span class="font-size-md text-light">1 / 5</span><a class="nav-link-style nav-link-light ml-3" href="#"><i class="czi-arrow-right"></i></a></div>
@@ -576,6 +576,30 @@
             <li class="page-item"><a class="page-link" href="#" aria-label="Next">Next<i class="czi-arrow-right ml-2"></i></a></li>
           </ul>
         </nav>
+        
+        {% if products.has_other_pages %}
+        <ul class="pagination">
+          {% if products.has_previous %}
+            <li><a href="?page={{ products.previous_page_number }}">&laquo;</a></li>
+          {% else %}
+            <li class="disabled"><span>&laquo;</span></li>
+          {% endif %}
+
+          {% for i in products.paginator.page_range %}
+            {% if products.number == i %}
+              <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% else %}
+              <li><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+          {% endfor %}
+
+          {% if products.has_next %}
+            <li><a href="?page={{ products.next_page_number }}">&raquo;</a></li>
+          {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+          {% endif %}
+        </ul>
+        {% endif %}
       </section>
     </div>
   </div>
