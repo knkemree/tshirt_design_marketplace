@@ -16,7 +16,7 @@
       Order Total: ${{ order.total }}
     </div>    
     <div class="row">
-     <p>You'll be charged <strong> ${{ after_credit }}</strong></p> 
+     <p>You'll be charged <strong> ${{ after_credit|floatformat:2 }}</strong></p> 
     </div>    
     
     {% if after_credit != 0%}
