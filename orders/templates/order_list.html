@@ -84,7 +84,6 @@
               <tr>
                 <td class="py-3"><a class="nav-link-style font-weight-medium font-size-sm" href="#order{{ object.id }}" data-toggle="modal">{{ object.id }}</a></td>
                 <td class="py-3">{{ object.created }}</td>
-                {{ object.status }}
                 {% if object.status == '3' %}
                   {% if object.paid %}
                   <td class="py-3"><span class="badge badge-success m-0">Paid</span></td>
