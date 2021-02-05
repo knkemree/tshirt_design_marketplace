@@ -99,7 +99,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ['ordered_by','paid', 'customer_notified','created', 'updated']
     inlines = [OrderItemInline]
     actions = [export_to_csv]
-    readonly_fields = ('paid','stripe_id','note')
+    readonly_fields = ('paid','stripe_id','note','status')
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
