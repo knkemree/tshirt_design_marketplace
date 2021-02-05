@@ -466,7 +466,7 @@
               <i class="czi-arrow-left"></i>
             </a>
             {% endif %}
-            <span class="font-size-md text-light">1 / 5</span>
+            <span class="font-size-md text-light">{% for i in products.paginator.page_range %}{% if products.number == i %} {{ i }} {% endif %}{% endfor %} / {{products.paginator.page_range|last }}</span>
             {% if products.has_next %}
             <a class="nav-link-style nav-link-light ml-3" href="?page={{ products.next_page_number }}">
               <i class="czi-arrow-right"></i>
@@ -599,7 +599,7 @@
             <li class="page-item"><a class="page-link" href="#" aria-label="Next">Next<i class="czi-arrow-right ml-2"></i></a></li>
           </ul>
         </nav>
-        {{products.paginator.page_range|last }}
+        
         {% if products.has_other_pages %}
         <ul class="pagination">
           {% if products.has_previous %}
