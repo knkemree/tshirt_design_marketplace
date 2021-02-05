@@ -71,6 +71,7 @@ def product_list(request, category_slug=None):
                   {'category': category,
                    'categories': categories,
                    'parent_categories': parent_categories,
+                   'products_list': products_list, #to calculate how many products are there in the category
                    'products': products})
 
 def product_detail(request, id, slug):
