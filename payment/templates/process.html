@@ -8,13 +8,14 @@
     <div class="row">
       <h4 class="checkout-title">Pay Order</h4>
     </div>
-
+    {% if credit_amount > 0 %}
     <div class="row">
       Credit: ${{ order.ordered_by.credit }}
     </div>
     <div class="row">
       Order Total: ${{ order.total }}
-    </div>    
+    </div>  
+    {% endif %}  
     <div class="row">
      <p>You'll be charged <strong> ${{ after_credit|floatformat:2 }}</strong></p> 
     </div>    
