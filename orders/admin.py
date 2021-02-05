@@ -88,15 +88,15 @@ class OrderItemInline(admin.TabularInline):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'customer_name','recipient', 
-                    'total', 'paid', 'fulfillment','status',
+                    'total', 'paid', 'customer_notified','status',
                     'updated','created',
                     #order_detail,
                     order_pdf,
                     ]
-    list_editable = ['fulfillment','status']
+    #list_editable = ['status']
     search_fields = ['id',]
     list_display_links =['id',]
-    list_filter = ['ordered_by','paid', 'fulfillment','created', 'updated']
+    list_filter = ['ordered_by','paid', 'customer_notified','created', 'updated']
     inlines = [OrderItemInline]
     actions = [export_to_csv]
     readonly_fields = ('paid','stripe_id','note')

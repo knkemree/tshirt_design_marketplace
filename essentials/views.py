@@ -16,6 +16,7 @@ from django.core import serializers
 from essentials.models import Color
 from cart.forms import CartAddProductForm
 import random
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 
 
@@ -42,10 +43,29 @@ def product_list(request, category_slug=None):
     categories = Category.objects.filter(active=True)
     parent_categories = Category.objects.filter(active=True, parent=None) 
 
-    products = Product.objects.filter(active=True).order_by('id').distinct('id')
+    products_list = Product.objects.filter(active=True).order_by('id').distinct('id')
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(products_list, 10)
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+
+
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
         products = products.filter(category=category)
+        page = request.GET.get('page', 1)
+        paginator = Paginator(products_list, 10)
+        try:
+            products = paginator.page(page)
+        except PageNotAnInteger:
+            products = paginator.page(1)
+        except EmptyPage:
+            products = paginator.page(paginator.num_pages)
     return render(request,
                   'list.html',
                   {'category': category,

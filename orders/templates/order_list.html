@@ -84,9 +84,11 @@
               <tr>
                 <td class="py-3"><a class="nav-link-style font-weight-medium font-size-sm" href="#order{{ object.id }}" data-toggle="modal">{{ object.id }}</a></td>
                 <td class="py-3">{{ object.created }}</td>
-                {% if object.status == '3' %}
+
+                <!-- payment durumu -->
+                {% if object.status == '4' %}
                   {% if object.paid %}
-                  <td class="py-3"><span class="badge badge-success m-0">Paid</span></td>
+                  <td class="py-3"><span class="badge badge-success m-0">Paid</span> <span class="badge badge-info m-0">Credit Applied</span></td>
                   {% else %}
                   <td class="py-3"><span class="badge badge-danger m-0">Not Paid</span></td>
                   {% endif %}
@@ -97,16 +99,20 @@
                   <td class="py-3"><a href="{% url 'payment:pay_order' object.id %}">Pay Now</a></td>
                   {% endif %}
                 {% endif %}
+                <!-- END payment durumu -->
 
-                {% if not object.status == '3' %}
-                  {% if object.fulfillment %}
-                  <td class="py-3"><span class="badge badge-success m-0">Fulfilled</span></td>
-                  {% else %}
-                  <td class="py-3"><span class="badge badge-info m-0">In Progress</span></td>
-                  {% endif %}
-                {% else %}
+                <!-- order hazirlanma asamasi durumu -->
+                {% if object.status == '4' %}
                   <td class="py-3"><span class="badge badge-danger m-0">Cancelled</span></td>
+                {% elif object.status == '3' %}
+                  <td class="py-3"><span class="badge badge-success m-0">Fulfilled</span></td>
+                {% elif object.status == '2' %}
+                  <td class="py-3"><span class="badge badge-warning m-0">In Progress</span></td>
+                {% else %}
+                  <td class="py-3"><span class="badge badge-info m-0">In Queue</span></td>   
                 {% endif %}
+                <!-- END order hazirlanma asamasi durumu -->
+
                 <td class="py-3">${{ object.get_total_cost|floatformat:2 }}</td>
               </tr>
             {% endfor %}
@@ -166,8 +172,9 @@
       {% endfor %}
       <!-- Footer-->
       <div class="modal-footer flex-wrap justify-content-between bg-secondary font-size-md">
-        <!-- eger cancel edilmedi veya fulfill edilmediyse cancel butonu gosterilir -->
-        {% if not object.status == '3' and not object.fulfillment %}
+        <!-- eger in queue ise iptal edilebilir butonunu goster -->
+        
+        {% if object.status == '1' %}
         <div class="px-2 py-1">
           <form action="{% url 'orders:order_cancel' object.id %}" method="POST">
             {% csrf_token %}
