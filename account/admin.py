@@ -41,11 +41,24 @@ class CommentAdmin(admin.ModelAdmin):
     list_filter = ['active']
     readonly_fields = ('subject','comment','ip','product','rate','id')
 
+
+# class CreditInline(admin.TabularInline):
+#     model = Seller
+#     #show_change_link = True
+#     #extra = 0
+#     fields = ['order','amount']
+#     #exclude = ['json_data','cost','end_product_img','image']
+#     raw_id_fields = ['seller']
+#     #readonly_fields = ('item','size','color','preview','technique','placement','price','quantity','ready_to_ship','log_entry','details')
+#     #list_editable = ('ready_to_ship',)
+
+
+
 class SellerAdmin(admin.ModelAdmin):
     list_display = ['seller', 'active','email_confirmed']
+    #inlines = [CreditInline]
 
-# class Admin(admin.ModelAdmin):
-#     list_display = ['', 'active','email_confirmed']
+
 
 
 admin.site.register(Comment, CommentAdmin)

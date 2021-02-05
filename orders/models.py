@@ -1,17 +1,19 @@
 from decimal import Decimal
+import json
+from core import settings
+from django.utils.safestring import mark_safe
+from django.contrib.admin.models import LogEntry
+from django.core.mail import EmailMultiAlternatives
 from django.db import models
 from django.urls import reverse 
 from django.core.validators import MinValueValidator, \
                                    MaxValueValidator
-from core import settings
+
+from coupons.models import Coupon
 from essentials.models import Product, Variant, Design
 from account.models import Customer, Seller
-from coupons.models import Coupon
-import json
-from django.utils.safestring import mark_safe
 
-from django.contrib.admin.models import LogEntry
-from django.core.mail import EmailMultiAlternatives
+
 
 class Order(models.Model):
     ordered_by = models.ForeignKey(Seller, on_delete=models.CASCADE)
@@ -31,7 +33,13 @@ class Order(models.Model):
     shipping_fee = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     profit = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     paid = models.BooleanField(default=False)
-    fulfillment = models.BooleanField(default=False, help_text="Customer will be notified via email if marked.")
+    fulfillment = models.BooleanField(default=False, help_text="Customer will be notified via email when marked. Unknown or question mark indicateds order has been cancelled")
+    STATUS = (
+    (1,'Fulfilled'),
+    (2,'In Progress'),
+    (3,'Cancelled'),
+    )
+    status =  models.IntegerField(choices=STATUS, default=2)
     stripe_id = models.CharField(max_length=150, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -65,7 +73,7 @@ class Order(models.Model):
         old = type(self).objects.get(pk=self.pk) if self.pk else None
         super(Order, self).save(*args, **kw)
 
-        if old and old.fulfillment == False and old.fulfillment != self.fulfillment: # if field changed
+        if old and old.fulfillment == False and self.fulfillment == True: # if field changed
             subject, from_email, to = 'Order #{} Ready!'.format(self.id), settings.DEFAULT_FROM_EMAIL, self.ordered_by
             text_content = 'Order #{} has been processed. See details'.format(self.id)
             html_content = "<p>Order #{} has been processed. See your <a href='https://contextcustom.com/orders/order/'>order history.</a></p>".format(self.id)
@@ -122,8 +130,6 @@ class OrderItem(models.Model):
         img = self.end_product_img
         if img is not None:
                 return mark_safe('<img src="{}" height="150" />'.format(img.url,))
-
-    
 
     
     

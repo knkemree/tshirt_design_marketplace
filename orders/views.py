@@ -135,3 +135,11 @@ def order_list(request):
         'orders': orders,
     }
     return render(request, 'order_list.html', context)
+
+def order_cancel(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    order.status = 3
+    order.ordered_by.credit = order.ordered_by.credit + order.total
+    order.save()
+    order.ordered_by.save()
+    return redirect('orders:order_list')

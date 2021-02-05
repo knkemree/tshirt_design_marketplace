@@ -88,12 +88,12 @@ class OrderItemInline(admin.TabularInline):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'customer_name','recipient', 
-                    'total', 'paid', 'fulfillment',
+                    'total', 'paid', 'fulfillment','status',
                     'updated','created',
                     #order_detail,
                     order_pdf,
                     ]
-    list_editable = ['fulfillment']
+    list_editable = ['fulfillment','status']
     search_fields = ['id',]
     list_display_links =['id',]
     list_filter = ['ordered_by','paid', 'fulfillment','created', 'updated']

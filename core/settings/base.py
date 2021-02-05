@@ -57,11 +57,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     
-
+    
     'account',
+    'orders',
     'essentials',
     'cart',
-    'orders',
+    
     'payment',
     'coupons.apps.CouponsConfig',
 
@@ -97,6 +98,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'cart.context_processors.cart',
                 'essentials.context_processors.categories',
+                'account.context_processors.credit_amount',
                 
             ],
         },

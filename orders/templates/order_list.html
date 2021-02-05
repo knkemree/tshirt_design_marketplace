@@ -40,8 +40,8 @@
           </div>
           <ul class="list-unstyled mb-0">
             <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 active" href="#"><i class="czi-bag opacity-60 mr-2"></i>Orders<span class="font-size-sm text-muted ml-auto">{{ orders|length }}</span></a></li>
-            <!-- <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="account-wishlist.html"><i class="czi-heart opacity-60 mr-2"></i>Wishlist<span class="font-size-sm text-muted ml-auto">3</span></a></li>
-            <li class="mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="account-tickets.html"><i class="czi-help opacity-60 mr-2"></i>Support tickets<span class="font-size-sm text-muted ml-auto">1</span></a></li> -->
+            {% if credit_amount %}<li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"><i class="czi-dollar opacity-60 mr-2"></i>Credits<span class="font-size-sm text-muted ml-auto">${{ credit_amount }}</span></a></li>{% endif %}
+            <!-- <li class="mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="account-tickets.html"><i class="czi-help opacity-60 mr-2"></i>Support tickets<span class="font-size-sm text-muted ml-auto">1</span></a></li> -->
           </ul>
           <!-- <div class="bg-secondary px-4 py-3">
             <h3 class="font-size-sm mb-0 text-muted">Account settings</h3>
@@ -84,15 +84,28 @@
               <tr>
                 <td class="py-3"><a class="nav-link-style font-weight-medium font-size-sm" href="#order{{ object.id }}" data-toggle="modal">{{ object.id }}</a></td>
                 <td class="py-3">{{ object.created }}</td>
-                {% if object.paid %}
-                <td class="py-3"><span class="badge badge-success m-0">Paid</span></td>
+                {% if not object.status == 3 %}
+                  {% if object.paid %}
+                  <td class="py-3"><span class="badge badge-success m-0">Paid</span></td>
+                  {% else %}
+                  <td class="py-3"><a href="{% url 'payment:pay_order' object.id %}">Pay Now</a></td>
+                  {% endif %}
                 {% else %}
-                <td class="py-3"><a href="{% url 'payment:pay_order' object.id %}">Pay Now</a></td>
+                  {% if object.paid %}
+                  <td class="py-3"><span class="badge badge-success m-0">Paid</span></td>
+                  {% else %}
+                  <td class="py-3"><span class="badge badge-danger m-0">Not Paid</span></td>
+                  {% endif %}
                 {% endif %}
-                {% if object.fulfillment %}
-                <td class="py-3"><span class="badge badge-success m-0">Shipped</span></td>
+
+                {% if not object.status == 3 %}
+                  {% if object.fulfillment %}
+                  <td class="py-3"><span class="badge badge-success m-0">Fulfilled</span></td>
+                  {% else %}
+                  <td class="py-3"><span class="badge badge-info m-0">In Progress</span></td>
+                  {% endif %}
                 {% else %}
-                <td class="py-3"><span class="badge badge-info m-0">In Progress</span></td>
+                  <td class="py-3"><span class="badge badge-danger m-0">Cancelled</span></td>
                 {% endif %}
                 <td class="py-3">${{ object.get_total_cost|floatformat:2 }}</td>
               </tr>
@@ -153,11 +166,20 @@
       {% endfor %}
       <!-- Footer-->
       <div class="modal-footer flex-wrap justify-content-between bg-secondary font-size-md">
-        <!-- <div class="px-2 py-1"><span class="text-muted">Subtotal:&nbsp;</span><span>$265.<small>00</small></span></div>
-        <div class="px-2 py-1"><span class="text-muted">Shipping:&nbsp;</span><span>$22.<small>50</small></span></div>
+        <!-- eger cancel edilmedi veya fulfill edilmediyse cancel butonu gosterilir -->
+        {% if not object.status == 3 and not object.fulfillment %}
+        <div class="px-2 py-1">
+          <form action="{% url 'orders:order_cancel' object.id %}" method="POST">
+            {% csrf_token %}
+            <button class="btn btn-link px-0 text-danger" data-toggle="tooltip" data-placement="bottom" title="You'll get ${{ object.total }} credits" type="submit"><i class="czi-close-circle mr-2"></i><small><span class="font-size-sm">Cancel Order</span></small></button>
+          </form>
+        </div>
+        {% endif %}
+        <!-- <div class="px-2 py-1"><span class="text-muted">Shipping:&nbsp;</span><span>$22.<small>50</small></span></div>
         <div class="px-2 py-1"><span class="text-muted">Tax:&nbsp;</span><span>$9.<small>50</small></span></div> -->
         <div class="px-2 py-1"><span class="text-muted">Total:&nbsp;</span><span class="font-size-lg">${{ object.total }}</span></div>
       </div>
+      
     </div>
   </div>
 </div>

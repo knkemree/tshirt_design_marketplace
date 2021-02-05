@@ -1,3 +1,6 @@
+from decimal import Decimal
+from phonenumber_field.modelfields import PhoneNumberField
+
 from django.db import models
 from django.conf import settings
 from django.forms import ModelForm
@@ -6,9 +9,9 @@ from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 
-from phonenumber_field.modelfields import PhoneNumberField
-
 from essentials.models import Product
+
+
 
 # Create your models here.
 class CustomerManager(BaseUserManager):
@@ -180,6 +183,7 @@ class Seller(models.Model):
     #email = models.ForeignKey(Customer, on_delete=models.CASCADE,unique=True,)
     seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, unique=True, related_name='creator')
     active = models.BooleanField(default=False)
+    credit = models.DecimalField(max_digits=12, decimal_places=2,default=0)
     email_confirmed = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
 
@@ -200,3 +204,4 @@ class Seller(models.Model):
         
             
         super(Seller, self).save(*args, **kwargs) 
+
