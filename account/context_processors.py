@@ -3,7 +3,7 @@ from account.models import Customer, Seller
 
 def credit_amount(request):
     try:
-        seller = get_object_or_404(Seller, seller=request.user)
+        seller = Seller.objects.get(seller=request.user)
         credit_amount = seller.credit
         context = {'credit_amount':credit_amount}
         print(credit_amount, 'ne kadar kredisi var')
