@@ -73,9 +73,11 @@
             <thead>
               <tr>
                 <th>Order #</th>
+                <th>Recipient</th>
                 <th>Date Purchased</th>
                 <th>Payment</th>
                 <th>Status</th>
+                <th>Label</th>
                 <th>Total</th>
               </tr>
             </thead>
@@ -83,6 +85,7 @@
             {% for object in orders %}
               <tr>
                 <td class="py-3"><a class="nav-link-style font-weight-medium font-size-sm" href="#order{{ object.id }}" data-toggle="modal">{{ object.id }}</a></td>
+                <td class="py-3">{{ object.recipient }}</td>
                 <td class="py-3">{{ object.created }}</td>
 
                 <!-- payment durumu -->
@@ -112,7 +115,7 @@
                   <td class="py-3"><span class="badge badge-info m-0">In Queue</span></td>   
                 {% endif %}
                 <!-- END order hazirlanma asamasi durumu -->
-
+                <td class="py-3">{% if object.shipping_label %}<a href="{{ object.shipping_label.url }}">View</a>{% endif %}</td>
                 <td class="py-3">${{ object.get_total_cost|floatformat:2 }}</td>
               </tr>
             {% endfor %}
@@ -174,11 +177,11 @@
       <div class="modal-footer flex-wrap justify-content-between bg-secondary font-size-md">
         <!-- eger in queue ve odendiyse ise iptal edilebilir butonunu goster -->
         
-        {% if object.status == '1' and object.paid == True %}
+        {% if object.status == '1' %}
         <div class="px-2 py-1">
           <form action="{% url 'orders:order_cancel' object.id %}" method="POST">
             {% csrf_token %}
-            <button class="btn btn-link px-0 text-danger" data-toggle="tooltip" data-placement="bottom" title="You'll get ${{ object.total }} credits" type="submit"><i class="czi-close-circle mr-2"></i><small><span class="font-size-sm">Cancel Order</span></small></button>
+            <button class="btn btn-link px-0 text-danger" {% if object.paid %} data-toggle="tooltip" data-placement="bottom" title="You'll get ${{ object.total }} credits" {% endif %} type="submit"><i class="czi-close-circle mr-2"></i><small><span class="font-size-sm">Cancel Order</span></small></button>
           </form>
         </div>
         {% endif %}

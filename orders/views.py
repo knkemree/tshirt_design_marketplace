@@ -139,11 +139,27 @@ def order_list(request):
 
 def order_cancel(request, order_id):
     order = get_object_or_404(Order, id=order_id)
-    order.status = '4'
-    order.ordered_by.credit = order.ordered_by.credit + order.total
-    order.save()
-    order.ordered_by.save()
-    subject = "Order #{} Cancelled".format(order.id)
-    message = "Order"
-    #mail_admins(subject, message, html_message="{} has cancelled order #{}. <a href='https://contextcustom.com/admin/orders/order/{}/change/'>Check Now!</a>".format(order.customer_name(), order.id, order.id))
+    
+    def cancel_apply_credit(order_instance):
+        order.status = '4'
+        order.ordered_by.credit = order.ordered_by.credit + order.total
+        order.save()
+        order.ordered_by.save()
+    def cancel_do_not_apply_credit(order_instance):
+        order.status = '4'
+        order.save()
+
+    def notify_admins(order_instance):
+        subject = "Order #{} Cancelled".format(order.id)
+        message = "Order"
+        mail_admins(subject, message, html_message="{} has cancelled order #{}. <a href='https://contextcustom.com/admin/orders/order/{}/change/'>Check Now!</a>".format(order.customer_name(), order.id, order.id))
+
+    if order.paid:
+        cancel_apply_credit(order)
+        notify_admins(order)
+    else:
+        cancel_do_not_apply_credit(order)
+        notify_admins(order)
+
+    
     return redirect('orders:order_list')
