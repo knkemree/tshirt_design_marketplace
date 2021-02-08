@@ -2,131 +2,24 @@
 <!-- Categories grid-->
 <div class="row pt-5">
     <!-- Catogory-->
+    {% for parent in parent_categories %}
     <div class="col-md-4 col-sm-6 mb-3">
-      <div class="card border-0"><a class="d-block overflow-hidden rounded-lg" href="shop-grid-ls.html"><img class="d-block w-100" src="{% static 'img/shop/categories/01.jpg' %}" alt="Clothing"></a>
+      <div class="card border-0"><a class="d-block overflow-hidden rounded-lg" href="{{ parent.get_absolute_url }}"><img class="d-block w-100" src="{% if parent.image %}{{ parent.image.url }}{% endif %}" alt="{{ parent.slug }}"></a>
         <div class="card-body">
-          <h2 class="h5">Clothing</h2>
+          <h2 class="h5">{{ parent.title }}</h2>
           <ul class="list-unstyled font-size-sm mb-0">
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Blazers &amp; Suits</a><span class="font-size-ms text-muted">235</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Blouse</a><span class="font-size-ms text-muted">410</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Cardigans &amp; Jumpers</a><span class="font-size-ms text-muted">107</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Dresses</a><span class="font-size-ms text-muted">93</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Hoodie &amp; Sweatshirts</a><span class="font-size-ms text-muted">93</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Sportswear</a><span class="font-size-ms text-muted">65</span></li>
-            <li>...</li>
+            {% for subcat in parent.children.all %}
+            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="{{ subcat.get_absolute_url }}"><i class="czi-arrow-right-circle mr-2"></i>{{ subcat.title }}</a></li>
+            {% endfor %}
             <li>
               <hr>
             </li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>View all</a><span class="font-size-ms text-muted">2,548</span></li>
+            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="{{ parent_get_absolute_url }}"><i class="czi-arrow-right-circle mr-2"></i>{{ parent.title }}</a></li>
           </ul>
         </div>
       </div>
     </div>
-    <!-- Catogory-->
-    <div class="col-md-4 col-sm-6 mb-3">
-      <div class="card border-0"><a class="d-block overflow-hidden rounded-lg" href="shop-grid-ls.html"><img class="d-block w-100" src="{% static 'img/shop/categories/02.jpg' %}" alt="Shoes"></a>
-        <div class="card-body">
-          <h2 class="h5">Shoes</h2>
-          <ul class="list-unstyled font-size-sm mb-0">
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Pumps &amp; High Heels</a><span class="font-size-ms text-muted">247</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Ballerinas &amp; Flats</a><span class="font-size-ms text-muted">156</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Sandals</a><span class="font-size-ms text-muted">310</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Sneakers</a><span class="font-size-ms text-muted">402</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Boots</a><span class="font-size-ms text-muted">393</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Flip Flops</a><span class="font-size-ms text-muted">116</span></li>
-            <li>...</li>
-            <li>
-              <hr>
-            </li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>View all</a><span class="font-size-ms text-muted">1,953</span></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <!-- Catogory-->
-    <div class="col-md-4 col-sm-6 mb-3">
-      <div class="card border-0"><a class="d-block overflow-hidden rounded-lg" href="shop-grid-ls.html"><img class="d-block w-100" src="{% static 'img/shop/categories/03.jpg' %}" alt="Gadgets"></a>
-        <div class="card-body">
-          <h2 class="h5">Gadgets</h2>
-          <ul class="list-unstyled font-size-sm mb-0">
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Smartphones &amp; Tablets</a><span class="font-size-ms text-muted">436</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Headphones</a><span class="font-size-ms text-muted">308</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Wearable Electronics</a><span class="font-size-ms text-muted">195</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Home IoT Gadgets</a><span class="font-size-ms text-muted">82</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Computers &amp; Accessories</a><span class="font-size-ms text-muted">264</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Cameras, Photo &amp; Video</a><span class="font-size-ms text-muted">57</span></li>
-            <li>...</li>
-            <li>
-              <hr>
-            </li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>View all</a><span class="font-size-ms text-muted">1,240</span></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <!-- Catogory-->
-    <div class="col-md-4 col-sm-6 mb-3">
-      <div class="card border-0"><a class="d-block overflow-hidden rounded-lg" href="shop-grid-ls.html"><img class="d-block w-100" src="{% static 'img/shop/categories/04.jpg' %}" alt="Furniture"></a>
-        <div class="card-body">
-          <h2 class="h5">Furniture &amp; Decor</h2>
-          <ul class="list-unstyled font-size-sm mb-0">
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Lounge Seating</a><span class="font-size-ms text-muted">374</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>File Cabinets</a><span class="font-size-ms text-muted">83</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Tables</a><span class="font-size-ms text-muted">125</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Indoor Lighting</a><span class="font-size-ms text-muted">291</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Office Chairs</a><span class="font-size-ms text-muted">118</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Adjustable Height Desks</a><span class="font-size-ms text-muted">46</span></li>
-            <li>...</li>
-            <li>
-              <hr>
-            </li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>View all</a><span class="font-size-ms text-muted">960</span></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <!-- Catogory-->
-    <div class="col-md-4 col-sm-6 mb-3">
-      <div class="card border-0"><a class="d-block overflow-hidden rounded-lg" href="shop-grid-ls.html"><img class="d-block w-100" src="{% static 'img/shop/categories/05.jpg' %}" alt="Accessories"></a>
-        <div class="card-body">
-          <h2 class="h5">Accessories</h2>
-          <ul class="list-unstyled font-size-sm mb-0">
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Bags</a><span class="font-size-ms text-muted">417</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Sunglasses</a><span class="font-size-ms text-muted">382</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Watches</a><span class="font-size-ms text-muted">122</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Hats</a><span class="font-size-ms text-muted">204</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Jewelry</a><span class="font-size-ms text-muted">149</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Cosmetics</a><span class="font-size-ms text-muted">90</span></li>
-            <li>...</li>
-            <li>
-              <hr>
-            </li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>View all</a><span class="font-size-ms text-muted">1,532</span></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <!-- Catogory-->
-    <div class="col-md-4 col-sm-6 mb-3">
-      <div class="card border-0"><a class="d-block overflow-hidden rounded-lg" href="shop-grid-ls.html"><img class="d-block w-100" src="{% static 'img/shop/categories/06.jpg' %}" alt="Entertainment"></a>
-        <div class="card-body">
-          <h2 class="h5">Entertainment</h2>
-          <ul class="list-unstyled font-size-sm mb-0">
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Video Games, VR</a><span class="font-size-ms text-muted">306</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Kid's Toys</a><span class="font-size-ms text-muted">231</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Table Games</a><span class="font-size-ms text-muted">114</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Outdoor / Camping</a><span class="font-size-ms text-muted">92</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Gifts</a><span class="font-size-ms text-muted">27</span></li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>Music, CDs &amp; Vinyl</a><span class="font-size-ms text-muted">41</span></li>
-            <li>...</li>
-            <li>
-              <hr>
-            </li>
-            <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="#"><i class="czi-arrow-right-circle mr-2"></i>View all</a><span class="font-size-ms text-muted">879</span></li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    {% endfor %}
   </div>
   
 </div>
