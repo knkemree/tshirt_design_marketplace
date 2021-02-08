@@ -49,7 +49,7 @@
                           <div class="input-group-append-overlay"><span class="input-group-text"><i class="czi-search"></i></span></div>
                         </div> -->
                         <ul class="widget-list cz-filter-list pt-1" style="height: 12rem;" data-simplebar data-simplebar-auto-hide="false">
-                          <li class="widget-list-item cz-filter-item"><a class="widget-list-link d-flex justify-content-between align-items-center" href="{{ subcat.get_absolute_url }}"><span class="cz-filter-item-text">View All {{ parent_title.title }}</span></a></li>
+                          <li class="widget-list-item cz-filter-item"><a class="widget-list-link d-flex justify-content-between align-items-center" href="{{ parent_title.get_absolute_url }}"><span class="cz-filter-item-text">View All {{ parent_title.title }}</span></a></li>
                           {% for subcat in parent_title.children.all %}
                           <li class="widget-list-item cz-filter-item"><a class="widget-list-link d-flex justify-content-between align-items-center" href="{{ subcat.get_absolute_url }}"><span class="cz-filter-item-text">{{ subcat.title }}</span></a></li>
                           {% endfor %}
