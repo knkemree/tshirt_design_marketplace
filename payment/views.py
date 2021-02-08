@@ -144,6 +144,8 @@ def pay_order(request, id):
             order.save()
             order.ordered_by.save()
             #credit_record.save()
+            del request.session['order_id']
+            request.session.modified = True
             print(after_credit, 'ne kadar charge edildi')
             # cart.clear()
             # launch asynchronous task
@@ -167,6 +169,8 @@ def pay_order(request, id):
             #credit_record.save()
             order.save()
             order.ordered_by.save()
+            del request.session['order_id']
+            request.session.modified = True
             return redirect('payment:done')
         
         else:
