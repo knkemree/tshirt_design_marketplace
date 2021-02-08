@@ -34,9 +34,9 @@ def payment_process(request):
             #amount=100,
             amount=int(after_credit*100),
             currency="usd",
-            #customer = order.ordered_by.seller.seller.stripe_id,
+            #customer = order.ordered_by.seller.stripe_id,
             source=token,
-            description="Payment for Context Custom",
+            description="Customer:{}, Order #{}, Total:${}, Used credit:${}, Paid Amount: ${}".format(order.ordered_by, order.id, total_cost, credit, after_credit),
         )
         print("result burda")
         print(result)
@@ -120,7 +120,7 @@ def pay_order(request, id):
             #amount=100,
             amount=int(after_credit*100),
             currency="usd",
-            #customer = order.ordered_by.seller.seller.stripe_id,
+            #customer = order.ordered_by.seller.stripe_id,
             source=token,
             description="Customer:{}, Order #{}, Total:${}, Used credit:${}, Paid Amount: ${}".format(order.ordered_by, order.id, total_cost, credit, after_credit),
         )

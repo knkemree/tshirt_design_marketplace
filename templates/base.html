@@ -194,19 +194,9 @@
             <div class="widget widget-links widget-light pb-2 mb-4">
               <h3 class="widget-title text-light">Shop departments</h3>
               <ul class="widget-list">
-                <li class="widget-list-item"><a class="widget-list-link" href="#">Sneakers &amp; Athletic</a></li>
-                <li class="widget-list-item"><a class="widget-list-link" href="#">Athletic Apparel</a></li>
-                <li class="widget-list-item"><a class="widget-list-link" href="#">Sandals</a></li>
-                <li class="widget-list-item"><a class="widget-list-link" href="#">Jeans</a></li>
-                <li class="widget-list-item"><a class="widget-list-link" href="#">Shirts &amp; Tops</a></li>
-                <li class="widget-list-item"><a class="widget-list-link" href="#">Shorts</a></li>
-                <li class="widget-list-item"><a class="widget-list-link" href="#">T-Shirts</a></li>
-                <li class="widget-list-item"><a class="widget-list-link" href="#">Swimwear</a></li>
-                <li class="widget-list-item"><a class="widget-list-link" href="#">Clogs &amp; Mules</a></li>
-                <li class="widget-list-item"><a class="widget-list-link" href="#">Bags &amp; Wallets</a></li>
-                <li class="widget-list-item"><a class="widget-list-link" href="#">Accessories</a></li>
-                <li class="widget-list-item"><a class="widget-list-link" href="#">Sunglasses &amp; Eyewear</a></li>
-                <li class="widget-list-item"><a class="widget-list-link" href="#">Watches</a></li>
+                {% for parent_title in parent_categories %}
+                <li class="widget-list-item"><a class="widget-list-link" href="{{ parent_title.get_absolute_url }}">{{ parent_title.title }}</a></li>
+                {% endfor %}
               </ul>
             </div>
           </div>
