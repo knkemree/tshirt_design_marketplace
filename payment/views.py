@@ -24,7 +24,7 @@ def payment_process(request):
     credit = order.ordered_by.credit
         
 
-    if request.method == 'POST' and total_cost >= credit:
+    if request.method == 'POST' and total_cost > credit:
         after_credit = total_cost-credit
         
         # retrieve token
@@ -71,7 +71,7 @@ def payment_process(request):
             return redirect('payment:canceled')
     else:
 
-        if request.method == 'POST' and total_cost < credit:
+        if request.method == 'POST' and total_cost <= credit:
             after_credit = 0.00
             subject = "New Order"
             message = "Order"
@@ -113,7 +113,7 @@ def pay_order(request, id):
     credit = order.ordered_by.credit
         
 
-    if request.method == 'POST' and total_cost >= credit:
+    if request.method == 'POST' and total_cost > credit:
         after_credit = total_cost-credit
         
         # retrieve token
@@ -153,7 +153,7 @@ def pay_order(request, id):
             return redirect('payment:canceled')
     else:
 
-        if request.method == 'POST' and total_cost < credit:
+        if request.method == 'POST' and total_cost <= credit:
             after_credit = 0.00
             subject = "Order Paid"
             message = "Order"

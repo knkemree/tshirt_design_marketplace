@@ -42,6 +42,12 @@
 $( document ).ready(function() {
     var canvas = new fabric.Canvas('tshirt-canvas');
     var json_content = $('#json_content').val();
+    //console.log(json_content);
+    var obj = JSON.parse(json_content)
+    Object.keys(obj).forEach(function(k){
+        console.log(k + ' - ' + obj[k]);
+    });
+    
     canvas.loadFromJSON(json_content);
 
     $('#load-from-db').on('click', function(){
@@ -99,6 +105,7 @@ $( document ).ready(function() {
 {% endblock %}
 
 {% block content %}
+{% if order_item.order.status == '4' %} <h1 style="background-color: red; color: white;">This order has been cancelled</h1>{% endif %}
 <h2>Order Item #{{ order_item.id }}</h2>
 <p>Order: #{{ order_item.order.id }}</p>
 <p>Item: #{{ order_item.id }}</p>
