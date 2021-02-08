@@ -40,6 +40,8 @@ def payment_process(request):
         )
         print("result burda")
         print(result)
+        del request.session['order_id']
+        request.session.modified = True
         if result.status == "succeeded":
             # mark the order as paid
             order.paid = True
@@ -48,11 +50,6 @@ def payment_process(request):
             subject = "New Order"
             message = "Order"
             mail_admins(subject, message, html_message="{} has just placed an order. <a href='https://contextcustom.com/admin/orders/order/{}/change/'>Check Now!</a>".format(order.customer_name(), order.id))
-            
-             
-            
-            del request.session['order_id']
-            request.session.modified = True
 
 
             order.ordered_by.credit = 0 
@@ -144,8 +141,6 @@ def pay_order(request, id):
             order.save()
             order.ordered_by.save()
             #credit_record.save()
-            del request.session['order_id']
-            request.session.modified = True
             print(after_credit, 'ne kadar charge edildi')
             # cart.clear()
             # launch asynchronous task
@@ -169,8 +164,7 @@ def pay_order(request, id):
             #credit_record.save()
             order.save()
             order.ordered_by.save()
-            del request.session['order_id']
-            request.session.modified = True
+            
             return redirect('payment:done')
         
         else:

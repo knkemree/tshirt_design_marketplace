@@ -13,7 +13,7 @@ class CustomerAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('email', 'admin','staff','seller','last_login','date_joined')
+    list_display = ('email', 'admin','stripe_id','staff','seller','last_login','date_joined')
     list_filter = ('admin','staff','seller')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
@@ -32,7 +32,7 @@ class CustomerAdmin(BaseUserAdmin):
         ),
     )
     search_fields = ('email',)
-    ordering = ('date_joined',)
+    ordering = ('-date_joined',)
     filter_horizontal = ()
     readonly_fields = ('stripe_id','seller','last_login','date_joined')
 
