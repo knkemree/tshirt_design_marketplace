@@ -6,7 +6,7 @@
     <div class="col-md-4 col-sm-6 mb-3">
       <div class="card border-0"><a class="d-block overflow-hidden rounded-lg" href="{{ parent.get_absolute_url }}"><img class="d-block w-100" src="{% if parent.image %}{{ parent.image.url }}{% endif %}" alt="{{ parent.slug }}"></a>
         <div class="card-body">
-          <h2 class="h5">{{ parent.title }}</h2>
+          <h2 class="h5"><a href="{{ parent.get_absolute_url }}">{{ parent.title }}</a></h2>
           <ul class="list-unstyled font-size-sm mb-0">
             {% for subcat in parent.children.all %}
             <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style" href="{{ subcat.get_absolute_url }}"><i class="czi-arrow-right-circle mr-2"></i>{{ subcat.title }}</a></li>
