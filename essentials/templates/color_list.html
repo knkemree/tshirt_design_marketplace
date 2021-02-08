@@ -5,6 +5,27 @@
 <script src="{% static 'js/theme.min.js' %}"></script>
 <script>
 $(document).ready(function() {  
+    var canvasModifiedCallback = function() {
+        console.log('canvas modified!');
+        var dataUrl = canvas.toDataURL();
+        $('#id_design').val(dataUrl);
+        canvas.renderAll();
+        
+        var node = document.getElementById('tshirt-div');
+        domtoimage.toPng(node).then(function (dataUrl) {
+            
+            var img = new Image();
+            var options = {
+            quality: 0.99,
+            };
+            img.src = dataUrl;
+            //document.body.appendChild(img);
+            $('#id_end_product_img').val(dataUrl) 
+            
+        }).catch(function (error) {
+          console.error('oops, something went wrong!', error);
+        });
+    };
 
     function ajax_change_size(){
       $.ajax({
@@ -53,7 +74,7 @@ $(document).ready(function() {
 
     function ajax_change_color(){
         
-      $.ajax({ 
+        $.ajax({ 
         url: "{% url 'essentials:change_color' %}",
         data: {
             'product_id':$('#productid').val(),
@@ -83,9 +104,12 @@ $(document).ready(function() {
             $('#price').text("$"+data.price_all_included);
 
             $('#addToCartAppend').html(data.variant_add_to_cart_url);
+            canvasModifiedCallback();
+            canvas.requestRenderAll();
+            
             
         }
-      });
+        });
     };
 
     $('#size-selector').on('change', function(e) {

@@ -125,7 +125,7 @@ def pay_order(request, id):
             currency="usd",
             #customer = order.ordered_by.seller.seller.stripe_id,
             source=token,
-            description="Payment for Context Custom",
+            description="Customer:{}, Order #{}, Total:${}, Used credit:${}, Paid Amount: ${}".format(order.ordered_by, order.id, total_cost, credit, after_credit),
         )
         print("result burda")
         print(result)
