@@ -588,20 +588,9 @@
                 <div class="widget widget-links widget-light pb-2 mb-4">
                   <h3 class="widget-title text-light">Product catalog</h3>
                   <ul class="widget-list">
-                    <li class="widget-list-item"><a class="widget-list-link" href="#">Special offers</a></li>
-                    <li class="widget-list-item"><a class="widget-list-link" href="#">Bakery</a></li>
-                    <li class="widget-list-item"><a class="widget-list-link" href="#">Fruits and Vegetables</a></li>
-                    <li class="widget-list-item"><a class="widget-list-link" href="#">Dairy and Eggs</a></li>
-                    <li class="widget-list-item"><a class="widget-list-link" href="#">Meat and Poultry</a></li>
-                    <li class="widget-list-item"><a class="widget-list-link" href="#">Fish and Seafood</a></li>
-                    <li class="widget-list-item"><a class="widget-list-link" href="#">Sauces and Spices</a></li>
-                    <li class="widget-list-item"><a class="widget-list-link" href="#">Canned Food and Oil</a></li>
-                    <li class="widget-list-item"><a class="widget-list-link" href="#">Alcoholic Beverages</a></li>
-                    <li class="widget-list-item"><a class="widget-list-link" href="#">Soft Drinks and Juice</a></li>
-                    <li class="widget-list-item"><a class="widget-list-link" href="#">Packets, Cereals and Poultry</a></li>
-                    <li class="widget-list-item"><a class="widget-list-link" href="#">Frozen</a></li>
-                    <li class="widget-list-item"><a class="widget-list-link" href="#">Personal hygiene</a></li>
-                    <li class="widget-list-item"><a class="widget-list-link" href="#">Kitchenware</a></li>
+                    {% for parent_title in parent_categories %}
+                      <li class="widget-list-item"><a class="widget-list-link" href="{{ parent_title.get_absolute_url }}">{{ parent_title.title }}</a></li>
+                    {% endfor %}
                   </ul>
                 </div>
               </div>
