@@ -48,7 +48,7 @@
                           <input class="cz-filter-search form-control form-control-sm appended-form-control" type="text" placeholder="Search">
                           <div class="input-group-append-overlay"><span class="input-group-text"><i class="czi-search"></i></span></div>
                         </div> -->
-                        <ul class="widget-list cz-filter-list pt-1" style="height: 2rem;" data-simplebar data-simplebar-auto-hide="false">
+                        <ul class="widget-list cz-filter-list pt-1" style="height: 8rem;" data-simplebar data-simplebar-auto-hide="false">
                           {% for subcat in parent_title.children.all %}
                           <li class="widget-list-item cz-filter-item"><a class="widget-list-link d-flex justify-content-between align-items-center" href="{{ subcat.get_absolute_url }}"><span class="cz-filter-item-text">{{ subcat.title }}</span></a></li>
                           {% endfor %}
