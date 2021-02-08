@@ -158,20 +158,9 @@
             <div class="input-group-append-overlay">
               <select class="custom-select">
                 <option>All categories</option>
-                <option>Bakery</option>
-                <option>Fruits and Vegetables</option>
-                <option>Dairy and Eggs</option>
-                <option>Meat and Poultry</option>
-                <option>Fish and Seafood</option>
-                <option>Sauces and Spices</option>
-                <option>Canned Food and Oil</option>
-                <option>Alcoholic Beverages</option>
-                <option>Soft Drinks and Juice</option>
-                <option>Packets, Cereals</option>
-                <option>Frozen</option>
-                <option>Snaks, Sweets and Chips</option>
-                <option>Personal hygiene</option>
-                <option>Kitchenware</option>
+                {% for parent in parent_categories %}
+                <option>{{ parent }}</option>
+                {% endfor %}
               </select>
             </div>
           </div>
