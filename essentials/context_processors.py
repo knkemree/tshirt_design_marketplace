@@ -6,5 +6,4 @@ def categories(request):
 
 def latest_products(request):
     latest_products = Product.objects.filter(active=True)[:4]
-    print(latest_products, 'en son urunler')
     return {'latest_products':latest_products}
