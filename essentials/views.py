@@ -40,6 +40,7 @@ class SellerProductListView(SellerAccountMixin, ListView):
 @login_required(login_url='/signup/')
 def product_list(request, category_slug=None):
     category = None
+    parent = None
     categories = Category.objects.filter(active=True)
     parent_categories = Category.objects.filter(active=True, parent=None) 
 
@@ -57,19 +58,32 @@ def product_list(request, category_slug=None):
 
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
-        products_list = Product.objects.filter(active=True, category=category).order_by('id').distinct('id')
-        page = request.GET.get('page', 1)
-        paginator = Paginator(products_list, 12)
-        try:
-            products = paginator.page(page)
-        except PageNotAnInteger:
-            products = paginator.page(1)
-        except EmptyPage:
-            products = paginator.page(paginator.num_pages)
+        if category.parent:
+            parent = category.parent
+            products_list = Product.objects.filter(active=True, category=category).order_by('id').distinct('id')
+            page = request.GET.get('page', 1)
+            paginator = Paginator(products_list, 12)
+            try:
+                products = paginator.page(page)
+            except PageNotAnInteger:
+                products = paginator.page(1)
+            except EmptyPage:
+                products = paginator.page(paginator.num_pages)
+        else:
+            products_list = Product.objects.filter(active=True, category=category).order_by('id').distinct('id')
+            page = request.GET.get('page', 1)
+            paginator = Paginator(products_list, 12)
+            try:
+                products = paginator.page(page)
+            except PageNotAnInteger:
+                products = paginator.page(1)
+            except EmptyPage:
+                products = paginator.page(paginator.num_pages)
     return render(request,
                   'list.html',
                   {'category': category,
                    'categories': categories,
+                   'parent':parent,
                    'parent_categories': parent_categories,
                    'products_list': products_list, #to calculate how many products are there in the category
                    'products': products})

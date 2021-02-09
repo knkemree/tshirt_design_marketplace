@@ -8,8 +8,8 @@
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i>Home</a></li>
             
             {% if category %}
-              {% if category.parent %}
-              <li class="breadcrumb-item text-nowrap" aria-current="page"> <a href="{{ category.parent.get_absolute_url }}">{{ category.parent.title }}</a></li>
+              {% if parent %}
+              <li class="breadcrumb-item text-nowrap" aria-current="page"> <a href="{{ parent.get_absolute_url }}">{{ parent.title }}</a></li>
               <li class="breadcrumb-item text-nowrap active" aria-current="page">{{ category.title }}</li>
               {% else %}
               <li class="breadcrumb-item text-nowrap active" aria-current="page">{{ category.title }}</li>
