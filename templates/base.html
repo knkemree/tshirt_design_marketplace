@@ -47,9 +47,13 @@
           <a class="navbar-brand d-sm-none mr-2 order-lg-1" href="{% url 'home' %}" style="min-width: 4.625rem;"><img width="74" src="{% static 'img/logo-icon.png' %}" alt="Context Custom"/></a>
           <!-- Toolbar-->
           <div class="navbar-toolbar d-flex align-items-center order-lg-3">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"><span class="navbar-toggler-icon"></span></button><a class="navbar-tool d-none d-lg-flex" href="#searchBox" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="searchBox"><span class="navbar-tool-tooltip">Search</span>
-              <div class="navbar-tool-icon-box"><i class="navbar-tool-icon czi-search"></i></div></a><a class="navbar-tool d-none d-lg-flex" href="#"><span class="navbar-tool-tooltip">Favorites</span>
-              <div class="navbar-tool-icon-box"><i class="navbar-tool-icon czi-heart"></i></div></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"><span class="navbar-toggler-icon"></span></button>
+            <a class="navbar-tool d-none d-lg-flex" href="#searchBox" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="searchBox"><span class="navbar-tool-tooltip">Search</span>
+              <div class="navbar-tool-icon-box"><i class="navbar-tool-icon czi-search"></i></div>
+            </a>
+            <!-- <a class="navbar-tool d-none d-lg-flex" href="#"><span class="navbar-tool-tooltip">Favorites</span>
+              <div class="navbar-tool-icon-box"><i class="navbar-tool-icon czi-heart"></i></div>
+            </a> -->
               {% if request.user.is_authenticated %}
               <div class="navbar-tool dropdown ml-2"><a class="navbar-tool-icon-box border dropdown-toggle" href="#"><img width="32" src="{% static 'img/marketplace/account/avatar-sm.png' %}" alt="Createx Studio"/></a><a class="navbar-tool-text ml-n1" href="#"><small>My Account</small>{{ request.user.first_name }}</a>
                 <div class="dropdown-menu dropdown-menu-right" style="min-width: 14rem;">
