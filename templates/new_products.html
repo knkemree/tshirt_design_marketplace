@@ -1,0 +1,31 @@
+{% load static %}
+<!-- Products grid (Trending products)-->
+<section class="container pt-md-3 pb-5 mb-md-3">
+    
+    <h2 class="h3 text-center">New products</h2>
+    <div class="row pt-4 mx-n2">
+      <!-- Product-->
+      {% for product in latest_products %}
+      <div class="col-lg-3 col-md-4 col-sm-6 px-2 mb-4">
+        <div class="card product-card"><span class="badge badge-info badge-shadow">New</span>
+            <a class="card-img-top d-block overflow-hidden" href="{{ product.get_absolute_url }}">
+              <img src="{{ product.image.url }}" alt="{{ product.title }}" style="max-height: 250px; display:block; margin:auto;">
+            </a>
+          <div class="card-body py-2"><a class="product-meta d-block font-size-xs pb-1" href="#">{{ product.brand }}</a>
+            <h3 class="product-title font-size-sm"><a href="{{ product.get_absolute_url }}">{{ product.title }}</a></h3>
+            <div class="d-flex justify-content-between">
+              <div class="product-price"><span class="text-accent">${{ product.variants.first.price }}</span></div>
+              <div class="star-rating"><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i>
+              </div>
+            </div>
+          </div>
+          <div class="card-body card-body-hidden">
+            <input class="btn btn-primary btn-sm btn-block mb-2" type="button" onclick="window.location='{{ product.get_absolute_url }}'" value="Design & Buy">
+          </div>
+        </div>
+        <hr class="d-sm-none">
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center pt-3"><a class="btn btn-outline-accent" href="{% url 'essentials:product_list' %}">More products<i class="czi-arrow-right ml-1"></i></a></div>
+  </section>

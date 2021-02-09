@@ -81,8 +81,6 @@ class Product(models.Model):
     def get_lowest_price(self):
         return self.variants.all().aggregate(Min('price'))
 
-    
-
     def image_tag(self):
         img = self.image
         if img is not None:

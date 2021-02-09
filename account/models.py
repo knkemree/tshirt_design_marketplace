@@ -4,7 +4,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.db import models
 from django.conf import settings
 from django.forms import ModelForm
-from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import Group, Permission, PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
@@ -58,7 +58,7 @@ class CustomerManager(BaseUserManager):
         return user
 
 
-class Customer(AbstractBaseUser):
+class Customer(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -67,8 +67,8 @@ class Customer(AbstractBaseUser):
     first_name = models.CharField("First Name", max_length=30)
     last_name = models.CharField("Last Name", max_length=30)
     phone = PhoneNumberField(null=True, blank=True)
-    user_permissions = models.ManyToManyField(Permission, blank=True)
-    groups = models.ManyToManyField(Group, blank=True)
+    #user_permissions = models.ManyToManyField(Permission, blank=True)
+    #groups = models.ManyToManyField(Group, blank=True)
     admin = models.BooleanField(default=False) # a superuser
     staff = models.BooleanField(default=False) # a admin user; non super-user
     seller = models.BooleanField(default=False, blank=True, null=True)
@@ -89,6 +89,7 @@ class Customer(AbstractBaseUser):
         verbose_name = "User"
         verbose_name_plural = "All Users"
 
+
     def get_full_name(self):
         # The user is identified by their email address
         return self.first_name + self.last_name
@@ -100,15 +101,15 @@ class Customer(AbstractBaseUser):
     def __str__(self):              # __unicode__ on Python 2
         return self.email
 
-    def has_perm(self, perm, obj=None):
-        "Does the user have a specific permission?"
-        # Simplest possible answer: Yes, always
-        return True
+    # def has_perm(self, perm, obj=None):
+    #     "Does the user have a specific permission?"
+    #     # Simplest possible answer: Yes, always
+    #     return True
 
-    def has_module_perms(self, app_label):
-        "Does the user have permissions to view the app `app_label`?"
-        # Simplest possible answer: Yes, always
-        return True
+    # def has_module_perms(self, app_label):
+    #     "Does the user have permissions to view the app `app_label`?"
+    #     # Simplest possible answer: Yes, always
+    #     return True
 
     def email_customer(self, subject, message, from_email=None, **kwargs):
         '''
@@ -183,8 +184,8 @@ class Seller(models.Model):
     #email = models.ForeignKey(Customer, on_delete=models.CASCADE,unique=True,)
     seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, unique=True, related_name='creator')
     active = models.BooleanField(default=False)
-    credit = models.DecimalField(max_digits=12, decimal_places=2,default=0)
     email_confirmed = models.BooleanField(default=False)
+    credit = models.DecimalField(max_digits=12, decimal_places=2,default=0)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
 
     def __str__(self):
@@ -199,7 +200,7 @@ class Seller(models.Model):
     def save(self, *args, **kwargs):
         customer = Customer.objects.get(email=self.seller)
         customer.seller = True
-        customer.buyer = True
+        #customer.buyer = True
         customer.save()
         
             
