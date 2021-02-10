@@ -127,7 +127,7 @@
               <li class="nav-item dropdown"><a class="nav-link dropdown-toggle pl-0" href="#" data-toggle="dropdown"><i class="czi-menu align-middle mt-n1 mr-2"></i>Categories</a>
                 <ul class="dropdown-menu py-1">
                   {% for parent in parent_categories %}
-                  <li class="dropdown"><a class="dropdown-item dropdown-toggle" href="{{ parent.get_abssolute_url }}" data-toggle="dropdown">{{ parent.title }}</a>
+                  <li class="dropdown"><a class="dropdown-item dropdown-toggle" href="{{ parent.get_absolute_url }}" data-toggle="dropdown">{{ parent.title }}</a>
                     <ul class="dropdown-menu">
                       <li class="dropdown-item product-title font-weight-medium"><a href="{{ parent.get_abssolute_url }}">All {{ parent.title }}<i class="czi-arrow-right font-size-xs ml-1"></i></a></li>
                       <li class="dropdown-divider"></li>
