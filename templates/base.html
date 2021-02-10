@@ -129,7 +129,7 @@
                   {% for parent in parent_categories %}
                   <li class="dropdown"><a class="dropdown-item dropdown-toggle" href="{{ parent.get_absolute_url }}" data-toggle="dropdown">{{ parent.title }}</a>
                     <ul class="dropdown-menu">
-                      <li class="dropdown-item product-title font-weight-medium"><a href="{{ parent.get_abssolute_url }}">All {{ parent.title }}<i class="czi-arrow-right font-size-xs ml-1"></i></a></li>
+                      <li class="dropdown-item product-title font-weight-medium"><a href="{{ parent.get_absolute_url }}">All {{ parent.title }}<i class="czi-arrow-right font-size-xs ml-1"></i></a></li>
                       <li class="dropdown-divider"></li>
                       {% for subcat in parent.children.all %}
                       <li><a class="dropdown-item" href="{{ subcat.get_absolute_url }}">{{ subcat.title }}</a></li>
