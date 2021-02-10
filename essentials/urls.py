@@ -7,6 +7,7 @@ app_name = "essentials"
 
 urlpatterns = [
     path('', views.product_list, name='product_list'),
+    path('search/', views.post_search, name='post_search'),
     path('api/', products_list, name='list'),
     path('ajax/change_size', views.change_size, name='change_size'),
     path('ajax/change_place/', views.change_place, name='change_place'),

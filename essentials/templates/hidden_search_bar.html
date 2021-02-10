@@ -1,0 +1,47 @@
+<div class="search-box collapse" id="searchBox">
+    <div class="card pt-2 pb-4 border-0 rounded-0">
+        <div class="container">
+        <div class="input-group-overlay">
+            <div class="input-group-prepend-overlay"><span class="input-group-text"><i class="czi-search"></i></span></div>
+            <form id="post_search" action="{% url 'essentials:post_search' %}" method="POST">
+                {% csrf_token %}
+                {{ form }}
+                <!-- <input name="query" class="form-control prepended-form-control" type="text" placeholder="Search.."> -->
+            </form>
+            
+        </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        // var post_search_form = $('#post_search');
+        // var action = post_search_form.attr('action');
+        // var method = post_search_form.attr('method');
+
+        // function ajax_search(){
+        //     $.ajax({
+        //     url : action, // the endpoint
+        //     type : method, // http method
+        //     data : {
+        //         'query': $('input[name=query]', '#post_search').val(),
+        //     }, // data sent with the get request
+        //     // handle a successful response
+        //     success : function(data) {
+        //         console.log("success"); // another sanity check
+        //     },
+        //     });
+        // };
+
+        $('input[name=query]', '#post_search').keypress(function (e) {
+            if (e.which == 13) {
+                console.log('enter basildi')
+                $('#post_search').submit();
+                return false;    //<---- Add this line
+            }
+        });
+
+        
+    })
+</script>

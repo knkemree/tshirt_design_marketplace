@@ -60,7 +60,7 @@
                   <h6 class="dropdown-header">Account</h6>
                   {% if request.user.is_staff %}<a class="dropdown-item d-flex align-items-center" href="/admin/"><i class="czi-settings opacity-60 mr-2"></i>Control Panel</a>{% endif %}
                   <!-- <a class="dropdown-item d-flex align-items-center" href="#"><i class="czi-settings opacity-60 mr-2"></i>Settings</a> -->
-                  
+
                   {% if credit_amount > 0 %}{% if request.user.seller %}<a class="dropdown-item d-flex align-items-center" href="{% url 'orders:order_list' %}"><i class="czi-dollar opacity-60 mr-2"></i>Credits ${{ credit_amount }}</a>{% endif %}{% endif %}
                   {% if request.user.seller %}<a class="dropdown-item d-flex align-items-center" href="{% url 'orders:order_list' %}"><i class="czi-basket opacity-60 mr-2"></i>Order History</a>{% endif %}
                   <!-- <a class="dropdown-item d-flex align-items-center" href="#"><i class="czi-heart opacity-60 mr-2"></i>Favorites<span class="font-size-xs text-muted ml-auto">4</span></a> -->
@@ -80,7 +80,7 @@
                 <div class="navbar-tool-text ml-n3"><small>Hello, Sign in</small>My Account</div></a>
               {% endif %}
 
-            
+
               <!-- <div class="navbar-tool ml-4"><a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="#"><span class="navbar-tool-label">3</span><i class="navbar-tool-icon czi-cart"></i></a></div> -->
               {% with total_items=cart|length %}
                 {% if total_items > 0 %}
@@ -88,9 +88,9 @@
                 {% else %}
                 <div class="navbar-tool ml-3"><a class="navbar-tool-icon-box bg-secondary dropdown-toggle"><span class="navbar-tool-label">0</span><i class="navbar-tool-icon czi-cart"></i></a><a class="navbar-tool-text" ><small>My Cart</small>$0.00</a>
                 {% endif %}
-              {% endwith %}  
+              {% endwith %}
 
-              
+
               <!-- Cart dropdown-->
               {% if cart %}
                 <div class="dropdown-menu dropdown-menu-right" style="width: 20rem;">
@@ -109,7 +109,7 @@
                           </div>
                           {% endwith %}
                         {% endfor %}
-                        
+
                     </div>
                     <div class="d-flex flex-wrap justify-content-between align-items-center py-3">
                       <div class="font-size-sm mr-2 py-2"><span class="text-muted">Subtotal:</span><span class="text-accent font-size-base ml-1">${{ cart.get_total_price }}</div><a class="btn btn-outline-secondary btn-sm" href="{% url 'cart:cart_detail' %}">Expand Cart<i class="czi-arrow-right ml-1 mr-n1"></i></a>
@@ -118,15 +118,10 @@
                 </div>
                 {% else %}
                 {% endif %}
-                
+
               </div>
           </div>
           <div class="collapse navbar-collapse mr-auto order-lg-2" id="navbarCollapse">
-            <!-- Search-->
-            <div class="input-group-overlay d-lg-none my-3">
-              <div class="input-group-prepend-overlay"><span class="input-group-text"><i class="czi-search"></i></span></div>
-              <input class="form-control prepended-form-control" type="text" placeholder="Search marketplace">
-            </div>
             <!-- Categories dropdown-->
             <ul class="navbar-nav mega-nav pr-lg-2 mr-lg-2">
               <li class="nav-item dropdown"><a class="nav-link dropdown-toggle pl-0" href="#" data-toggle="dropdown"><i class="czi-menu align-middle mt-n1 mr-2"></i>Categories</a>
@@ -155,16 +150,32 @@
       <!-- Search collapse-->
       <div class="search-box collapse" id="searchBox">
         <div class="card pt-2 pb-4 border-0 rounded-0">
-          <div class="container">
+            <div class="container">
             <div class="input-group-overlay">
-              <div class="input-group-prepend-overlay"><span class="input-group-text"><i class="czi-search"></i></span></div>
-              <input class="form-control prepended-form-control" type="text" placeholder="Search marketplace">
+                <div class="input-group-prepend-overlay"><span class="input-group-text"><i class="czi-search"></i></span></div>
+                <form id="post_search_collapse" action="{% url 'essentials:post_search' %}" method="POST">
+                    {% csrf_token %}
+                    <input id="id_query" name="query" class="form-control prepended-form-control" type="text" placeholder="Search products">
+                </form>
+                
             </div>
-          </div>
+            </div>
         </div>
       </div>
-      
 
+      {% block javascript %}
+      <script>
+        $(document).ready(function(){
+          $('input[name=query]', '#post_search_collapse').keypress(function (e) {
+              if (e.which == 13) {
+                  console.log('enter basildi')
+                  $('#post_search_collapse').submit();
+                  return false;    //<---- Add this line
+              }
+          });   
+        });
+      </script>
+      {% endblock %}
       {% block css %}
       {% endblock %}
     </header>
@@ -173,25 +184,25 @@
     {% block blank %}
     {% endblock %}
     <div class="container py-5">
-        
+
         {% block main_text %}
         {% endblock %}
 
-        
-    
+
+
         {% block banner %}
         {% endblock %}
 
         {% block new_products %}
         {% endblock %}
-        
+
         {% block shop_categories %}
         {% endblock %}
-        
+
         {% block shop_list_ls %}
         {% endblock %}
     </div>
-    
+
     <!-- Footer-->
     <!-- Footer-->
     <footer class="bg-dark pt-5">
@@ -334,10 +345,10 @@
       </div>
     </footer>
     <!-- Toolbar for handheld devices-->
-    <div class="cz-handheld-toolbar">
+    <!-- <div class="cz-handheld-toolbar">
       <div class="d-table table-fixed w-100"><a class="d-table-cell cz-handheld-toolbar-item" href="#"><span class="cz-handheld-toolbar-icon"><i class="czi-heart"></i></span><span class="cz-handheld-toolbar-label">Wishlist</span></a><a class="d-table-cell cz-handheld-toolbar-item" href="#navbarCollapse" data-toggle="collapse" onclick="window.scrollTo(0, 0)"><span class="cz-handheld-toolbar-icon"><i class="czi-menu"></i></span><span class="cz-handheld-toolbar-label">Menu</span></a><a class="d-table-cell cz-handheld-toolbar-item" href="#"><span class="cz-handheld-toolbar-icon"><i class="czi-cart"></i><span class="badge badge-primary badge-pill ml-1">4</span></span><span class="cz-handheld-toolbar-label">$265.00</span></a>
       </div>
-    </div>
+    </div> -->
     <!-- Back To Top Button--><a class="btn-scroll-top" href="#top" data-scroll><span class="btn-scroll-top-tooltip text-muted font-size-sm mr-2">Top</span><i class="btn-scroll-top-icon czi-arrow-up">   </i></a>
     <!-- jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -355,17 +366,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fontfaceobserver/2.1.0/fontfaceobserver.js"></script>
     <!-- Main theme script-->
     <script src="{% static 'js/theme.min.js' %}"></script>
-
-    
-    {% block javascript %}
-      <script>
-        if(typeof jQuery!=='undefined'){
-        console.log('jQuery Loaded');
-        }
-        else{
-            console.log('not loaded yet');
-        }
-      </script>
-    {% endblock %}
   </body>
 </html>

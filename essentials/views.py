@@ -1,3 +1,5 @@
+import json
+import random
 from django.shortcuts import render
 from django.db.models import Q, Avg, Count
 from django.views.generic.list import ListView
@@ -5,18 +7,17 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
-from cart.forms import CartAddProductForm
-from .models import Category, Product, Variant, Design, Placement, Method
-from account.mixins import SellerAccountMixin
-import json
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.utils.safestring import SafeString
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.serializers import serialize
 from django.core import serializers
 from essentials.models import Color
+from essentials.forms import SearchForm 
 from cart.forms import CartAddProductForm
-import random
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from .models import Category, Product, Variant, Design, Placement, Method
+from account.mixins import SellerAccountMixin
+
 
 
 
@@ -292,3 +293,29 @@ def blank_single_item(request, id, slug):
     cart_product_form = CartAddProductForm()
     context = {'product': product,'cart_product_form': cart_product_form,'sizes':sizes, 'colors':colors,  'variant':variant,}
     return render(request,'blank-single-item.html',context)
+
+
+def post_search(request):
+    form = SearchForm()
+    products = []
+    query = request.POST.get('query')
+    if query:
+        print(query, 'query burda')
+        products = Product.objects.filter(Q(title__icontains=query)).order_by('id')
+        # page = request.GET.get('page', 1)
+        # paginator = Paginator(results_list, 4) # 4 posts in each page
+        # products = paginator.page(1)
+
+        # try:
+        #     products = paginator.page(page)
+        # except PageNotAnInteger:
+        #     # If page is not an integer deliver the first page
+        #     products = paginator.page(1)
+        # except EmptyPage:
+        #     # If page is out of range deliver last page of results
+        #     products = paginator.page(paginator.num_pages) 
+        context = {'form':form,'products':products}
+        return render(request, 'search_page.html', context)
+
+    context = {'form':form,'products':products}        
+    return render(request, 'search_page.html', context)

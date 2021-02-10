@@ -100,6 +100,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'cart.context_processors.cart',
                 'essentials.context_processors.categories',
+                'essentials.context_processors.search_form',
                 'account.context_processors.credit_amount',
                 
             ],
