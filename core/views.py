@@ -4,13 +4,15 @@ from django.contrib import messages
 from account.forms import UserAdminCreationForm
 from account.models import Customer
 from django.contrib.auth.forms import AuthenticationForm
+from essentials.models import Product
 
 class HomeView(TemplateView):
     template_name = 'home_page.html'
 
 def home_page(request):
+    latest_products = Product.objects.filter(active=True)[:4]
     context = {
-        'hi':'hi'
+        'latest_products':latest_products
     }
     return render(request, "home_page.html", context)
 
