@@ -24,7 +24,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth import views as auth_views
 from .views import HomeView, home_page
 from account.views import signup, account_activation_sent, activate, activated, login_request
-from core.views import how_it_works, test
+from core.views import how_it_works, test, free_mockup
 from essentials import views
 
 urlpatterns = [
@@ -36,6 +36,7 @@ urlpatterns = [
     path('activate/<slug:uidb64>/<slug:token>/', activate, name='activate'),
     path('activated/', activated, name='activated'),
     path('test/', test, name='test'),
+    path('free_mockup/', free_mockup, name='free_mockup'),
     #path('login/', auth_views.LoginView.as_view(redirect_authenticated_user=True), name='login'),
     path('login/', login_request, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),

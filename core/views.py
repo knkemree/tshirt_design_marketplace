@@ -24,4 +24,8 @@ def how_it_works(request):
 def test(request):
     context = {}
     return render(request,'test.html', context)
+
+def free_mockup(request):
+    context = {}
+    return render(request, 'free_mockup.html', context)
     

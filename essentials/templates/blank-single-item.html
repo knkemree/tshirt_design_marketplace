@@ -893,7 +893,7 @@ canvas.on('object:removed', function(e) {
                         <small><span class="badge badge-dark badge-shadow">{{ place }}</span></small> 
                         <a class="cz-thumblist-item" href="#place{{place.id}}" id="{{ place.id }}">
                           <input type="hidden" value="{{ place.id }}" name="place_id">
-                          <img data-toggle="tooltip" data-placement="right" title="{{ place }}"  src="{{ place.image.url }}" alt="Product thumb" class="thumbnail_image">
+                          <img style="max-height: 80px; width: auto; margin: auto;" data-toggle="tooltip" data-placement="right" title="{{ place }}"  src="{{ place.image.url }}" alt="Product thumb" class="thumbnail_image">
                         </a>
                         {% endfor %}
                       </form>
