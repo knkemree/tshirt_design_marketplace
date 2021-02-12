@@ -64,7 +64,7 @@ INSTALLED_APPS = [
     'essentials',
     'cart',
     'accounting',
-    
+    'mockups',
     'payment',
     'coupons.apps.CouponsConfig',
 
