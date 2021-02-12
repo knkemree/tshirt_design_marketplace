@@ -75,12 +75,15 @@
             <div class="container">
                 <form class="needs-validation" method="post" action="{% url 'account:create_credit' %}" novalidate>{% csrf_token %}
                     <div class="row mb-4">
-                        <label for="validationTooltip01">Amount</label>
+                        <div>
+                            <p>You've ${{ total_of_unpaid_orders|floatformat:2 }} of unpaid orders.</p>
+                        </div>
+                        
                         <div class="input-group mb-3 mr-sm-4">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">$</div>
                             </div>
-                            <input class="form-control" type="number" name="amount" min="0.0" step="0.01" required="" id="id_amount" placeholder="5">
+                            <input class="form-control" type="number" name="amount" min="0.0" step="0.01" required="" id="id_amount" placeholder="{{ total_of_unpaid_orders|floatformat:2 }}">
                         </div>
                         <input class="btn btn-primary btn-sm mt-1" type="submit" value="Add Money">
                         
