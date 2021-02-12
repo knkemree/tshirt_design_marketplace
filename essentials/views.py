@@ -38,7 +38,7 @@ class SellerProductListView(SellerAccountMixin, ListView):
 		return qs
 
 
-@login_required(login_url='/signup/')
+
 def product_list(request, category_slug=None):
     category = None
     parent = None
@@ -89,6 +89,7 @@ def product_list(request, category_slug=None):
                    'products_list': products_list, #to calculate how many products are there in the category
                    'products': products})
 
+@login_required(login_url='/signup/')
 def product_detail(request, id, slug):
     query = request.GET.get('q')
     product = get_object_or_404(Product,id=id,slug=slug,active=True)
@@ -281,6 +282,7 @@ def get_current_variant(request):
 def product_design(request):
     return render(request,'product_design.html')
 
+@login_required(login_url='/signup/')
 def blank_single_item(request, id, slug):
     query = request.GET.get('q')
     product = get_object_or_404(Product,id=id,slug=slug,active=True)

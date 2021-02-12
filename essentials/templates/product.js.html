@@ -182,6 +182,7 @@ $(document).ready(function(){
 
   var canvasModifiedCallback = function() {
         console.log('canvas modified!');
+        is_canvas_empty();
         var dataUrl = canvas.toDataURL();
         $('#id_design').val(dataUrl);
         canvas.renderAll();
@@ -722,6 +723,7 @@ $(document).ready(function(){
       $( window ).resize(function(e) {
         e.preventDefault();
         ajax_dynamic_canvas();
+        
       });
       // END window resize edildiginde canvas'i ayarla
 
@@ -740,7 +742,21 @@ $(document).ready(function(){
       //     // should the image be resized to fit the container?
       //     backgroundImageStretch: false
       // });
-  
+
+      
+        
+      function is_canvas_empty(){
+        var objs = canvas.getObjects();
+        if(objs.length){
+          $('#addtocartButton').prop('disabled', false);  
+          $('#addtocartButton').removeClass('disabled');
+        }else{
+          $('#addtocartButton').prop('disabled', true);
+        };
+      };
+      
+
+      
       
   });
 

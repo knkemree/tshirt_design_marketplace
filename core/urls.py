@@ -54,6 +54,7 @@ urlpatterns = [
     path('how_it_works/', how_it_works, name='how_it_works'),
     path('cart/', include('cart.urls', namespace='cart')),
     path('account/', include('account.urls', namespace='account')),
+    path('mockups/', include('mockups.urls', namespace='mockups')),
     path('orders/', include('orders.urls', namespace='orders')),
     path('payment/', include('payment.urls', namespace='payment')),
     path('coupons/', include('coupons.urls', namespace='coupons')),
