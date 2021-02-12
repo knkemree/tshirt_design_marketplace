@@ -172,6 +172,7 @@
                     <h6 class="dropdown-header">Account</h6>
                     {% if request.user.is_staff %}<a class="dropdown-item d-flex align-items-center" href="/admin/"><i class="czi-settings opacity-60 mr-2"></i>Control Panel</a>{% endif %}
                     <!-- <a class="dropdown-item d-flex align-items-center" href="#"><i class="czi-settings opacity-60 mr-2"></i>Settings</a> -->
+                    {% if request.user.seller %}<a class="dropdown-item d-flex align-items-center" href="{% url 'account:create_credit' %}"><i class="czi-dollar opacity-60 mr-2"></i>Credits ${{ credit_amount }}</a>{% endif %}
                     {% if request.user.seller %}<a class="dropdown-item d-flex align-items-center" href="{% url 'orders:order_list' %}"><i class="czi-basket opacity-60 mr-2"></i>Order History</a>{% endif %}
                     <!-- <a class="dropdown-item d-flex align-items-center" href="#"><i class="czi-heart opacity-60 mr-2"></i>Favorites<span class="font-size-xs text-muted ml-auto">4</span></a> -->
                     <!-- {% if request.user.seller %}

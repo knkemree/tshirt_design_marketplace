@@ -73,6 +73,9 @@ INSTALLED_APPS = [
     
 ]
 
+
+#SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -261,3 +264,4 @@ CELERY_IMPORTS = (
     'orders.tasks',
     'account.tasks',
 )
+

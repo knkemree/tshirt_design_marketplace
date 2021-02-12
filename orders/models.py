@@ -17,7 +17,7 @@ from django.core.exceptions import ValidationError
 
 
 class Order(models.Model):
-    ordered_by = models.ForeignKey(Seller, on_delete=models.CASCADE)
+    ordered_by = models.ForeignKey(Seller, on_delete=models.CASCADE, related_name='orders')
     recipient = models.CharField(max_length=50, blank=True, null=True)
     shipping_label = models.FileField(upload_to='uploads/', blank=True, null=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)

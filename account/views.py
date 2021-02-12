@@ -1,7 +1,9 @@
 from nameparser import HumanName
 import stripe
 import json
-from account.forms import UpdateCreditForm
+from decimal import Decimal
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView
 from django.views.generic.edit import UpdateView, FormView, CreateView
 from django.shortcuts import render
@@ -18,8 +20,10 @@ from .tokens import account_activation_token
 from .forms import UserAdminCreationForm, CustomAuthenticationForm, AuthenticationForm
 from .models import Customer, Seller
 from core.tasks import send_activation_email
-from django.urls import reverse
+from account.forms import UpdateCreditForm
 from account.models import Credit
+
+
 
 
 # Create your views here.
@@ -164,20 +168,20 @@ def login_request(request):
     #                 template_name = "registration/login.html",
     #                 context={'login_form':login_form,})
 
+@login_required(login_url='/signup/')
 def create_credit(request):
     form =  UpdateCreditForm()
-    #seller_email = get_object_or_404(Seller, seller_id=request.user.id)
+    seller_email = get_object_or_404(Seller, seller_id=request.user.id)
+    orders = seller_email.orders.all()
 
     if request.method == 'POST':
         form = UpdateCreditForm(request.POST)
         if form.is_valid():
             amount = form.cleaned_data['amount']
-            request.session['amount'] = amount
-            
-            #request.session['credit_id'] = credit.id
+            request.session['amount'] = str(amount) # I had to convert it to str to make it JSOn serializable
             return redirect(reverse('payment:pay_for_credit'))
     else:
-        context = {'form':form}
+        context = {'form':form, 'orders':orders}
         return render(request, 'credit_form.html', context)
             
 

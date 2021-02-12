@@ -1,5 +1,8 @@
 import stripe
+from decimal import Decimal
 from decouple import config
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.debug import sensitive_variables
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
@@ -8,8 +11,6 @@ from django.core.mail import mail_admins
 from orders.models import Order
 from cart.cart import Cart
 from account.models import Credit, Seller
-from decimal import Decimal
-from django.urls import reverse
 
 
 
@@ -78,10 +79,7 @@ def payment_process(request):
             mail_admins(subject, message, html_message="{} has just placed an order. <a href='https://contextcustom.com/admin/orders/order/{}/change/'>Check Now!</a>".format(order.customer_name(), order.id))
             del request.session['order_id']
             request.session.modified = True
-
-            
             order.paid = True
-
             order.ordered_by.credit = credit - total_cost
             #credit_record = Credit.objects.create(user=order.ordered_by, order_id=order.id, amount=total_cost*-1)
             #credit_record.save()
@@ -100,19 +98,21 @@ def payment_process(request):
                       'after_credit':after_credit,
                        'publish_key':STRIPE_PUBLIC_KEY})
 
+
+@login_required(login_url='/signup/')
 def payment_done(request):
     return render(request, 'done.html')
+
+@login_required(login_url='/signup/')
 def payment_canceled(request):
     return render(request, 'canceled.html')
 
 
+@login_required(login_url='/signup/')
 def pay_order(request, id):
     order = get_object_or_404(Order, id=id)
     total_cost = order.get_total_cost()
-
     credit = order.ordered_by.credit
-        
-
     if request.method == 'POST' and total_cost > credit:
         after_credit = total_cost-credit
         
@@ -181,10 +181,10 @@ def pay_order(request, id):
                       'after_credit':after_credit,
                        'publish_key':STRIPE_PUBLIC_KEY})
 
+
+@login_required(login_url='/signup/')
 def pay_for_credit(request):
-    
-    amount = request.session.get('amount')
-    
+    amount = Decimal(request.session.get('amount')) #since decimal object is not json serializable i made i str in account:create_credit view and changed here to Decimal
     print(amount, 'amount burda')
     seller = get_object_or_404(Seller, seller_id=request.user.id)
     if request.method == 'POST' :
