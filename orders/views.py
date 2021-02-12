@@ -1,6 +1,7 @@
 from PIL import Image
 import base64, secrets, io
 #import weasyprint
+
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
@@ -9,7 +10,7 @@ from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.utils.safestring import mark_safe
 from .models import OrderItem, Order
 from .forms import OrderCreateForm
@@ -163,3 +164,13 @@ def order_cancel(request, order_id):
 
     
     return redirect('orders:order_list')
+
+def ajax_credits(request):
+    data ={}
+    if request.is_ajax:
+        user_email = request.POST.get('user_email')
+        user = get_object_or_404(Seller, email = user_email)
+        return JsonResponse(data)
+
+
+

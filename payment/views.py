@@ -7,6 +7,9 @@ from django.core.mail import mail_admins
 #from .tasks import payment_completed
 from orders.models import Order
 from cart.cart import Cart
+from account.models import Credit, Seller
+from decimal import Decimal
+from django.urls import reverse
 
 
 
@@ -177,3 +180,53 @@ def pay_order(request, id):
                       {'order': order,
                       'after_credit':after_credit,
                        'publish_key':STRIPE_PUBLIC_KEY})
+
+def pay_for_credit(request):
+    
+    amount = request.session.get('amount')
+    
+    print(amount, 'amount burda')
+    seller = get_object_or_404(Seller, seller_id=request.user.id)
+    if request.method == 'POST' :
+
+        # retrieve token
+        token = request.POST.get('stripeToken')
+        # create and submit transaction
+        result = stripe.Charge.create(
+            #amount=100,
+            amount=int(int(amount)*100),
+            currency="usd",
+            #customer = order.ordered_by.seller.stripe_id,
+            source=token,
+            description="Customer uploaded money",
+        )
+        del request.session['amount']
+        request.session.modified = True
+        
+        
+        if result.status == "succeeded":
+
+            credit = Credit.objects.create(email=seller, added_amount=amount, created_by = 'seller')
+            seller.credit = seller.credit + Decimal(credit.added_amount)
+            seller.save()
+            # store the unique transaction id
+            credit.stripe_id = result.id
+            credit.save()
+            #subject = "Order Paid"
+            #message = "Order"
+            #mail_admins(subject, message, html_message="{} has just made a payment for order #{}. <a href='https://contextcustom.com/admin/orders/order/{}/change/'>Check Now!</a>".format(order.customer_name(), order.id, order.id))
+            
+            return redirect('payment:done')
+
+        
+
+        else:
+            return redirect('payment:canceled')
+    elif amount == None:
+            return redirect(reverse('orders:order_list'))
+    else:
+        return render(request,
+                        'pay_for_credit.html',
+                        {
+                        'credit':amount,
+                        'publish_key':STRIPE_PUBLIC_KEY})

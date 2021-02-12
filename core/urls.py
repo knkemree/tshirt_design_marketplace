@@ -53,6 +53,7 @@ urlpatterns = [
     path('reset/done/',auth_views.PasswordResetCompleteView.as_view(),name='password_reset_complete'),
     path('how_it_works/', how_it_works, name='how_it_works'),
     path('cart/', include('cart.urls', namespace='cart')),
+    path('account/', include('account.urls', namespace='account')),
     path('orders/', include('orders.urls', namespace='orders')),
     path('payment/', include('payment.urls', namespace='payment')),
     path('coupons/', include('coupons.urls', namespace='coupons')),

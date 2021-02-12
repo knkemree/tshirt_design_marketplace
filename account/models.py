@@ -10,6 +10,7 @@ from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 
 from essentials.models import Product
+from audioop import reverse
 
 
 
@@ -22,15 +23,15 @@ class CustomerManager(BaseUserManager):
         if not email:
             raise ValueError('Users must have an email address')
 
-        user = self.model(
-            email=self.normalize_email(email),
-        )
+            user = self.model(
+                email=self.normalize_email(email),
+            )
 
-        user.set_password(password)
-        user.seller = True
-        user.buyer = True
-        user.save(using=self._db)
-        return user
+            user.set_password(password)
+            user.seller = True
+            user.buyer = True
+            user.save(using=self._db)
+            return user
 
     def create_staffuser(self, email, password):
         """
@@ -194,6 +195,9 @@ class Seller(models.Model):
 	# def get_absolute_url(self):
 	# 	return reverse("products:vendor_detail", kwargs={"vendor_name": self.user.username})
 
+    # def get_absolute_url(self):
+    #     return reverse('seller-detail', kwargs={'pk': self.pk})
+
     def get_customer_name(self):
         return self.seller.first_name +' '+ self.seller.last_name
     
@@ -206,3 +210,19 @@ class Seller(models.Model):
             
         super(Seller, self).save(*args, **kwargs) 
 
+
+class Credit(models.Model):
+    email = models.ForeignKey(Seller, on_delete=models.PROTECT, blank=True, null=True, related_name='credits')
+    STATUS = (
+    ('staff', 'Staff'),
+    ('seller','Seller'),
+    )
+    created_by =  models.CharField(max_length=10, choices=STATUS, default='staff')
+    added_amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    #total_amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    stripe_id = models.CharField(max_length=150, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "Credit #{} for {}".format(self.id, self.email.get_customer_name())

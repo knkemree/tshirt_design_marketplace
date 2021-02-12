@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block blank %}
+<div class="container py-5">
+    <div class="row">
+      <h4 class="checkout-title">Add Money</h4>
+    </div>
+    <div class="row">
+        <p>Add money to your account to use it later.</strong></p> 
+    </div>    
+    
+    <div class="row">
+        <div class="col-12 mb-20">
+            <form  method="post" action="{% url 'account:create_credit' %}">{% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Add $">
+            </form>
+        </div>
+    </div>
+</div>
+    
+{% endblock %}

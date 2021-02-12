@@ -120,3 +120,7 @@ class UserAdminChangeForm(forms.ModelForm):
         # field does not have access to the initial value
         return self.initial["password"]
 
+
+class UpdateCreditForm(forms.Form):
+    amount = forms.DecimalField(max_digits=10,decimal_places=2, min_value=0.00)
+

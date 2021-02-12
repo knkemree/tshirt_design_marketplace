@@ -1,11 +1,13 @@
 from nameparser import HumanName
 import stripe
 import json
-
+from account.forms import UpdateCreditForm
+from django.views.generic import DetailView
+from django.views.generic.edit import UpdateView, FormView, CreateView
 from django.shortcuts import render
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
@@ -16,6 +18,8 @@ from .tokens import account_activation_token
 from .forms import UserAdminCreationForm, CustomAuthenticationForm, AuthenticationForm
 from .models import Customer, Seller
 from core.tasks import send_activation_email
+from django.urls import reverse
+from account.models import Credit
 
 
 # Create your views here.
@@ -159,3 +163,44 @@ def login_request(request):
     # return render(request = request,
     #                 template_name = "registration/login.html",
     #                 context={'login_form':login_form,})
+
+def create_credit(request):
+    form =  UpdateCreditForm()
+    #seller_email = get_object_or_404(Seller, seller_id=request.user.id)
+
+    if request.method == 'POST':
+        form = UpdateCreditForm(request.POST)
+        if form.is_valid():
+            amount = form.cleaned_data['amount']
+            request.session['amount'] = amount
+            
+            #request.session['credit_id'] = credit.id
+            return redirect(reverse('payment:pay_for_credit'))
+    else:
+        context = {'form':form}
+        return render(request, 'credit_form.html', context)
+            
+
+
+class SellerDetailView(DetailView):
+
+    queryset = Seller.objects.all()
+
+    def get_object(self):
+        obj = super().get_object()
+        # Record the last accessed date
+        # obj.last_accessed = timezone.now()
+        # obj.save()
+        return obj
+  
+class CreditUpdateFormView(FormView): 
+    # specify the Form you want to use 
+    form_class = UpdateCreditForm 
+      
+    # sepcify name of template 
+    template_name = "account / seller_credit_update_form.html"
+  
+    # can specify success url 
+    # url to redirect after successfully 
+    # updating details 
+    success_url ="/thanks/"

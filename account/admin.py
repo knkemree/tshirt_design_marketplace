@@ -3,6 +3,7 @@ from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import Customer, Comment, Seller
 from .forms import UserAdminChangeForm, UserAdminCreationForm
+from account.models import Credit
 
 
 class CustomerAdmin(BaseUserAdmin):
@@ -64,7 +65,7 @@ class SellerAdmin(admin.ModelAdmin):
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Customer, CustomerAdmin)
 admin.site.register(Seller, SellerAdmin)
-#admin.site.register(, Admin)
+admin.site.register(Credit)
 
 
     
