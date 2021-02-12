@@ -177,7 +177,7 @@ def create_credit(request):
     total_of_unpaid_orders = 0
     for order in orders:
         #exclude canceled orders
-        if order.paid == False and order.status !=4:
+        if order.paid == False and order.status != '4' :
             total_of_unpaid_orders += order.total
 
     if request.method == 'POST':
