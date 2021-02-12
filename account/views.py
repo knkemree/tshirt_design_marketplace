@@ -174,11 +174,21 @@ def create_credit(request):
     seller_email = get_object_or_404(Seller, seller_id=request.user.id)
     orders = seller_email.orders.all()
 
+    recommeded_upload_amount = 0
     total_of_unpaid_orders = 0
     for order in orders:
         #exclude canceled orders
         if order.paid == False and order.status != '4' :
             total_of_unpaid_orders += order.total
+
+    if seller_email.credit:
+        if seller_email.credit > total_of_unpaid_orders:
+            recommeded_upload_amount = 0
+        else:
+            recommeded_upload_amount = total_of_unpaid_orders - seller_email.credit 
+    else:
+        print(total_of_unpaid_orders, 'odenmemis')
+        recommeded_upload_amount = total_of_unpaid_orders
 
     if request.method == 'POST':
         form = UpdateCreditForm(request.POST)
@@ -187,7 +197,7 @@ def create_credit(request):
             request.session['amount'] = str(amount) # I had to convert it to str to make it JSOn serializable
             return redirect(reverse('payment:pay_for_credit'))
     else:
-        context = {'form':form, 'orders':orders, 'total_of_unpaid_orders':total_of_unpaid_orders}
+        context = {'form':form, 'orders':orders, 'total_of_unpaid_orders':total_of_unpaid_orders, 'recommeded_upload_amount':recommeded_upload_amount}
         return render(request, 'credit_form.html', context)
             
 

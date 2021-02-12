@@ -73,22 +73,29 @@
         <!-- upload money'nin oldugu kisim-->
         <div id="order-history" class="table-responsive font-size-md">
             <div class="container">
-                <form class="needs-validation" method="post" action="{% url 'account:create_credit' %}" novalidate>{% csrf_token %}
-                    <div class="row mb-4">
-                        <div>
-                            <p>You've ${{ total_of_unpaid_orders|floatformat:2 }} of unpaid orders.</p>
-                        </div>
-                        
+                <div class="row mb-4">
+                    <h4>Credits: ${{ credit_amount|floatformat:2 }}</h4>
+                </div>
+                <div class="row mb-4">
+                    {% if total_of_unpaid_orders > 0 %}
+                    <p>You've <strong> ${{ total_of_unpaid_orders|floatformat:2 }}</strong> of unpaid orders. </p>
+                    <p> Recommeded upload amount is <strong>${{ recommeded_upload_amount }}</strong>.</p>
+                    {% else %}
+                    <p>Upload money to use it for your next purchases.</p>
+                    {% endif %}
+                </div>
+
+                <div class="row mb-4">
+                    <form class="needs-validation" method="post" action="{% url 'account:create_credit' %}" novalidate>{% csrf_token %}
                         <div class="input-group mb-3 mr-sm-4">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">$</div>
                             </div>
-                            <input class="form-control" type="number" name="amount" min="0.0" step="0.01" required="" id="id_amount" placeholder="{{ total_of_unpaid_orders|floatformat:2 }}">
+                            <input class="form-control" type="number" name="amount" min="0.0" step="0.01" required="" id="id_amount" placeholder="{{ recommeded_upload_amount }}">
                         </div>
                         <input class="btn btn-primary btn-sm mt-1" type="submit" value="Add Money">
-                        
-                    </div>
-                </form>
+                    </form> 
+                </div>
             </div>
         </div>
         <!--END  upload money'nin oldugu kisim-->
