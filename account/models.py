@@ -93,24 +93,15 @@ class Customer(AbstractBaseUser, PermissionsMixin):
 
     def get_full_name(self):
         # The user is identified by their email address
-        return self.first_name + self.last_name
+        return "{} {}".format(self.first_name, self.last_name)
 
     def get_short_name(self):
         # The user is identified by their email address
         return self.email
 
     def __str__(self):              # __unicode__ on Python 2
-        return self.email
+        return self.get_full_name()
 
-    # def has_perm(self, perm, obj=None):
-    #     "Does the user have a specific permission?"
-    #     # Simplest possible answer: Yes, always
-    #     return True
-
-    # def has_module_perms(self, app_label):
-    #     "Does the user have permissions to view the app `app_label`?"
-    #     # Simplest possible answer: Yes, always
-    #     return True
 
     def email_customer(self, subject, message, from_email=None, **kwargs):
         '''
@@ -120,13 +111,6 @@ class Customer(AbstractBaseUser, PermissionsMixin):
         from django.core.mail import send_mail
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
-    # def save(self, *args, **kw):
-    #     old = type(self).objects.get(pk=self.pk) if self.pk else None
-    #     super(Customer, self).save(*args, **kw)
-
-    #     if old and old.seller == False and self.seller == True: # Field has changed
-    #         update_buyer = Seller.objects.create(seller_id=self.id)
-    #         update_buyer.save()
             
     @property
     def is_staff(self):
@@ -138,10 +122,10 @@ class Customer(AbstractBaseUser, PermissionsMixin):
         "Is the user a admin member?"
         return self.admin
 
-    # @property
-    # def is_active(self):
-    #     "Is the user active?"
-    #     return self.active
+        # @property
+        # def is_active(self):
+        #     "Is the user active?"
+        #     return self.active
 
     @property
     def is_seller(self):

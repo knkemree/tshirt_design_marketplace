@@ -283,9 +283,34 @@ def product_design(request):
     return render(request,'product_design.html')
 
 @login_required(login_url='/signup/')
-def blank_single_item(request, id, slug):
+def blank_single_item(request, id, slug, parent_category=None, subcategory=None):
     query = request.GET.get('q')
     product = get_object_or_404(Product,id=id,slug=slug,active=True)
+    category = None #urun hicbir kategoride degilse bunun olmasi gerekiyor
+
+    if subcategory:
+        category = get_object_or_404(Category, slug=subcategory)
+    else:
+        for i in product.category.all():
+            # parenti olan ilk urunu al
+            while i.parent:
+                category = i
+                print(category, 'category nedir')
+                break
+                
+
+    #bu yukarindakinden sonra gelmeli cunku else oldugunda category productini aliyor. category onceden belli olmasi lazim
+    if parent_category:
+        parent = get_object_or_404(Category, slug=parent_category)
+    else:
+        # eger kategorinin parenti yoksa parent None olmasi gerekiyor cunku category diye tanimladigimin kendisi parent
+        #if category'yi eklemek zorundayim cunku urun hicbir kategoride degilse o olmadan hata veriyor
+        if category and category.parent:
+            parent = category.parent
+        else:
+            parent = None
+        
+        
 
     variants = Variant.objects.filter(product_id=id).order_by('color_id')
     variant = Variant.objects.get(id=variants[0].id)
@@ -293,7 +318,7 @@ def blank_single_item(request, id, slug):
     colors = Variant.objects.filter(product_id=id,size_id=variants[0].size_id ).order_by('color_id').distinct('color__id')
     
     cart_product_form = CartAddProductForm()
-    context = {'product': product,'cart_product_form': cart_product_form,'sizes':sizes, 'colors':colors,  'variant':variant,}
+    context = {'product': product,'cart_product_form': cart_product_form,'sizes':sizes, 'colors':colors,  'variant':variant, 'parent':parent,'category':category}
     return render(request,'blank-single-item.html',context)
 
 
