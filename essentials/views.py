@@ -310,7 +310,12 @@ def blank_single_item(request, id, slug, parent_category=None, subcategory=None)
         else:
             parent = None
         
-        
+    others = list(Product.objects.filter(active=True))
+    if len(others) > 4:
+        qty = 4
+    else:
+        qty = len(others)
+    others = random.sample(others, qty)
 
     variants = Variant.objects.filter(product_id=id).order_by('color_id')
     variant = Variant.objects.get(id=variants[0].id)
@@ -318,7 +323,7 @@ def blank_single_item(request, id, slug, parent_category=None, subcategory=None)
     colors = Variant.objects.filter(product_id=id,size_id=variants[0].size_id ).order_by('color_id').distinct('color__id')
     
     cart_product_form = CartAddProductForm()
-    context = {'product': product,'cart_product_form': cart_product_form,'sizes':sizes, 'colors':colors,  'variant':variant, 'parent':parent,'category':category}
+    context = {'product': product,'cart_product_form': cart_product_form,'sizes':sizes, 'colors':colors,  'variant':variant, 'parent':parent,'category':category, 'others':others}
     return render(request,'blank-single-item.html',context)
 
 
