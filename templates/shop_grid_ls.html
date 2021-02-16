@@ -188,9 +188,10 @@
           {% for object in products %}
           <div class="col-md-4 col-sm-6 px-2 mb-4">
             <div class="card product-card"><span class="badge badge-danger badge-shadow">Sale</span>
-              <button class="btn-wishlist btn-sm" type="button" data-toggle="tooltip" data-placement="left" title="Add to wishlist"><i class="czi-heart"></i></button><a class="card-img-top d-block overflow-hidden" href="{{ object.get_absolute_url }}"><img  src="{{object.image.url}}" alt="Product" style="height:236px; display:block; margin:auto;"></a>
-              <div class="card-body py-2"><a class="product-meta d-block font-size-xs pb-1 center" href="{{ object.get_absolute_url }}">{{ object.brand }}</a>
-                <h3 class="product-title font-size-sm"><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></h3>
+              <button class="btn-wishlist btn-sm" type="button" data-toggle="tooltip" data-placement="left" title="Add to wishlist"><i class="czi-heart"></i></button>
+              <a class="card-img-top d-block overflow-hidden" href="{% if parent and category %}{% url 'essentials:blank_single_item_two_cats' id=object.id slug=object.slug parent_category=parent.slug subcategory=category.slug %}{% elif category %} {% url 'essentials:blank_single_item_one_cat' id=object.id slug=object.slug subcategory=category.slug %}{% else %}{% url 'essentials:blank_single_item' id=object.id slug=object.slug %}{% endif %}"><img  src="{{object.image.url}}" alt="Product" style="height:236px; display:block; margin:auto;"></a>
+              <div class="card-body py-2"><a class="product-meta d-block font-size-xs pb-1 center" href="{% if parent and category %}{% url 'essentials:blank_single_item_two_cats' id=object.id slug=object.slug parent_category=parent.slug subcategory=category.slug %}{% elif category %} {% url 'essentials:blank_single_item_one_cat' id=object.id slug=object.slug subcategory=category.slug %}{% else %}{% url 'essentials:blank_single_item' id=object.id slug=object.slug %}{% endif %}">{{ object.brand }}</a>
+                <h3 class="product-title font-size-sm"><a href="{% if parent and category %}{% url 'essentials:blank_single_item_two_cats' id=object.id slug=object.slug parent_category=parent.slug subcategory=category.slug %}{% elif category %} {% url 'essentials:blank_single_item_one_cat' id=object.id slug=object.slug subcategory=category.slug %}{% else %}{% url 'essentials:blank_single_item' id=object.id slug=object.slug %}{% endif %}">{{ object.title }}</a></h3>
                 <div class="d-flex justify-content-between">
                   <div class="product-price"><span class="text-accent">${{ object.get_lowest_price.price__min|floatformat:-2 }}</span>
                     {% comment %} <del class="font-size-sm text-muted">38.<small>50</small></del> {% endcomment %}
@@ -200,7 +201,7 @@
                 </div>
               </div>
               <div class="card-body card-body-hidden">
-                <input class="btn btn-primary btn-sm btn-block mb-2" type="button" onclick="window.location='{{ object.get_absolute_url }}';" value="Design & Buy">
+                <!-- <input class="btn btn-primary btn-sm btn-block mb-2" type="button" onclick="window.location='{{ object.get_absolute_url }}';" value="Design & Buy"> -->
                 <!-- <button class="btn btn-primary btn-sm btn-block mb-2" type="button" data-toggle="toast" href="{{ object.get_absolute_url }}"><i class="czi-edit font-size-sm mr-1"></i>Customize</button> -->
               </div>
             </div>

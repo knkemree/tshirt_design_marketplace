@@ -45,7 +45,7 @@ class Mockup(models.Model):
     )
     brand = models.CharField(max_length=40, choices=BRANDS, blank=True, null=True)
     image=models.ImageField(blank=True,upload_to='images/')
-    #tags = TaggableManager()
+    tags = TaggableManager()
     active = models.BooleanField(default=True)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
