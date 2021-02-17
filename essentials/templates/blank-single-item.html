@@ -840,7 +840,7 @@ canvas.on('object:removed', function(e) {
               {% if parent %}<li class="breadcrumb-item text-nowrap"><a href="{{ parent.get_absolute_url }}">{{ parent.title }}</a>{% endif %}
               {% if category %}<li class="breadcrumb-item text-nowrap"><a href="{{ category.get_absolute_url }}">{{ category.title }}</a>{% endif %}
               </li>
-              <li class="breadcrumb-item text-nowrap active" aria-current="page">{{ product.title }}</li>
+              <li class="breadcrumb-item text-nowrap active" aria-current="page">{{ product.title|truncatewords:4 }}</li>
             </ol>
           </nav>
         </div>
