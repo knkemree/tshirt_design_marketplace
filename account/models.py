@@ -184,7 +184,12 @@ class Seller(models.Model):
 
     def get_customer_name(self):
         return self.seller.first_name +' '+ self.seller.last_name
-    
+
+    def email(self):
+        return self.seller.email
+
+    def user_id(self):
+        return self.seller.pk    
      
 
 
