@@ -91,7 +91,7 @@ def product_list(request, category_slug=None):
 
 @login_required(login_url='/signup/')
 def product_detail(request, id, slug):
-    query = request.GET.get('q')
+    #query = request.GET.get('q')
     product = get_object_or_404(Product,id=id,slug=slug,active=True)
     #techniques = product.technique.all()
 
@@ -106,23 +106,6 @@ def product_detail(request, id, slug):
     else:
         qty = len(others)
     others = random.sample(others, qty)
-
-    #color = colors[0].color.name
-    
-    # if request.method == 'POST':
-    #     variant_id = request.POST.get('variantid')                                                                                                                                                  
-    #     variant = Variant.objects.get(id=variant_id) #selected product by click color radio
-    #     sizes = Variant.objects.filter(product_id = variant.product_id).order_by('size_id').distinct('size__id') 
-    #     colors = Variant.objects.filter(product_id=id,size_id=variant.size_id ).order_by('color_id').distinct('color__id')
-    #     color = colors[0].color.name
-    #     query += variant.product.title+' Size:' +str(variant.size) +' Color:' +str(variant.color)
-    #     print(query)
-    # else:
-    #     variants = Variant.objects.filter(product_id=id).order_by('color_id')
-    #     variant = Variant.objects.get(id=variants[0].id)
-    #     sizes = Variant.objects.filter(product_id = variant.product_id).order_by('size_id').distinct('size__id')
-    #     colors = Variant.objects.filter(product_id=id,size_id=variants[0].size_id ).order_by('color_id').distinct('color__id')
-    #     color = colors[0].color.name
     
     cart_product_form = CartAddProductForm()
     context = {'product': product,'cart_product_form': cart_product_form,'sizes':sizes, 'colors':colors,  'variant':variant, 'others':others}
