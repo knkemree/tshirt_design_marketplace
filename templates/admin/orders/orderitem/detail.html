@@ -79,7 +79,8 @@ $( document ).ready(function() {
         console.log(k + ' - ' + obj[k]);
     });
     
-    canvas.loadFromJSON(json_content);
+    setTimeout(function(){canvas.loadFromJSON(json_content)} ,2000);
+    
 
     $('#load-from-db').on('click', function(){
         canvas.loadFromJSON(json_content);
