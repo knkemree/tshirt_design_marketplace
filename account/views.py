@@ -1,6 +1,7 @@
 from nameparser import HumanName
 import stripe
 import json
+from decouple import config
 from decimal import Decimal
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -24,7 +25,7 @@ from account.forms import UpdateCreditForm
 from account.models import Credit
 
 
-
+stripe.api_key = config('STRIPE_PRIVATE_KEY')
 
 # Create your views here.
 def signup(request):
@@ -32,24 +33,23 @@ def signup(request):
         return redirect('/')
     data = {}
     if request.method == 'POST':
-        login_form = CustomAuthenticationForm(request=request, data=request.POST)
         signup_form = UserAdminCreationForm(request.POST)
         # Extract values
-        parsed_name = HumanName(request.POST.get('fullname'))
         if signup_form.is_valid():
+            parsed_name = HumanName(request.POST.get('fullname'))
             user = signup_form.save(commit=False)
             user.first_name = parsed_name.first
             user.last_name = parsed_name.last
-            user.active = False
-            user.buyer = True
-            user.save()
-            customer = Customer.objects.get(email=user.email)
+            user.is_active = True
+            print(user.email, 'user burda')
+            #user.save()
+        
             created_customer = stripe.Customer.create(
                 description=user.email,
                 email=user.email
             )
-            customer.stripe_id = created_customer.id
-            customer.save()
+            user.stripe_id = created_customer.id
+            user.save()
             current_site = get_current_site(request)
             subject = 'Activate Your Context Custom Account'
             message = render_to_string('account_activation_email.html', {
@@ -60,29 +60,12 @@ def signup(request):
             })
             #send_activation_email.delay(user, subject, message)
             data['success'] = 'signedup'
+            
             user.email_customer(subject, message)
             return JsonResponse(data)
             # return redirect('account_activation_sent')
-        elif login_form.is_valid():
-            username = login_form.cleaned_data.get('username')
-            password = login_form.cleaned_data.get('password')
-            remember_me = login_form.cleaned_data.get('remember_me')
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                data['success'] = 'loggedin'
-                if remember_me == False:
-                    request.session.set_expiry(0)
-                return JsonResponse(data)
-                # return redirect('/')
-            # elif user.is_active == False:
-            #     messages.error(request, "Your account is not active.")
-            else:
-                data['error'] = login_form.errors
-                messages.error(request, "User not found!")
 
         else:
-            data['login_error'] = login_form.errors
             data['signup_error'] = signup_form.errors
             #messages.error(request, "None of the forms are valid!")
             return JsonResponse(data)
@@ -104,6 +87,7 @@ def activate(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = Customer.objects.get(pk=uid)
+        print(user,'user ne')
     except (TypeError, ValueError, OverflowError, Customer.DoesNotExist):
         user = None
 
@@ -118,14 +102,7 @@ def activate(request, uidb64, token):
         except:
             pass
         
-        # eger buyer kaydolduysa bunu uygula
-        try:
-            for i in user.shopper.all():
-                i.active = True
-                i.email_confirmed = True
-                i.save()
-        except:
-            pass
+        
         
         login(request, user)
         return redirect('activated')
@@ -144,25 +121,30 @@ def login_request(request):
             password = login_form.cleaned_data.get('password')
             remember_me = login_form.cleaned_data.get('remember_me')
             user = authenticate(username=username, password=password)
-            if user is not None:
+            customer = get_object_or_404(Customer, email=username)
+            seller = get_object_or_404(Seller, seller=customer)
+            if user is not None and seller.active:
                 login(request, user)
                 data['success'] = 'loggedin'
                 if remember_me == False:
                     request.session.set_expiry(0)
                 return JsonResponse(data)
                 # return redirect('/')
-            elif user.is_active == False:
+            elif seller.active == False:
+                data['error_user_is_not_active'] = 'User is not active'
                 messages.error(request, "Your account is not active.")
+                return JsonResponse(data)
             else:
-                data['error'] = login_form.errors
+                data['error_invalid_login'] = "Invalid username or password."
                 messages.error(request, "Invalid username or password.")
+                return JsonResponse(data)
         else:
-            
-            data['error'] = login_form.errors
+            data['error_invalid_login'] = "Invalid username or password."
             messages.error(request, "Invalid username or password.")
+            return JsonResponse(data)
     else:
         login_form = CustomAuthenticationForm()
-    return JsonResponse(data)
+        return JsonResponse(data)
     
     # return render(request = request,
     #                 template_name = "registration/login.html",

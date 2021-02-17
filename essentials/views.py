@@ -311,8 +311,8 @@ def blank_single_item(request, id, slug, parent_category=None, subcategory=None)
             parent = None
         
     others = list(Product.objects.filter(active=True))
-    if len(others) > 4:
-        qty = 4
+    if len(others) > 3:
+        qty = 3
     else:
         qty = len(others)
     others = random.sample(others, qty)

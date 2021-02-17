@@ -29,7 +29,7 @@ class CustomerManager(BaseUserManager):
 
             user.set_password(password)
             user.seller = True
-            user.buyer = True
+            #user.buyer = True
             user.save(using=self._db)
             return user
 
@@ -185,14 +185,7 @@ class Seller(models.Model):
     def get_customer_name(self):
         return self.seller.first_name +' '+ self.seller.last_name
     
-    def save(self, *args, **kwargs):
-        customer = Customer.objects.get(email=self.seller)
-        customer.seller = True
-        #customer.buyer = True
-        customer.save()
-        
-            
-        super(Seller, self).save(*args, **kwargs) 
+     
 
 
 class Credit(models.Model):
