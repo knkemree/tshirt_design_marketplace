@@ -97,7 +97,7 @@ class UserAdminCreationForm(forms.ModelForm):
         # Save the provided password in hashed format
         user = super(UserAdminCreationForm, self).save(commit=False)
         user.set_password(self.cleaned_data["password1"])
-        user.buyer = True
+        #user.buyer = True
         if commit:
             user.save()
         return user

@@ -204,7 +204,7 @@ EMAIL_SUBJECT_PREFIX = 'Context Custom - '
 
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'signup'
-LOGOUT_URL = 'logout'
+LOGOUT_URL = 'signup'
 
 #Authentication backends
 AUTHENTICATION_BACKENDS = (

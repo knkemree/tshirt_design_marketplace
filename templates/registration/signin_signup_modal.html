@@ -17,11 +17,10 @@
         <div class="modal-body tab-content py-4">
           <form action="{% url 'login' %}"  method="POST" class="tab-pane fade show active" autocomplete="on" id="signin-tab">
             <!-- Danger alert -->
-            <div id="error" style="display: none;" class="alert alert-danger alert-with-icon" role="alert">
-              <div class="alert-icon-box">
-                <i class="alert-icon czi-close-circle"></i>
-              </div>
-              Invalid email or password.
+            <div id="login_error" style="display: none;" class="alert alert-danger alert-with-icon" role="alert">
+              <div class="alert-icon-box"><i class="alert-icon czi-close-circle"></i></div>
+              <div id='error_message'></div>
+              <!-- error mesahini buraya append et -->
             </div>
             {% csrf_token %}
             <div class="form-group">
@@ -47,6 +46,44 @@
             </div>
             <button class="btn btn-primary btn-block btn-shadow" type="submit">Sign in</button>
           </form>
+          <script>
+            $(document).on('submit','#signin-tab', function(e){
+              e.preventDefault();
+              var login_form = $('#signin-tab');
+              var action = login_form.attr('action');
+              var method = login_form.attr('method');
+              var login_data = login_form.serialize();
+
+              $.ajax({
+                type:method,
+                url:action,
+                data: login_data,
+                success: function(data, status){
+                  console.log(data)
+                  if (data.success) {
+                    window.location.href = '/';
+                    $('#id_username').addClass("is-valid");
+                    $('#id_password').addClass("is-valid");
+                  } else if (data.error_user_is_not_active){
+                    $( "#login_error" ).show()
+                    $( "#error_message" ).text(data.error_user_is_not_active)
+                    $('#id_username').addClass("is-invalid");
+                    $('#id_password').addClass("is-invalid");
+                  }
+                  else{
+                    console.log(data.error_invalid_login);
+                    $( "#login_error" ).show()
+                    $( "#error_message" ).text(data.error_invalid_login)
+                    $('#id_username').addClass("is-invalid");
+                    $('#id_password').addClass("is-invalid");
+                  };
+
+                  }
+              });
+            });
+            
+          </script>
+
           
           <form action="{% url 'signup' %}" method="POST" class="tab-pane fade" autocomplete="off" id="signup-tab">
             {% csrf_token %}
@@ -96,7 +133,7 @@
             </div> -->
             <div class="form-group d-flex flex-wrap justify-content-between">
               <div class="custom-control custom-checkbox mb-2">
-                <input class="custom-control-input" type="checkbox" id="id_seller" name="seller">
+                <input class="custom-control-input" type="checkbox" id="id_seller" name="seller" required>
                 <label class="custom-control-label" for="id_seller">Are you a seller?</label>
               </div>
             </div>
@@ -176,63 +213,3 @@
     </div>
   </div>
 
-
-
-
-<script>
-$("#id_username").on("click", function() {
-  console.log('clicked')
-  if ($('#id_username').hasClass('is-invalid')) {
-    $('#id_username').removeClass("is-invalid");
-  };
-  if ($('#id_password').hasClass('is-invalid')) {
-    $('#id_password').removeClass("is-invalid");
-  };
-});
-
-$('#id_username').keyup(function() {
-  var currentVal = $(this).val();
-  console.log('current email value');
-  console.log(currentVal); 
-});  
-
-$(document).on('submit','#signin-tab', function(e){
-  e.preventDefault();
-  var signin = $('#signin-tab');
-  var form_data = signin.serialize()
-  var method = signin.attr('method');
-  var action = signin.attr('action');
-
-  $.ajax({
-      type:method,
-      url:action,
-      data: form_data,
-      success: function(data, status){
-
-          if (data.success) {
-              window.location.href = '/';
-              $('#id_username').addClass("is-valid");
-              $('#id_password').addClass("is-valid");
-              // console.log('succes')
-              // alert(data[error]);
-          }else{
-            console.log(data.error.__all__[0]);
-            $( "#error" ).show()
-            $('#id_username').addClass("is-invalid");
-            $('#id_password').addClass("is-invalid");
-            // $( "#error" ).show().html(data.error.__all__[0]);
-            // $( "#id_username" ).html($( this ).attr( "invalid" ));
-            // $('#error').show().html(data.error.__all__[0]);
-
-              // window.location.href = '/signup/'; 
-              // location.reload(true);
-          };
-      },      
-  });
-});
-</script>
-
-<script>
-  
-  
-</script>

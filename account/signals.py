@@ -4,11 +4,14 @@ from django.dispatch import receiver
 from django.db import transaction
 
 from .models import Customer, Seller
+from django.shortcuts import get_object_or_404
 
 @receiver(post_save, sender=Customer)
 def create_seller_profile(sender, instance, created, **kwargs):
     if created and instance.seller == True:
-        new_seller  = Seller.objects.create(seller=instance)
+        print(instance, 'customer object?')
+        customer_instance = get_object_or_404(Customer, email=instance.email)
+        new_seller  = Seller.objects.create(seller=customer_instance) # seller mutlaka customer instance olmasi gerkiyor. 
         new_seller.save()
         
         # new_buyer = Buyer.objects.create(buyer=instance)
