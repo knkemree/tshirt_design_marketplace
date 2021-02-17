@@ -14,7 +14,7 @@ class CustomerAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('get_full_name','email', 'is_superuser','admin','staff','seller','stripe_id','last_login','date_joined')
+    list_display = ('id','get_full_name','email', 'is_superuser','admin','staff','seller','stripe_id','last_login','date_joined')
     list_filter = ('admin','staff','seller')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
@@ -56,7 +56,8 @@ class CommentAdmin(admin.ModelAdmin):
 
 
 class SellerAdmin(admin.ModelAdmin):
-    list_display = ['seller','credit', 'active','email_confirmed']
+    list_display = ['id','user_id','seller','email','credit', 'active','email_confirmed','timestamp']
+    list_filter = ['seller','active','email_confirmed','timestamp']
     #inlines = [CreditInline]
 
 
