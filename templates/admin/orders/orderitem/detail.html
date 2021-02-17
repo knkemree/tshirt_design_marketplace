@@ -1,5 +1,6 @@
 {% extends "admin/base_site.html" %}
 {% block extrastyle %}
+{{ block.super }}
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=Boogaloo&display=swap');
@@ -34,7 +35,7 @@
 {% endblock %}
 {% load static %}
 {% block title %}
-  Order Item
+  Order Item | {{ site_title|default:_('Context Custom') }}
 {% endblock %}
 
 {% block breadcrumbs %}
