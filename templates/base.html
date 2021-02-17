@@ -29,6 +29,7 @@
     <!-- Vendor Styles including: Font Icons, Plugins, etc.-->
     <link type="text/css" media="screen" href="{% static 'vendor/simplebar/dist/simplebar.min.css' %}"/>
     <link type="text/css" media="screen" href="{% static 'vendor/tiny-slider/dist/tiny-slider.css' %}"/>
+    <link rel="stylesheet" media="screen" href="{% static 'vendor/lightgallery.js/dist/css/lightgallery.min.css' %}"/>
     <!-- Main Theme Styles + Bootstrap-->
     <link rel="stylesheet" media="screen" href="{% static 'css/theme.min.css' %}">
   </head>
@@ -143,7 +144,7 @@
             <!-- Primary menu-->
             <ul class="navbar-nav">
               <li class="nav-item"><a class="nav-link" href="{% url 'how_it_works' %}">How It Works?</a></li>
-              <li class="nav-item"><a class="nav-link" href="{% url 'how_it_works' %}">Free Mockups</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% url 'mockups:mockup-list' %}">Free Mockups</a></li>
             </ul>
           </div>
         </div>
@@ -368,6 +369,10 @@
     <script src="{% static 'vendor/simplebar/dist/simplebar.min.js' %}"></script>
     <script src="{% static 'vendor/tiny-slider/dist/min/tiny-slider.js' %}"></script>
     <script src="{% static 'vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js' %}"></script>
+    <script src="vendor/bs-custom-file-input/dist/bs-custom-file-input.min.js' %}"></script>
+    <script src="{% static 'vendor/lightgallery.js/dist/js/lightgallery.min.js' %}"></script>
+    <script src="{% static 'vendor/lg-fullscreen.js/dist/lg-fullscreen.min.js' %}"></script>
+    <script src="{% static 'vendor/lg-zoom.js/dist/lg-zoom.min.js' %}"></script>
     <!-- Include Fabric.js and other requirements in the page -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.1.0/fabric.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>

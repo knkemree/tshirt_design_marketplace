@@ -1,14 +1,10 @@
 
-from django.contrib import admin
-
-from django.contrib.auth.models import Group
-
 import admin_thumbnails
-from django.utils.safestring import mark_safe
 from mptt.admin import DraggableMPTTAdmin
-
-from .models import Category, Product, Color, Size, TechniqueBase, Variant, Design, Method, Placement, PlacementBase, Font
-from essentials.models import Clr, Sz
+from django.contrib import admin
+from django.contrib.auth.models import Group
+from django.utils.safestring import mark_safe
+from .models import Category, Product, Color, Size, TechniqueBase, Variant, Design, Method, Placement, PlacementBase, Font, Clr, Sz
 
 
 
