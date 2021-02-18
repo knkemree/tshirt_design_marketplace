@@ -9,7 +9,7 @@ class MockupListView(ListView):
     template_name = 'mockup_list.html' #default ta da zatem boyle aslinda silinse olur ama sildim calismadi
     queryset = Mockup.activated.all()
     context_object_name = 'mockups'
-    paginate_by = 10
+    #paginate_by = 45
     ordering = ['-created_at']
 
     #In case you want to filter the queryset differently for different web requests
