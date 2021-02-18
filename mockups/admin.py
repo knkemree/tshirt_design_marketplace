@@ -9,6 +9,7 @@ class MockupAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     list_display_links = ['id','preview']
     list_filter = ['active','created_at']
+    search_fields = ['title','brand','id']
     #readonly_fields = ('subject','comment','ip','product','rate','id')
 
 admin.site.register(Mockup, MockupAdmin)

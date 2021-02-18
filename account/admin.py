@@ -32,7 +32,7 @@ class CustomerAdmin(BaseUserAdmin):
             'fields': ('email', 'password1', 'password2','seller')}
         ),
     )
-    search_fields = ('email',)
+    search_fields = ('email','first_name','last_name','id')
     ordering = ('-date_joined',)
     filter_horizontal = ()
     readonly_fields = ('stripe_id','seller','last_login','date_joined')
@@ -58,6 +58,7 @@ class CommentAdmin(admin.ModelAdmin):
 class SellerAdmin(admin.ModelAdmin):
     list_display = ['id','user_id','seller','email','credit', 'active','email_confirmed','timestamp']
     list_filter = ['seller','active','email_confirmed','timestamp']
+    search_fields = ['seller__first_name','seller__last_name','seller__email','seller__id','id']
     #inlines = [CreditInline]
 
 

@@ -94,7 +94,7 @@ class OrderAdmin(admin.ModelAdmin):
                     order_pdf,
                     ]
     #list_editable = ['status']
-    search_fields = ['id',]
+    search_fields = ['id','ordered_by__seller__first_name','ordered_by__seller__last_name','ordered_by__seller__email','recipient']
     list_display_links =['id',]
     list_filter = ['ordered_by','paid', 'customer_notified','created', 'updated']
     inlines = [OrderItemInline]

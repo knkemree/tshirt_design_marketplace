@@ -8,6 +8,7 @@ class ExpenseAdmin(admin.ModelAdmin):
     list_editable = [
         'amount',
         'category']
+    search_fields = ['title','category']
     #readonly_fields = ('image_tag',)
 
 admin.site.register(Expense, ExpenseAdmin)
