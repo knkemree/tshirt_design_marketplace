@@ -48,7 +48,7 @@ class Mockup(models.Model):
         ('context','Context'),
     )
     brand = models.CharField(max_length=40, choices=BRANDS, blank=True, null=True)
-    image=models.ImageField(blank=True,upload_to='images/')
+    image=models.ImageField(blank=False, null=False, upload_to='images/')
     title = models.CharField(max_length=40, blank=True, null=True)
     slug = models.SlugField(null=False, unique=True)
     tags = TaggableManager()
