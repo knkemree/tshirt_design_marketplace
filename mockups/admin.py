@@ -8,7 +8,7 @@ class MockupAdmin(admin.ModelAdmin):
     list_display = ['id','preview','title', 'brand','active','created_at']
     prepopulated_fields = {'slug': ('title',)}
     list_display_links = ['id','preview']
-    list_filter = ['active','created_at']
+    list_filter = ['active','created_at','brand']
     search_fields = ['title','brand','id']
     #readonly_fields = ('subject','comment','ip','product','rate','id')
 
