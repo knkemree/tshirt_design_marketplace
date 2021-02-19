@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'mockups',
     'payment',
     'coupons.apps.CouponsConfig',
+    'designs',
 
     'taggit',
     'mptt',

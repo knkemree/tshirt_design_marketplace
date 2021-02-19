@@ -28,15 +28,16 @@ $(document).ready(function(){
     // When the user clicks on upload a custom picture
     
     document.getElementById('id_uploaded_image').addEventListener("change", function(e){
-        console.log('image changed')
+        console.log('image changed');
+        console.log(this.files, 'genislik burda')
         var reader = new FileReader();  
-        
         reader.onload = function (event){
             var imgObj = new Image();
             imgObj.src = event.target.result;
             //$('#id_design').val(e.target.result);
             // When the picture loads, create the image in Fabric.js
             imgObj.onload = function () {
+                
                 var img = new fabric.Image(imgObj);
                 img.scaleToHeight(100);
                 img.scaleToWidth(100);  

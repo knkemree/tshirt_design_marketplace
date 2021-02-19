@@ -106,7 +106,7 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     ready_to_ship = models.BooleanField(default=False)
     log_entry = models.CharField(max_length=200, blank=True, null=True)
-    json_data = models.JSONField(blank=True, null=True)
+    json_data = models.JSONField(blank=True, null=True, editable=False)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 

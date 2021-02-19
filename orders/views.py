@@ -89,12 +89,12 @@ def order_create(request):
                     end_product_img = get_image_from_data_url(item['end_product_img'])[0]
                 except:
                     end_product_img = None
-                image = get_image_from_data_url(item['design'])[0]
+                design = get_image_from_data_url(item['design'])[0]
                 OrderItem.objects.create(order=order,
                                         variant_id=item['variant_id'],
                                         price=item['price'],
                                         end_product_img=end_product_img,
-                                        image = image,
+                                        image = design,
                                         quantity=item['quantity'],
                                         technique=item['technique'],
                                         placement = item['placement'],
