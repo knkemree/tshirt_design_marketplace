@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Downloads | Context Custom
+{% endblock %}
+
+{% block blank %}
+<!-- Page Title-->
+<div class="page-title-overlap bg-dark pt-4">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-start">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i>Home</a></li>
+            <li class="breadcrumb-item text-nowrap"><a href="#">Account</a>
+            </li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">Downloads</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+        <h1 class="h3 text-light mb-0">My Downloads</h1>
+      </div>
+    </div>
+  </div>
+  <!-- Page Content-->
+  <div class="container pb-5 mb-2 mb-md-3">
+    <div class="row">
+      <!-- Sidebar-->
+      {% include 'my_account_sidebar.html' %}
+      <script>
+        $( document ).ready(function() {
+          $('#downloads').addClass('active');
+        });
+      </script>
+      <!-- Content  -->
+      <section class="col-lg-8">
+        <div class="pt-2 px-4 pl-lg-0 pr-xl-5">
+          <!-- Toolbar-->
+          <div class="d-flex justify-content-between align-items-center pt-lg-2 pb-4 pb-lg-5 mb-lg-3">
+            <div class="form-inline">
+              <!-- <label class="text-light opacity-75 text-nowrap mr-2 d-none d-lg-block" for="order-sort">Sort orders:</label>
+              <select class="form-control custom-select" id="order-sort">
+                <option>All</option>
+                <option>Shipped</option>
+                <option>In Progress</option>
+              </select> -->
+            </div><a class="btn btn-primary btn-sm d-none d-lg-inline-block" href="{% url 'logout' %}"><i class="czi-sign-out mr-2"></i>Sign out</a>
+          </div>
+          
+          <!-- Products list-->
+          <!-- Product-->
+          {% if downloads %}
+          {% for item in downloads %}
+          <div class="media d-block d-sm-flex align-items-center py-4 border-bottom"><a class="d-block mb-3 mb-sm-0 mr-sm-4 mx-auto" href="{{ item.bundle.get_absolute_url }}" style="width: 12.5rem;"><img class="rounded-lg" src="{{ item.bundle.design_images.first.image.url }}" alt="{{ item.bundle.title }}"></a>
+            <div class="media-body text-center text-sm-left">
+              <h3 class="h6 product-title mb-2"><a href="{{ item.bundle.get_absolute_url }}">{{ item.bundle.title }}</a></h3>
+              <!-- <div class="text-accent font-size-sm mb-1">Standard license</div> -->
+              <!-- <div class="custom-control custom-checkbox">
+                <input class="custom-control-input" type="checkbox" id="update-info-1" checked>
+                <label class="custom-control-label font-size-ms" for="update-info-1">Notify me when this product is updated</label>
+              </div> -->
+              <div class="d-flex align-items-center justify-content-center justify-content-sm-start pt-2">
+                <div class="my-2">
+                  <button onclick="window.location.href='{% url 'orders:design-download' item.bundle.pk %}'" class="btn btn-primary btn-sm mr-3" type="button"><i class="czi-download mr-1"></i>Download</button>
+                </div><a class="d-block text-muted text-center my-2" href="#">
+                  <!-- <div class="star-rating"><i class="sr-star czi-star"></i><i class="sr-star czi-star"></i><i class="sr-star czi-star"></i><i class="sr-star czi-star"></i><i class="sr-star czi-star"></i>
+                  </div>
+                  <div class="font-size-xs">Reate this product</div></a> -->
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          {% else %}
+          <h6 class="text-center">Go check out our awesome <a href="{% url 'designs:design-list' %}">designs</a> now!</h6>
+          {% endif %}
+          
+          
+          
+          <!-- Pagination-->
+          <!-- <nav class="d-md-flex justify-content-between align-items-center text-center text-md-left mt-4" aria-label="Page navigation">
+            <div class="d-md-flex align-items-center w-100"><span class="font-size-sm text-muted mr-md-3">Showing 5 of 9 products</span>
+              <div class="progress w-100 my-3 mx-auto mx-md-0" style="max-width: 10rem; height: 4px;">
+                <div class="progress-bar" role="progressbar" style="width: 56%;" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+            <button class="btn btn-outline-primary btn-sm" type="button">More products</button>
+          </nav> -->
+        </div>
+      </section>
+    </div>
+  </div>
+{% endblock %}

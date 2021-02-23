@@ -51,9 +51,9 @@ class DesignActivatedManager(models.Manager):
 
 
 class Design(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    categories = models.ManyToManyField(Design_Category, blank=False, null=True, related_name='design_categories')
-    title = models.CharField(max_length=40, blank=False, null=True)
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    departments = models.ManyToManyField(Design_Category, blank=False, null=True, related_name='designs')
+    title = models.CharField(max_length=40, blank=False, null=True, unique=True,)
     slug = models.SlugField(blank=False, null=False, unique=True)
     digital_product = models.FileField(blank=False, null=True, upload_to='digital_products/', help_text="Customer will download this file upon succesfull payment")
     price = models.DecimalField(max_digits=12, decimal_places=2, blank=False, null=True, help_text="price for this digital product")
@@ -89,7 +89,8 @@ class DesignImageActivatedManager(models.Manager):
         return super(DesignImageActivatedManager, self).get_queryset().filter(active=True)
 
 class DesignImage(models.Model):
-    design = models.ForeignKey(Design, on_delete=models.SET_NULL, null=True, blank=True, related_name='design_images')
+    #design = models.ForeignKey(Design, on_delete=models.SET_NULL, null=True, blank=True, related_name='design_images', to_field='uuid')
+    tasarim = models.ForeignKey(Design, on_delete=models.SET_NULL, null=True, blank=False, related_name='design_images', to_field='uuid')
     image = models.ImageField(upload_to='designs/%Y/%m/%d', blank=False, null=True)
     row_no = models.IntegerField(default=0)
     active = models.BooleanField(default=True)

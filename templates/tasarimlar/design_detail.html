@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block title %}{{ design.title }} | Context Custom {% endblock %}
 {% block blank %}
 <!-- Page Title-->
 <div class="page-title-overlap bg-accent pt-4">
@@ -91,9 +92,14 @@
               </div> -->
             </div>
             <hr>
-            <form action="" method="POST">
-                <input class="btn btn-primary btn-shadow btn-block mt-4" type="submit" value="Coming Soon">
+            
+            <form action="{% url 'designs:design-detail' design.slug %}" method="POST">{% csrf_token %}
+                {{ form }}
+                <input class="btn btn-primary btn-shadow btn-block mt-4" type="submit" value="Add to Cart">
             </form>
+            <script>
+                $('#id_quantity').hide();
+            </script>
             
             <div class="bg-secondary rounded p-3 mt-4 mb-2"><a class="media align-items-center" href="#"><img class="rounded-circle" width="50" src="https://cdn.shopify.com/s/files/1/1707/5873/files/context_icon_0f0b984c-337d-41c5-ac3d-6542abef9ca8_x200.png?v=1553546276" alt="context logo"/>
                 <div class="media-body pl-2"><span class="font-size-ms text-muted">Created by</span>

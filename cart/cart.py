@@ -2,6 +2,7 @@ from decimal import Decimal
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from essentials.models import Design, Product, Variant, Placement, Method
+from tasarimlar.models import Design as design_for_sale
 from coupons.models import Coupon
 import json
 
@@ -35,7 +36,6 @@ class Cart(object):
             placement = get_object_or_404(Placement, id=placement)
             method = get_object_or_404(Method, id=technique)
             print('placement burda')
-            print(placement)
         except:
             print('placement bulunamiyor')
             pass
@@ -51,12 +51,24 @@ class Cart(object):
                                     'design': design,
                                     'json_data':json_data,
                                     'technique': str(method),
-                                    'placement':str(placement)
+                                    'placement':str(placement),
+                                    'digital_product':False,
                                     }
         if override_quantity:
             self.cart[art_id]['quantity'] = quantity
         else:
             self.cart[art_id]['quantity'] += quantity
+        self.save()
+
+    def add_design(self, instance_pk, quantity,):
+        instance = get_object_or_404(design_for_sale, pk = instance_pk)
+        if str(instance.pk) not in self.cart:
+            self.cart[str(instance.pk)] ={
+                                        'title':str(instance.title),
+                                        'price':str(instance.price),
+                                        'quantity': 1,
+                                        'digital_product':True,
+                                    }
         self.save()
 
     def save(self):
@@ -67,7 +79,7 @@ class Cart(object):
         """
         Remove a product from the cart.
         """
-        product_id = str(product.id)
+        product_id = str(product.pk)
         if product_id in self.cart:
             del self.cart[product_id]
             self.save()
@@ -78,12 +90,19 @@ class Cart(object):
         from the database.
         """
         product_ids = self.cart.keys()
-        # get the product objects and add them to the cart
-        products = Design.objects.filter(id__in=product_ids)
-        #products = Variant.objects.filter(id__in=product_ids)
+        
+        products = []
+        for i in product_ids:
+            try:
+                p = Design.objects.get(pk=i)
+                products.append(p)
+            except:
+                p = design_for_sale.objects.get(pk=i)
+                products.append(p)
+        #products = design_for_sale.objects.filter(uuid__in=product_ids)
         cart = self.cart.copy()
         for product in products:
-            cart[str(product.id)]['product'] = product
+            cart[str(product.pk)]['product'] = product
         for item in cart.values():
             item['price'] = Decimal(item['price'])
             item['total_price'] = item['price'] * item['quantity']

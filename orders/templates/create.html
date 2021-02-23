@@ -43,15 +43,14 @@
       <div class="row">
         <section class="col-lg-8">
           <!-- Steps-->
-          <div class="steps steps-light pt-2 pb-3 mb-5"><a class="step-item active" href="#">
+          <div class="steps steps-light pt-2 pb-3 mb-5"><a class="step-item active" href="{% url 'cart:cart_detail' %}">
               <div class="step-progress"><span class="step-count">1</span></div>
-              <div class="step-label"><i class="czi-cart"></i>Cart</div></a><a class="step-item active current" href="#">
+              <div class="step-label"><i class="czi-cart"></i>Cart</div></a><a class="step-item active current" href="{% url 'cart:cart_detail' %}">
               <div class="step-progress"><span class="step-count">2</span></div>
-              <div class="step-label"><i class="czi-package"></i>Shipping details</div></a><a class="step-item" href="#">
+              <div class="step-label"><i class="czi-package"></i>Shipping details</div></a><a class="step-item" href="{% url 'orders:order_create' %}">
               <div class="step-progress"><span class="step-count">3</span></div>
-              {% comment %} <div class="step-label"><i class="czi-package"></i>Shipping</div></a><a class="step-item" href="#"> {% endcomment %}
               <div class="step-progress"><span class="step-count">3</span></div>
-              <div class="step-label"><i class="czi-card"></i>Payment</div></a><a class="step-item" href="#">
+              <div class="step-label"><i class="czi-card"></i>Payment</div></a><a class="step-item">
               <div class="step-progress"><span class="step-count">4</span></div>
               <div class="step-label"><i class="czi-check-circle"></i>Review</div></a></div>
           <!-- Autor info-->
@@ -112,14 +111,23 @@
             <div class="widget mb-3">
               <h2 class="widget-title text-center">Order summary</h2>
               {% for item in cart %}
-              <div class="media align-items-center pb-2 border-bottom"><a class="d-block mr-2" href="#"><img width="64" src="{{ item.end_product_img }}" alt="Product"/></a>
+              {% if item.digital_product %}
+              <div class="media align-items-center pb-2 border-bottom"><a class="d-block mr-2" href="{{ item.product.get_absolute_url }}"><img width="64" src="{{ item.product.design_images.first.image.url }}" alt="{{ item.product.title }}"/></a>
                 <div class="media-body">
-                  <h6 class="widget-product-title"><a href="#">{{ item.variant }}</a></h6>
+                  <h6 class="widget-product-title"><a href="{{ item.product.get_absolute_url }}">{{ item.product.title }}</a></h6>
+                  <div class="widget-product-meta"><span class="text-accent mr-2">${{ item.product.price }}</span><span class="text-muted">x {{ item.quantity}}</span></div>
+                </div>
+              </div>
+              {% else %}
+              <div class="media align-items-center pb-2 border-bottom"><a class="d-block mr-2" ><img width="64" src="{{ item.end_product_img }}" alt="Product"/></a>
+                <div class="media-body">
+                  <h6 class="widget-product-title"><a>{{ item.variant }}</a></h6>
                   <div class="font-size-sm"><small><span class="text-muted mr-2">Size:</span>{{ item.size }}</small></div>
                   <div class="font-size-sm"><small><span class="text-muted mr-2">Color:</span>{{ item.color }}</small></div>
                   <div class="widget-product-meta"><span class="text-accent mr-2">${{ item.price }}</span><span class="text-muted">x {{ item.quantity}}</span></div>
                 </div>
               </div>
+              {% endif %}
               {% endfor %}
             </div>
             <ul class="list-unstyled font-size-sm pb-2 border-bottom">

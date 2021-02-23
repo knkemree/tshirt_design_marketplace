@@ -5,6 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from essentials.models import Design, Product, Variant
+from tasarimlar.models import Design as design_for_sale
 from .cart import Cart
 from .forms import CartAddProductForm
 from coupons.forms import CouponApplyForm
@@ -55,10 +56,21 @@ def cart_add(request, variant_id, art_id=None):
 @require_POST
 def cart_remove(request, art_id):
     cart = Cart(request)
+    
     product = get_object_or_404(Design, id=art_id)
+    
     cart.remove(product)
     product.delete()
     return redirect('cart:cart_detail')
+
+@require_POST
+def cart_remove_design_for_sale(request, pk):
+    cart = Cart(request)
+    product = get_object_or_404(design_for_sale, pk=pk)
+    cart.remove(product)
+    return redirect('cart:cart_detail')
+
+
 
 def cart_detail(request):
     cart = Cart(request)

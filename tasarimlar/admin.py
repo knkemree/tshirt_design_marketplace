@@ -1,5 +1,5 @@
 from django.contrib import admin
-from designs.models import Design, DesignImage, Design_Category
+from .models import Design, DesignImage, Design_Category
 from django.utils.safestring import mark_safe
 
 
@@ -12,6 +12,7 @@ class DesignImageInline(admin.TabularInline):
     extra = 0
     show_change_link = True
     readonly_fields = ['preview']
+    min_num = 1
 
     def preview(self, obj):
         #return mark_safe("""<img src="/images/%s.jpg" />""" % obj.end_product_img)

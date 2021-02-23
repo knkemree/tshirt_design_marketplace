@@ -1,11 +1,13 @@
 import os
 from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView
 from .models import Mockup
 from django.http import HttpResponse
 
 # Create your views here.
-class MockupListView(ListView):
+class MockupListView(LoginRequiredMixin, ListView):
+    login_url = '/signup/'
     template_name = 'mockup_list.html' #default ta da zatem boyle aslinda silinse olur ama sildim calismadi
     queryset = Mockup.activated.all()
     context_object_name = 'mockups'
@@ -22,7 +24,8 @@ class MockupListView(ListView):
 	# 	context['mockups'] = Mockup.objects.filter(active=1)
 	# 	return context
 
-class MockupDetailView(DetailView):
+class MockupDetailView(LoginRequiredMixin, DetailView):
+    login_url = '/signup/'
     model = Mockup
     slug_field = 'slug'
     slug_url_kwarg = 'slug'

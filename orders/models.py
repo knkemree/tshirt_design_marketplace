@@ -11,6 +11,7 @@ from django.core.validators import MinValueValidator, \
 
 from coupons.models import Coupon
 from essentials.models import Product, Variant, Design
+from tasarimlar.models import Design as design_for_sale
 from account.models import Customer, Seller
 from django.core.exceptions import ValidationError
 
@@ -101,6 +102,9 @@ class OrderItem(models.Model):
     placement = models.CharField(max_length=100, blank=True, null=True)
     end_product_img = models.ImageField(upload_to='end_product_imgs/', null=True, blank=True)
     image = models.ImageField(upload_to='designs/', null=True, blank=True)
+    bundle = models.ForeignKey(design_for_sale, on_delete=models.SET_NULL, blank=True, null=True, to_field='uuid')
+    is_digital_product = models.BooleanField(default=False)
+    #downloadable_product = models.FileField(upload_to='sold_digital_products/', null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     quantity = models.PositiveIntegerField(default=1)

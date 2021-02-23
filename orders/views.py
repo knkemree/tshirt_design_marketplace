@@ -1,25 +1,32 @@
 from PIL import Image
 import base64, secrets, io
-#import weasyprint
+import weasyprint
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
-from django.shortcuts import get_object_or_404
+from django.core.files import File
+from django.core.mail import mail_admins
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.utils.safestring import mark_safe
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, DetailView
+
 from .models import OrderItem, Order
 from .forms import OrderCreateForm
 from .tasks import order_created
+
 from cart.cart import Cart
 from account.models import Seller
 from essentials.models import Design
-import weasyprint
-from django.core.mail import mail_admins
+from tasarimlar.models import Design as design_for_sale
+import os
+
+
 
 
 @staff_member_required
@@ -84,22 +91,45 @@ def order_create(request):
             #     order.coupon = cart.coupon
             #     order.discount = cart.coupon.discount
             order.save()
+            print(len(cart), 'cart uzunlugu')
             for item in cart:
-                try:
-                    end_product_img = get_image_from_data_url(item['end_product_img'])[0]
-                except:
-                    end_product_img = None
-                design = get_image_from_data_url(item['design'])[0]
-                OrderItem.objects.create(order=order,
-                                        variant_id=item['variant_id'],
-                                        price=item['price'],
-                                        end_product_img=end_product_img,
-                                        image = design,
-                                        quantity=item['quantity'],
-                                        technique=item['technique'],
-                                        placement = item['placement'],
-                                        json_data = item['json_data']
-                                        )
+                
+                #eger digital product ise
+                if item['digital_product'] == True:
+                    print('if oldu')
+                    # file = open(item['path'])
+                    # downloadable_product = File(file)
+                    # #pdfImage.myfile.save('new', djangofile)
+                    # file.close()
+                    # with open(item['path'], 'rb') as fo:
+                    #     same_file = File(fo, item['filename'])
+                    OrderItem.objects.create(order=order,
+                                            price=item['price'],
+                                            quantity=item['quantity'],
+                                            bundle = item['product'],
+                                            is_digital_product=True,
+                                            end_product_img = item['product'].design_images.first().image
+                                            )   
+                    
+                else: 
+                    print('else oldu')
+                    try:
+                        end_product_img = get_image_from_data_url(item['end_product_img'])[0]
+                    except:
+                        end_product_img = None
+                    design = get_image_from_data_url(item['design'])[0]
+                    OrderItem.objects.create(order=order,
+                                            variant_id=item['variant_id'],
+                                            price=item['price'],
+                                            end_product_img=end_product_img,
+                                            image = design,
+                                            quantity=item['quantity'],
+                                            technique=item['technique'],
+                                            placement = item['placement'],
+                                            json_data = item['json_data']
+                                            )
+                    
+
             # clear the cart
             cart.clear()
             # launch asynchronous task
@@ -177,3 +207,25 @@ def ajax_credits(request):
 
 
 
+class DownloadsListView(LoginRequiredMixin, ListView):
+    login_url = '/signup/'
+    template_name = 'downloads_list.html' 
+    context_object_name = 'downloads'
+
+    def get_queryset(self):
+        seller = get_object_or_404(Seller, seller__email=self.request.user.email)
+        orders = Order.objects.filter(ordered_by=seller, paid=True).exclude(status='4')
+        downloads = []
+
+        for order in orders:
+            for item in order.items.filter(is_digital_product=True):
+                downloads.append(item)
+        return downloads
+
+def design_download(request, pk):
+    design = design_for_sale.objects.get(pk=pk)
+    fsock = open(design.digital_product.path,'rb').read()
+    response = HttpResponse(fsock, content_type='image/*')
+    file_name, file_extension = os.path.splitext(design.digital_product.path)
+    response['Content-Disposition'] = 'attachment;'+ 'filename={}{}'.format(design.slug, file_extension)
+    return response

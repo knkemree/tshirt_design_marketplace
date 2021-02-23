@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from orders.views import DownloadsListView, design_download
 
 app_name = 'orders'
 urlpatterns = [
@@ -10,4 +11,6 @@ urlpatterns = [
     path('admin/order/<int:order_id>/', views.admin_order_detail, name='admin_order_detail'),
     path('admin/orderitem/<int:order_id>/', views.admin_order_item_detail, name='admin_order_item_detail'),
     path('admin/order/<int:order_id>/pdf/',views.admin_order_pdf,name='admin_order_pdf'),
+    path('downloads/', DownloadsListView.as_view(), name='downloads-list'),
+    path('download/<uuid:pk>/', design_download, name='design-download')
 ]

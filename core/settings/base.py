@@ -67,7 +67,7 @@ INSTALLED_APPS = [
     'mockups',
     'payment',
     'coupons.apps.CouponsConfig',
-    'designs',
+    'tasarimlar',
 
     'taggit',
     'mptt',
@@ -203,7 +203,7 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'Context Custom <noreply@contextcustom.com>'
 EMAIL_SUBJECT_PREFIX = 'Context Custom - '
 
-LOGIN_REDIRECT_URL = 'home'
+#LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'signup'
 LOGOUT_URL = 'signup'
 

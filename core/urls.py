@@ -59,7 +59,7 @@ urlpatterns = [
     path('payment/', include('payment.urls', namespace='payment')),
     path('coupons/', include('coupons.urls', namespace='coupons')),
     path('essentials/', include("essentials.urls"), name="essentials"),
-    path('designs/', include("designs.urls"), name="designs"),
+    path('tasarimlar/', include("tasarimlar.urls"), name="tasarimlar"),
     
     path('__debug__/', include(debug_toolbar.urls)),   
 ]

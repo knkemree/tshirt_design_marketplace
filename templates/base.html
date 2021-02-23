@@ -62,8 +62,10 @@
                   {% if request.user.is_staff %}<a class="dropdown-item d-flex align-items-center" href="/admin/"><i class="czi-settings opacity-60 mr-2"></i>Control Panel</a>{% endif %}
                   <!-- <a class="dropdown-item d-flex align-items-center" href="#"><i class="czi-settings opacity-60 mr-2"></i>Settings</a> -->
 
-                  {% if request.user.seller %}<a class="dropdown-item d-flex align-items-center" href="{% url 'account:create_credit' %}"><i class="czi-dollar opacity-60 mr-2"></i>Credits ${{ credit_amount }}</a>{% endif %}
+                 
                   {% if request.user.seller %}<a class="dropdown-item d-flex align-items-center" href="{% url 'orders:order_list' %}"><i class="czi-basket opacity-60 mr-2"></i>Order History</a>{% endif %}
+                  {% if request.user.seller %}<a class="dropdown-item d-flex align-items-center" href="{% url 'orders:downloads-list' %}"><i class="czi-download opacity-60 mr-2"></i>Downloads</a>{% endif %}
+                  {% if request.user.seller %}<a class="dropdown-item d-flex align-items-center" href="{% url 'account:create_credit' %}"><i class="czi-dollar opacity-60 mr-2"></i>Credits ${{ credit_amount }}</a>{% endif %}
                   <!-- <a class="dropdown-item d-flex align-items-center" href="#"><i class="czi-heart opacity-60 mr-2"></i>Favorites<span class="font-size-xs text-muted ml-auto">4</span></a> -->
                   <!-- {% if request.user.seller %}
                   <div class="dropdown-divider"></div>
@@ -98,17 +100,28 @@
                   <div class="widget widget-cart px-3 pt-2 pb-3">
                     <div style="height: 10rem;" data-simplebar data-simplebar-auto-hide="false">
                         {% for rs in cart %}
+                        {% if rs.digital_product %}
+                        <div class="widget-cart-item pb-2 border-bottom">  
+                          <div class="media align-items-center"><a class="d-block mr-2" href="#"><img width="64" src="{{ rs.product.design_images.first.image.url }}" alt="{{ rs.product.title }}"/></a>
+                            <div class="media-body">
+                              <h6 class="widget-product-title"><a href="{{ rs.product.get_absolute_url }}">{{ rs.product.title }}</a></h6>
+                              <div class="widget-product-meta"><span class="text-accent mr-2">${{ rs.product.price }}</span><span class="text-muted">x {{ rs.quantity }}</span></div>
+                            </div>
+                          </div>
+                        </div>
+                        {% else %}
                           {% with variation=rs.variant %}
                           <div class="widget-cart-item pb-2 border-bottom">
-                            <!-- <button class="close text-danger" type="button" aria-label="Remove"><span aria-hidden="true">&times;</span></button> -->
+                           
                             <div class="media align-items-center"><a class="d-block mr-2" href="#"><img width="64" src="{{ rs.end_product_img }}" alt="{{ rs.product }}"/></a>
                               <div class="media-body">
-                                <h6 class="widget-product-title"><a href="#">{{ rs.variant }}</a></h6>
+                                <h6 class="widget-product-title">{{ rs.variant }}</h6>
                                 <div class="widget-product-meta"><span class="text-accent mr-2">${{ rs.price }}</span><span class="text-muted">x {{ rs.quantity }}</span></div>
                               </div>
                             </div>
                           </div>
                           {% endwith %}
+                        {% endif %}
                         {% endfor %}
 
                     </div>
