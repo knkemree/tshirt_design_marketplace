@@ -1,11 +1,14 @@
-from mptt.models import MPTTModel
 import os
 import uuid
-from django.db import models
+from mptt.models import MPTTModel
+from ckeditor_uploader.fields import RichTextUploadingField
 from mptt.models import TreeForeignKey
 from taggit.managers import TaggableManager
+
+from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+
 
 
 # Create your models here.
@@ -60,6 +63,7 @@ class Design(models.Model):
     cost = models.DecimalField(max_digits=12, decimal_places=2, blank=False, null=True, help_text="cost for this digital product")
     sales = models.IntegerField(default=0)
     views = models.PositiveIntegerField(default=0)
+    description =RichTextUploadingField(null=True, blank=True)
     active = models.BooleanField(default=True)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
