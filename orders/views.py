@@ -106,8 +106,8 @@ def order_create(request):
                     OrderItem.objects.create(order=order,
                                             price=item['price'],
                                             quantity=item['quantity'],
-                                            bundle = item['product'],
-                                            is_digital_product=True,
+                                            bundle2 = item['product'],
+                                            is_digital_product2=True,
                                             end_product_img = item['product'].design_images.first().image
                                             )   
                     
@@ -218,7 +218,7 @@ class DownloadsListView(LoginRequiredMixin, ListView):
         downloads = []
 
         for order in orders:
-            for item in order.items.filter(is_digital_product=True):
+            for item in order.items.filter(is_digital_product2=True):
                 downloads.append(item)
         return downloads
 
