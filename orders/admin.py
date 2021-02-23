@@ -56,10 +56,10 @@ class OrderItemInline(admin.TabularInline):
     model = OrderItem
     show_change_link = True
     extra = 0
-    fields = ['preview','item','bundle','is_digital_product','technique','placement','price','quantity','ready_to_ship','log_entry','details']
+    fields = ['preview','item','technique','placement','price','quantity','ready_to_ship','log_entry','details']
     #exclude = ['json_data','cost','end_product_img','image']
-    raw_id_fields = ['variant','bundle']
-    readonly_fields = ('item','size','color','preview','technique','placement','price','quantity','ready_to_ship','log_entry','details','is_digital_product')
+    raw_id_fields = ['variant',]
+    readonly_fields = ('item','size','color','preview','technique','placement','price','quantity','ready_to_ship','log_entry','details',)
     list_editable = ('ready_to_ship',)
     
 
