@@ -265,8 +265,8 @@ $(document).ready(function(){
                     </div>
 
                     <!-- thumbnail'larin oldugu yer -->
+                    <form id="post-placement" method="POST" action="{% url 'essentials:change_place' %}"></form>
                     <div class="cz-thumblist order-sm-1">
-                      <form id="post-placement" method="POST" action="{% url 'essentials:change_place' %}">
                         {% csrf_token %}
                         {% for place in product.placements.all %}
                         <a class="cz-thumblist-item" href="#place{{place.id}}" id="{{ place.id }}">
@@ -274,8 +274,8 @@ $(document).ready(function(){
                           <img style="max-height: 80px; width: auto; margin: auto;" data-toggle="tooltip" data-placement="right" title="{{ place }}"  src="{{ place.image.url }}" alt="Product thumb" class="thumbnail_image">
                         </a>
                         {% endfor %}
-                      </form>
                     </div>
+                  </form>
                     <!-- END thumbnail'larin oldugu yer -->
                   </div>
                 </div>
