@@ -239,9 +239,9 @@ $(document).ready(function(){
         <!-- Tabs-->
         <ul class="nav nav-tabs" role="tablist">
           <li class="nav-item"><a class="nav-link p-4 active" href="#general" data-toggle="tab" role="tab">General Info</a></li>
-          <li class="nav-item"><a class="nav-link p-4" href="#specs" data-toggle="tab" role="tab">Tee Specs</a></li>
+          <!-- <li class="nav-item"><a class="nav-link p-4" href="#specs" data-toggle="tab" role="tab">Tee Specs</a></li>
           <li class="nav-item"><a class="nav-link p-4" href="#real-life" data-toggle="tab" role="tab">Real Life</a></li>
-          <li class="nav-item"><a class="nav-link p-4" href="#reviews" data-toggle="tab" role="tab">Reviews <span class="font-size-sm opacity-60"></span></a></li>
+          <li class="nav-item"><a class="nav-link p-4" href="#reviews" data-toggle="tab" role="tab">Reviews <span class="font-size-sm opacity-60"></span></a></li> -->
         </ul>
         <div class="px-4 pt-lg-3 pb-3 mb-5">
           <div class="tab-content px-lg-3">
@@ -269,7 +269,6 @@ $(document).ready(function(){
                       <form id="post-placement" method="POST" action="{% url 'essentials:change_place' %}">
                         {% csrf_token %}
                         {% for place in product.placements.all %}
-                        <small><span class="badge badge-dark badge-shadow">{{ place }}</span></small> 
                         <a class="cz-thumblist-item" href="#place{{place.id}}" id="{{ place.id }}">
                           <input type="hidden" value="{{ place.id }}" name="place_id">
                           <img style="max-height: 80px; width: auto; margin: auto;" data-toggle="tooltip" data-placement="right" title="{{ place }}"  src="{{ place.image.url }}" alt="Product thumb" class="thumbnail_image">
