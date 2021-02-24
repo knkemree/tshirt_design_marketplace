@@ -48,6 +48,7 @@
           <a class="navbar-brand d-sm-none mr-2 order-lg-1" href="{% url 'home' %}" style="min-width: 4.625rem;"><img width="64" src="{% static 'img\illustrations\context_custom_logo_v2.png' %}" alt="Context Custom"/></a>
           <!-- Toolbar-->
           <div class="navbar-toolbar d-flex align-items-center order-lg-3">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"><span class="navbar-toggler-icon"></span></button>
             <a class="navbar-tool d-none d-lg-flex" href="#searchBox" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="searchBox"><span class="navbar-tool-tooltip">Search</span>
               <div class="navbar-tool-icon-box"><i class="navbar-tool-icon czi-search"></i></div>
             </a>
@@ -75,11 +76,10 @@
                 </div>
               </div>
               {% else %}
-              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"><span class="navbar-toggler-icon"></span></button><a class="navbar-tool navbar-stuck-toggler" href="#"><span class="navbar-tool-tooltip">Expand menu</span>
-                <div class="navbar-tool-icon-box"><i class="navbar-tool-icon czi-heart"></i></div></a><a class="navbar-tool ml-1 ml-lg-0 mr-n1 mr-lg-2" href="{% url 'signup' %}">
-                {% comment %} <div class="navbar-tool-icon-box"><i class="navbar-tool-icon czi-heart"></i></div></a><a class="navbar-tool ml-1 ml-lg-0 mr-n1 mr-lg-2" href="#signin-modal" data-toggle="modal"> {% endcomment %}
+              <a class="navbar-tool ml-1 ml-lg-0 mr-n1 mr-lg-2" href="{% url 'signup' %}">
                 <div class="navbar-tool-icon-box"><i class="navbar-tool-icon czi-user"></i></div>
-                <div class="navbar-tool-text ml-n3"><small>Hello, Sign in</small>My Account</div></a>
+                <div class="navbar-tool-text ml-n3"><small>Hello, Sign in</small>My Account</div>
+              </a>
               {% endif %}
 
 
