@@ -17,6 +17,8 @@ from essentials.forms import SearchForm
 from cart.forms import CartAddProductForm
 from .models import Category, Product, Variant, Design, Placement, Method
 from account.mixins import SellerAccountMixin
+from tasarimlar.models import Design as design_for_sale
+from itertools import chain
 
 
 
@@ -312,11 +314,20 @@ def blank_single_item(request, id, slug, parent_category=None, subcategory=None)
 
 def post_search(request):
     form = SearchForm()
-    products = []
+    result_list = []
     query = request.POST.get('query')
     if query:
-        print(query, 'query burda')
-        products = Product.objects.filter(Q(title__icontains=query)).order_by('id')
+        products = Product.objects.filter(
+            Q(title__icontains=query) |
+            Q(description__icontains=query)
+        
+        ).order_by('id')
+        designs = design_for_sale.objects.filter(
+            Q(title__icontains=query) |
+            Q(description__icontains=query)
+        
+        ).order_by('pk')
+        result_list = list(chain(products, designs))
         # page = request.GET.get('page', 1)
         # paginator = Paginator(results_list, 4) # 4 posts in each page
         # products = paginator.page(1)
@@ -329,8 +340,8 @@ def post_search(request):
         # except EmptyPage:
         #     # If page is out of range deliver last page of results
         #     products = paginator.page(paginator.num_pages) 
-        context = {'form':form,'products':products}
+        context = {'form':form,'products':result_list}
         return render(request, 'search_page.html', context)
 
-    context = {'form':form,'products':products}        
+    context = {'form':form,'products':result_list}        
     return render(request, 'search_page.html', context)

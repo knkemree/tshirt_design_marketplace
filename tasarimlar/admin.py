@@ -1,6 +1,9 @@
+import admin_thumbnails
+
 from django.contrib import admin
-from .models import Design, DesignImage, Design_Category
 from django.utils.safestring import mark_safe
+
+from .models import Design, DesignImage, Design_Category
 
 
 class Design_CategoryAdmin(admin.ModelAdmin):
@@ -20,6 +23,7 @@ class DesignImageInline(admin.TabularInline):
         if img is not None:
             return mark_safe('<img src="{}" height="150" />'.format(img.url,))
 
+@admin_thumbnails.thumbnail('image')
 class DesignAdmin(admin.ModelAdmin):
     list_display = ['preview','title','digital_product','price','sales','active']
     list_display_links = ['preview','title']

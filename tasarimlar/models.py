@@ -58,6 +58,7 @@ class Design(models.Model):
     departments = models.ManyToManyField(Design_Category, blank=False, null=True, related_name='designs')
     title = models.CharField(max_length=40, blank=False, null=True, unique=True,)
     slug = models.SlugField(blank=False, null=False, unique=True)
+    image = models.ImageField(blank=False, null=True,upload_to='images/', help_text='Image for preview. Will be display on list page')
     digital_product = models.FileField(blank=False, null=True, upload_to='digital_products/', help_text="Customer will download this file upon succesfull payment")
     price = models.DecimalField(max_digits=12, decimal_places=2, blank=False, null=True, help_text="price for this digital product")
     cost = models.DecimalField(max_digits=12, decimal_places=2, blank=False, null=True, help_text="cost for this digital product")
@@ -104,8 +105,10 @@ class DesignImage(models.Model):
     # Model managers
     objects = models.Manager()  # The default manager.
     activated = DesignImageActivatedManager()  # Our custom manager.
-
+        
     class Meta:
+        verbose_name = 'image'
+        verbose_name_plural = 'gallery'
         ordering = ['row_no']
 
     def __str__(self): 

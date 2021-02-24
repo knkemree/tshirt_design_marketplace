@@ -36,7 +36,7 @@
                 </button>
             </div> -->
             <a class="product-thumb-overlay" href="{{ design.get_absolute_url }}"></a>
-            <img style="height: 250px; width: auto; margin: auto;" src="{% if design.design_images.first %}{{ design.design_images.first.image.url }}{% endif %}" alt="design #{{design.id}}">
+            <img style="height: 250px; width: auto; margin: auto;" src="{% if design.image %}{{ design.image.url }}{% endif %}" alt="design #{{design.id}}">
           </div>
           <div class="card-body">
             <div class="d-flex flex-wrap justify-content-between align-items-start pb-2">

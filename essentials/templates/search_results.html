@@ -97,16 +97,16 @@
             <div class="card product-card"><span class="badge badge-danger badge-shadow">Sale</span>
               <button class="btn-wishlist btn-sm" type="button" data-toggle="tooltip" data-placement="left" title="Add to wishlist"><i class="czi-heart"></i></button><a class="card-img-top d-block overflow-hidden" href="{{ object.get_absolute_url }}"><img  src="{{object.image.url}}" alt="Product" style="height:236px; display:block; margin:auto;"></a>
               <div class="card-body py-2"><a class="product-meta d-block font-size-xs pb-1 center" href="{{ object.get_absolute_url }}">{{ object.brand }}</a>
-                <h3 class="product-title font-size-sm"><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></h3>
+                <h3 class="product-title font-size-sm"><a href="{{ object.get_absolute_url }}">{{ object.title|truncatewords:4 }}</a></h3>
                 <div class="d-flex justify-content-between">
-                  <div class="product-price"><span class="text-accent">${{ object.get_lowest_price.price__min|floatformat:-2 }}</span>
+                  <div class="product-price"><span class="text-accent">${% if object.get_lowest_price %}{{ object.get_lowest_price.price__min|floatformat:-2 }}{% else %}{{ object.price }}{% endif %}</span>
                   </div>
                   <div class="star-rating"><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i>
                   </div>
                 </div>
               </div>
               <div class="card-body card-body-hidden">
-                <input class="btn btn-primary btn-sm btn-block mb-2" type="button" onclick="window.location='{{ object.get_absolute_url }}';" value="Design & Buy">
+                <input class="btn btn-primary btn-sm btn-block mb-2" type="button" onclick="window.location='{{ object.get_absolute_url }}';" value="View Details">
                 <!-- <button class="btn btn-primary btn-sm btn-block mb-2" type="button" data-toggle="toast" href="{{ object.get_absolute_url }}"><i class="czi-edit font-size-sm mr-1"></i>Customize</button> -->
               </div>
             </div>

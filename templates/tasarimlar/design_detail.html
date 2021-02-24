@@ -29,7 +29,7 @@
           <div class="pt-2 px-4 pr-lg-0 pl-xl-5">
             <!-- Product gallery-->
             <div class="cz-gallery">
-              <a class="gallery-item rounded-lg mb-grid-gutter" href="{{ design.design_images.first.image.url }}" data-sub-html="&lt;h6 class=&quot;font-size-sm text-light&quot;&gt;{{ design.title }}&lt;/h6&gt;"><img src="{{ design.design_images.first.image.url }}" alt="Gallery preview"/><span class="gallery-item-caption">{{ design.title }}</span></a>
+              <a class="gallery-item rounded-lg mb-grid-gutter" href="{{ design.image.url }}" data-sub-html="&lt;h6 class=&quot;font-size-sm text-light&quot;&gt;{{ design.title }}&lt;/h6&gt;"><img src="{{ design.image.url }}" alt="Gallery preview"/><span class="gallery-item-caption">{{ design.title }}</span></a>
                 <div class="row">
                   
                     {% for design_image in design.design_images.all %}
@@ -108,7 +108,7 @@
                 <div class="media-body pl-2"><span class="font-size-ms text-muted">Created by</span>
                   <h6 class="font-size-sm mb-0">Context</h6>
                 </div></a></div>
-            <div class="bg-secondary rounded p-3 mb-2"><i class="czi-download h5 text-muted align-middle mb-0 mt-n1 mr-2"></i><span class="d-inline-block h6 mb-0 mr-1">715</span><span class="font-size-sm">Sales</span></div>
+            <!-- <div class="bg-secondary rounded p-3 mb-2"><i class="czi-download h5 text-muted align-middle mb-0 mt-n1 mr-2"></i><span class="d-inline-block h6 mb-0 mr-1">715</span><span class="font-size-sm">Sales</span></div> -->
             <div class="bg-secondary rounded p-3 mb-4">
               <div class="star-rating"><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i><i class="sr-star czi-star-filled active"></i>
               </div>
@@ -129,6 +129,7 @@
     </div>
   </section>
   <!-- Product description + Reviews + Comments-->
+  {% if design.description %}
   <section class="container mb-4 mb-lg-5">
     <!-- Nav tabs-->
     <ul class="nav nav-tabs" role="tablist">
@@ -139,12 +140,12 @@
       <div class="tab-pane fade show active" id="details" role="tabpanel">
         <div class="row">
           <div class="col-lg-8">
-            {% if design.description %}{{ design.description|safe }}{% endif %}
+            {{ design.description|safe }}
           </div>
         </div>
       </div>
     </div>
   </section>
-
+  {% endif %}
 
 {% endblock %}
