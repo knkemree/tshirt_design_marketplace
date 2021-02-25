@@ -401,9 +401,9 @@
                     <div id="tshirt-div" class="cz-preview order-sm-2">
                         {% for place in product.placements.all %}
                         <div class="cz-preview-item" id="place{{ place.id }}">
-                            <img id="tshirt-backgroundpicture" class="cz-image-zoom" src="{{ place.image.url }}" data-zoom="{{ place.image.url }}" alt="Product image">
+                            <img style="height: 100%;" id="tshirt-backgroundpicture" class="cz-image-zoom" src="{{ place.image.url }}" alt="Product image">
                             <input type="hidden" value="{{ place.id }}">
-                            <div class="cz-image-zoom-pane"></div>
+                            <!-- <div class="cz-image-zoom-pane"></div> -->
                         </div>
                         {% endfor %}
                         <div id="drawingArea" style="position: absolute;z-index: 10;">
