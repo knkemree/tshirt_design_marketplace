@@ -276,8 +276,7 @@ class Placement(models.Model):
 
 class Variant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants")
-    uuid1 = models.UUIDField(null=True, unique=False)
-    uuid2 = models.UUIDField(null=True, unique=False)
+    uuid = models.UUIDField(null=True, unique=False)
     size = models.ForeignKey(Size, on_delete=models.SET_NULL,blank=True,null=True)
     color = models.ForeignKey(Color, on_delete=models.SET_NULL,blank=True,null=True)
     #technique = models.ForeignKey(Technique, on_delete=models.CASCADE,blank=True,null=True)
@@ -313,8 +312,7 @@ class Variant(models.Model):
 
 class Design(models.Model):
     #uuid = models.UUIDField(default=uuid.uuid4, editable=False)
-    uuid1 = models.UUIDField(null=True, unique=False)
-    uuid2 = models.UUIDField(null=True, unique=False)
+    uuid = models.UUIDField(null=True, unique=False)
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE, related_name="designs", blank=True, null=True)
     email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name="designs", blank=True, null=True)
     end_product_img = models.ImageField(upload_to='end_product_imgs/',null=True, blank=True)
