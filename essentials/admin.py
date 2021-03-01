@@ -113,13 +113,13 @@ class SizeAdmin(admin.ModelAdmin):
     search_fields = ['name',]
 
 class VariantAdmin(admin.ModelAdmin):
-    list_display = ['id','__str__','size','color','price','quantity','uuid','created_at','updated_at',]
+    list_display = ['id','__str__','size','color','price','quantity','created_at','updated_at',]
     list_filter = ['product','size','color',]
     search_fields = ['size','color',]
     save_as =True
 
 class DesignAdmin(admin.ModelAdmin):
-    list_display = ['id','image_tag','email','variant','uuid',]
+    list_display = ['id','image_tag','email','variant',]
     list_display_links = ['id','image_tag']
     
 admin.site.register(Design, DesignAdmin)
