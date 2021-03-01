@@ -111,19 +111,28 @@
             <div class="widget mb-3">
               <h2 class="widget-title text-center">Order summary</h2>
               {% for item in cart %}
-              {% if item.digital_product %}
+              {% if item.type == 'digital' %}
               <div class="media align-items-center pb-2 border-bottom"><a class="d-block mr-2" href="{{ item.product.get_absolute_url }}"><img width="64" src="{{ item.product.design_images.first.image.url }}" alt="{{ item.product.title }}"/></a>
                 <div class="media-body">
                   <h6 class="widget-product-title"><a href="{{ item.product.get_absolute_url }}">{{ item.product.title }}</a></h6>
                   <div class="widget-product-meta"><span class="text-accent mr-2">${{ item.product.price }}</span><span class="text-muted">x {{ item.quantity}}</span></div>
                 </div>
               </div>
-              {% else %}
+              {% elif item.type == 'custom' %}
               <div class="media align-items-center pb-2 border-bottom"><a class="d-block mr-2" ><img width="64" src="{{ item.end_product_img }}" alt="Product"/></a>
                 <div class="media-body">
-                  <h6 class="widget-product-title"><a>{{ item.variant }}</a></h6>
+                  <h6 class="widget-product-title"><a>{{ item.product.variant.product.title }}</a></h6>
                   <div class="font-size-sm"><small><span class="text-muted mr-2">Size:</span>{{ item.size }}</small></div>
                   <div class="font-size-sm"><small><span class="text-muted mr-2">Color:</span>{{ item.color }}</small></div>
+                  <div class="widget-product-meta"><span class="text-accent mr-2">${{ item.price }}</span><span class="text-muted">x {{ item.quantity}}</span></div>
+                </div>
+              </div>
+              {% else %}
+              <div class="media align-items-center pb-2 border-bottom"><a class="d-block mr-2" ><img width="64" src="{{ item.end_product_img }}" alt="{{ item.product }}"/></a>
+                <div class="media-body">
+                  <h6 class="widget-product-title"><a>{{ item.product.product.title }}</a></h6>
+                  <div class="font-size-sm"><small><span class="text-muted mr-2">Size:</span>{{ item.product.size }}</small></div>
+                  <div class="font-size-sm"><small><span class="text-muted mr-2">Color:</span>{{ item.product.color }}</small></div>
                   <div class="widget-product-meta"><span class="text-accent mr-2">${{ item.price }}</span><span class="text-muted">x {{ item.quantity}}</span></div>
                 </div>
               </div>

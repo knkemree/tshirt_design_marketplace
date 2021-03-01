@@ -1,0 +1,48 @@
+{% if cart %}
+<div class="dropdown-menu dropdown-menu-right" style="width: 20rem;">
+    <div class="widget widget-cart px-3 pt-2 pb-3">
+    <div style="height: 10rem;" data-simplebar data-simplebar-auto-hide="false">
+        {% for rs in cart %}
+        {% if rs.type == 'digital' %}
+        <div class="widget-cart-item pb-2 border-bottom">  
+            <div class="media align-items-center"><a class="d-block mr-2" href="#"><img width="64" src="{{ rs.product.design_images.first.image.url }}" alt="{{ rs.product.title }}"/></a>
+            <div class="media-body">
+                <h6 class="widget-product-title"><a href="{{ rs.product.get_absolute_url }}">{{ rs.product.title }}</a></h6>
+                <div class="widget-product-meta"><span class="text-accent mr-2">${{ rs.product.price }}</span><span class="text-muted">x {{ rs.quantity }}</span></div>
+            </div>
+            </div>
+        </div>
+        {% elif rs.type == 'custom' %}
+            {% with variation=rs.variant %}
+            <div class="widget-cart-item pb-2 border-bottom">
+            
+            <div class="media align-items-center"><a class="d-block mr-2" href="#"><img width="64" src="{{ rs.end_product_img }}" alt="{{ rs.product }}"/></a>
+                <div class="media-body">
+                <h6 class="widget-product-title">{{ rs.variant }}</h6>
+                <div class="widget-product-meta"><span class="text-accent mr-2">${{ rs.price }}</span><span class="text-muted">x {{ rs.quantity }}</span></div>
+                </div>
+            </div>
+            </div>
+            {% endwith %}
+        {% else %}
+            {% with blank=rs.product %}
+            <div class="widget-cart-item pb-2 border-bottom">
+            <div class="media align-items-center"><a class="d-block mr-2" href="#"><img style="{% if blank.color.texture %}background-image:url({{ blank.color.texture.url }}) {% else %} background-color:{{ blank.color.color_code }} {% endif %};" width="64" src="{% if blank.product.placements.first.image %}{{ blank.product.placements.first.image.url }}{% endif %}" alt="{{ blank }}"/></a>
+                <div class="media-body">
+                <h6 class="widget-product-title">{{ blank }}</h6>
+                <div class="widget-product-meta"><span class="text-accent mr-2">${{ rs.price }}</span><span class="text-muted">x {{ rs.quantity }}</span></div>
+                </div>
+            </div>
+            </div>
+            {% endwith %}
+        {% endif %}
+        {% endfor %}
+
+    </div>
+    <div class="d-flex flex-wrap justify-content-between align-items-center py-3">
+        <div class="font-size-sm mr-2 py-2"><span class="text-muted">Subtotal:</span><span class="text-accent font-size-base ml-1">${{ cart.get_total_price }}</div><a class="btn btn-outline-secondary btn-sm" href="{% url 'cart:cart_detail' %}">Expand Cart<i class="czi-arrow-right ml-1 mr-n1"></i></a>
+    </div><a class="btn btn-primary btn-sm btn-block" href="{% url 'orders:order_create' %}"><i class="czi-card mr-2 font-size-base align-middle"></i>Checkout</a>
+    </div>
+</div>
+{% else %}
+{% endif %}

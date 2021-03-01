@@ -56,10 +56,10 @@ class OrderItemInline(admin.TabularInline):
     model = OrderItem
     show_change_link = True
     extra = 0
-    fields = ['preview','item','bundle2','is_digital_product2','technique','placement','price','quantity','ready_to_ship','log_entry','details']
+    fields = ['preview','variant','bundle2','product_type','is_digital_product2','technique','placement','price','quantity','ready_to_ship','log_entry','details']
     #exclude = ['json_data','cost','end_product_img','image']
     raw_id_fields = ['variant','bundle2']
-    readonly_fields = ('item','size','color','preview','technique','placement','price','quantity','ready_to_ship','log_entry','details','is_digital_product2')
+    readonly_fields = ('preview','technique','placement','price','quantity','details','is_digital_product2','product_type',)
     list_editable = ('ready_to_ship',)
     
 
@@ -104,6 +104,7 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline]
     actions = [export_to_csv]
     readonly_fields = ('paid','stripe_id','note')
+    list_editable = ['status']
 
     
 

@@ -7,22 +7,27 @@
     $(document).ready(function() {
         console.log('order list sayfasi burada');
 
-        $('#result_list .field-status').each(function() {
-            if($(this).html() === 'Cancelled' ){
+        $('#result_list .field-status select').each(function() {
+            console.log($(this).val(),'hey')
+            if($(this).val() === '4' ){
                 $(this).css('background-color', 'red')
                 console.log('cancelled');
             }
-            else if($(this).html() === 'Fulfilled'){
+            else if($(this).val() === '3'){
                 $(this).css('background-color', '#70BF2B')
             }
-            else if($(this).html() === 'In Queue'){
-                $(this).css('background-color', 'aqua')
-            }
-            else if($(this).html() === 'In Progress'){
+            else if($(this).val() === '2'){
                 $(this).css('background-color', 'yellow')
+            }
+            else if($(this).val() === '1'){
+                $(this).css('background-color', 'aqua')
             }
             
         });
+        $('#result_list .field-status select').on('change', function(){
+            console.log('degisti')
+            $("input[name='_save']").click()
+        })
 
     });
 })(django.jQuery);

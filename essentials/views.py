@@ -118,19 +118,9 @@ def change_size(request):
     form = CartAddProductForm()
     #if request.POST.get('action') == 'post':
     if request.is_ajax:
-        size_id = request.GET.get('size')
         product_id = request.GET.get('product_id')
-        place_id = request.GET.get('place_id', None)
-        method_id = request.GET.get('method_id', None)
+        size_id = request.GET.get('size')
         color_id = request.GET.get('color_id', None)
-        cart_data = request.GET.get('cart_data', None)
-
-        print(cart_data)    
-
-        placement = get_object_or_404(Placement, id=place_id)
-        method = get_object_or_404(Method, id=method_id)
-        
-
         #variant, placement ve size price'i degistirmek icin gerekli
         #variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0]
         try:
@@ -138,22 +128,26 @@ def change_size(request):
         except:
             # eger size degistirildiginde secili renk o size'da yoksa ilk rengi sec
             variant = Variant.objects.filter(product_id=product_id, size_id=size_id, color__texture__isnull=False).order_by('color_id')[0]
-            
-            print(variant.color)
-            print('burayi print ediyor mu')
 
-        
         if variant.color.texture:
             data['color_id'] = variant.color.texture.url
         else:
-            data['color_id'] = variant.color.color_code    
-        
+            data['color_id'] = variant.color.color_code 
+
         #color options
         colors = Variant.objects.filter(product_id=product_id, size_id=size_id).order_by('color_id')
+        method_id = request.GET.get('method_id', None)
+        if method_id != 'none':
+            method = get_object_or_404(Method, id=method_id)
+            place_id = request.GET.get('place_id', None)
+            placement = get_object_or_404(Placement, id=place_id)
+            data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price()
+        else:
+            data['price_all_included'] = variant.variant_price()
         
         context = {'size_id': size_id, 'colors': colors, 'variant':variant}
         context2 = {'ajax_variant':variant,'form':form}
-        data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price()
+        
         data['rendered_table'] =  render_to_string('color_list.html', context=context, request=request)
         data['variant_add_to_cart_url'] = render_to_string('add_to_cart_form.html',context=context2, request=request)
         #"/cart/add/"+str(variant.id)+"/"
@@ -165,17 +159,18 @@ def change_place(request):
     data = {}
     if request.is_ajax:
         product_id = request.GET.get('product_id', None)
-        place_id = request.GET.get('place_id', None)
-        method_id = request.GET.get('method_id', None)
         size_id = request.GET.get('size_id', None)
         color_id = request.GET.get('color_id', None)
-        placement = get_object_or_404(Placement, id=place_id)
-        method = get_object_or_404(Method, id=method_id)
         variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0] #burda get  de kullanabilirdim ama olaki size id'si ve color id'si ayni olan variant olusturulursa ilki secilecek
-        
-        print(placement, method, variant)
+        method_id = request.GET.get('method_id', None)
+        if method_id != 'none':
+            method = get_object_or_404(Method, id=method_id)
+            place_id = request.GET.get('place_id', None)
+            placement = get_object_or_404(Placement, id=place_id)
+            data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price()
+        else:
+            data['price_all_included'] = variant.variant_price()
         data['ajax'] = 'true'
-        data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price()
         return JsonResponse(data)
     data['ajax'] = 'false'
     data['price_all_included'] = 0
@@ -185,17 +180,18 @@ def change_method(request):
     data = {}
     if request.is_ajax:
         product_id = request.GET.get('product_id', None)
-        place_id = request.GET.get('place_id', None)
-        method_id = request.GET.get('method_id', None)
         size_id = request.GET.get('size_id', None)
         color_id = request.GET.get('color_id', None)
-        placement = get_object_or_404(Placement, id=place_id)
-        method = get_object_or_404(Method, id=method_id)
         variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0] #burda get  de kullanabilirdim ama olaki size id'si ve color id'si ayni olan variant olusturulursa ilki secilecek
-        
-        data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price()
+        method_id = request.GET.get('method_id', None)
+        if method_id != 'none':
+            place_id = request.GET.get('place_id', None)
+            placement = get_object_or_404(Placement, id=place_id)
+            method = get_object_or_404(Method, id=method_id)
+            data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price()
+        else:
+            data['price_all_included'] = variant.variant_price()
         return JsonResponse(data)
-
 
 
 def change_color(request):
@@ -203,17 +199,8 @@ def change_color(request):
     form = CartAddProductForm()
     if request.is_ajax:
         product_id = request.GET.get('product_id', None)
-        place_id = request.GET.get('place_id', None)
-        method_id = request.GET.get('method_id', None)
         size_id = request.GET.get('size_id', None)
         color_id = request.GET.get('color_id', None)
-        cart_data = request.GET.get('cart_data', None)
-        placement = get_object_or_404(Placement, id=place_id)
-        method = get_object_or_404(Method, id=method_id)
-        variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0] #burda get  de kullanabilirdim ama olaki size id'si ve color id'si ayni olan variant olusturulursa ilki secilecek
-        
-        print(cart_data)
-
         #variant, placement ve size price'i degistirmek icin gerekli
         color = get_object_or_404(Color, id=color_id)
         if color.texture:
@@ -221,7 +208,17 @@ def change_color(request):
         else:
             data['color_id'] = color.color_code
 
-        data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price(),
+        variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0] #burda get  de kullanabilirdim ama olaki size id'si ve color id'si ayni olan variant olusturulursa ilki secilecek
+        method_id = request.GET.get('method_id', None)
+
+        if method_id != 'none':
+            method = get_object_or_404(Method, id=method_id)
+            place_id = request.GET.get('place_id', None)
+            placement = get_object_or_404(Placement, id=place_id)
+            data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price()
+        else:
+            data['price_all_included'] = variant.variant_price()
+
         context = {'ajax_variant':variant,'form':form}
         data['variant_add_to_cart_url'] = render_to_string('add_to_cart_form.html',context=context, request=request)
         return JsonResponse(data)
@@ -280,7 +277,6 @@ def blank_single_item(request, id, slug, parent_category=None, subcategory=None)
             # parenti olan ilk urunu al
             while i.parent:
                 category = i
-                print(category, 'category nedir')
                 break
                 
 
@@ -328,18 +324,7 @@ def post_search(request):
         
         ).order_by('pk')
         result_list = list(chain(products, designs))
-        # page = request.GET.get('page', 1)
-        # paginator = Paginator(results_list, 4) # 4 posts in each page
-        # products = paginator.page(1)
-
-        # try:
-        #     products = paginator.page(page)
-        # except PageNotAnInteger:
-        #     # If page is not an integer deliver the first page
-        #     products = paginator.page(1)
-        # except EmptyPage:
-        #     # If page is out of range deliver last page of results
-        #     products = paginator.page(paginator.num_pages) 
+        
         context = {'form':form,'products':result_list}
         return render(request, 'search_page.html', context)
 

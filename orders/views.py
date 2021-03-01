@@ -95,7 +95,7 @@ def order_create(request):
             for item in cart:
                 
                 #eger digital product ise
-                if item['digital_product'] == True:
+                if item['type'] == 'digital':
                     print('if oldu')
                     # file = open(item['path'])
                     # downloadable_product = File(file)
@@ -108,9 +108,22 @@ def order_create(request):
                                             quantity=item['quantity'],
                                             bundle2 = item['product'],
                                             is_digital_product2=True,
-                                            end_product_img = item['product'].design_images.first().image
+                                            end_product_img = item['product'].design_images.first().image,
+                                            product_type = item['type']
                                             )   
-                    
+                elif item['type'] == 'blank':
+                    print('urun blank')
+                    try:
+                        end_product_img = get_image_from_data_url(item['end_product_img'])[0]
+                    except:
+                        end_product_img = None
+                    OrderItem.objects.create(order=order,
+                                            price=item['price'],
+                                            quantity=item['quantity'],
+                                            variant = item['product'],
+                                            end_product_img=end_product_img,
+                                            product_type = item['type']
+                                            ) 
                 else: 
                     print('else oldu')
                     try:
@@ -126,7 +139,8 @@ def order_create(request):
                                             quantity=item['quantity'],
                                             technique=item['technique'],
                                             placement = item['placement'],
-                                            json_data = item['json_data']
+                                            json_data = item['json_data'],
+                                            product_type = item['type']
                                             )
                     
 

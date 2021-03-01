@@ -84,6 +84,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ['id','image_tag','title',
     'brand',
     'variant_type','active','created_at','updated_at']
+    list_display_links = ['id','image_tag','title']
     list_filter = ['category','active','created_at','updated_at','brand']
     list_editable = [
         'brand',
@@ -112,14 +113,16 @@ class SizeAdmin(admin.ModelAdmin):
     search_fields = ['name',]
 
 class VariantAdmin(admin.ModelAdmin):
-    list_display = ['id','__str__','size','color','price','quantity','created_at','updated_at',]
+    list_display = ['id','__str__','size','color','price','quantity','uuid','created_at','updated_at',]
     list_filter = ['product','size','color',]
     search_fields = ['size','color',]
     save_as =True
 
-
+class DesignAdmin(admin.ModelAdmin):
+    list_display = ['id','image_tag','email','variant','uuid',]
+    list_display_links = ['id','image_tag']
     
-admin.site.register(Design)
+admin.site.register(Design, DesignAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Color, ColorAdmin)

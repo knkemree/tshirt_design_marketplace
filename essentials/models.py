@@ -1,3 +1,4 @@
+import uuid
 from ckeditor_uploader.fields import RichTextUploadingField
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
@@ -275,6 +276,7 @@ class Placement(models.Model):
 
 class Variant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants")
+    uuid = models.UUIDField(null=True, unique=False)
     size = models.ForeignKey(Size, on_delete=models.SET_NULL,blank=True,null=True)
     color = models.ForeignKey(Color, on_delete=models.SET_NULL,blank=True,null=True)
     #technique = models.ForeignKey(Technique, on_delete=models.CASCADE,blank=True,null=True)
@@ -309,21 +311,25 @@ class Variant(models.Model):
 
 
 class Design(models.Model):
+    #uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+    uuid = models.UUIDField(null=True, unique=False)
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE, related_name="designs", blank=True, null=True)
     email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name="designs", blank=True, null=True)
-    end_product_img = models.ImageField(upload_to='end_product_imgs/')
-    image = models.ImageField(upload_to='designs/')
+    end_product_img = models.ImageField(upload_to='end_product_imgs/',null=True, blank=True)
+    image = models.ImageField(upload_to='designs/', null=True, blank=True)
 
     def __str__(self):
         return 'Art #'+str(self.id)
 
     def image_tag(self):
-        img = self.product.image
-        color = self.color.code
-        if img is not None:
-             return mark_safe('<img src="{}" height="50" style="background-color:{}"/>'.format(img.url, color))
-        else:
-            return ""
+        if self.end_product_img:
+            img = self.end_product_img
+            #color = self.color.code
+            if img is not None:
+                return mark_safe('<img src="{}" height="100"/>'.format(img.url))
+            else:
+                return ""
+        return ''
 
 
 

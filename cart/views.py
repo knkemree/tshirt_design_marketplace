@@ -10,22 +10,20 @@ from .cart import Cart
 from .forms import CartAddProductForm
 from coupons.forms import CouponApplyForm
 from django.core.mail import mail_admins
+import uuid
 
 
 @require_POST
 def cart_add(request, variant_id, art_id=None):
     data = {}
     cart = Cart(request)
-    print('cartta nee var')
-    print(cart)
-    print(variant_id)
     if request.method == 'POST':
         form = CartAddProductForm(request.POST, request.FILES)
         if form.is_valid():
             cd = form.cleaned_data
             # if not updating qty create new design instance
             if cd['override'] == False:
-                art = Design.objects.create(email=request.user, variant_id=variant_id)
+                art = Design.objects.create(email=request.user, variant_id=variant_id, uuid=uuid.uuid4())
                 art.save()
             #if updating get art.id from session. session created when first click on add to cart
             else:
@@ -54,13 +52,40 @@ def cart_add(request, variant_id, art_id=None):
     #return JsonResponse(data)
 
 @require_POST
-def cart_remove(request, art_id):
+def cart_add_blank(request, uuid):
+    data = {}
     cart = Cart(request)
+    if request.method == 'POST':
+        form = CartAddProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            cd = form.cleaned_data
+            print(cd['quantity'], cd['override'], 'override')
+            cart.add_blank(
+                uuid=uuid,
+                quantity=cd['quantity'],
+                override_quantity=cd['override'],
+                end_product_img=cd['end_product_img'],
+            )
+            data['result'] = "succeded"
+            return redirect('cart:cart_detail')
+        else:
+            data['result'] = form.errors
+            return render('cart:cart_detail')
+
+@require_POST
+def cart_remove(request, uuid):
+    cart = Cart(request)
+    try:
+        #burasi cart'a eklenen tasarimi silmek icin. fazldan yer etmesine gerek yok onun icin siliyorum
+        product = get_object_or_404(Design, uuid=uuid)
+        cart.remove(product)
+        product.delete()
+    except:
+        #burasi blank priduct'i cart'tan kaldirmak icin
+        product = get_object_or_404(Variant, uuid=uuid)
+        cart.remove(product)
     
-    product = get_object_or_404(Design, id=art_id)
     
-    cart.remove(product)
-    product.delete()
     return redirect('cart:cart_detail')
 
 @require_POST

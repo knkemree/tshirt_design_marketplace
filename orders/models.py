@@ -75,14 +75,17 @@ class Order(models.Model):
     def save(self, *args, **kw):
         old = type(self).objects.get(pk=self.pk) if self.pk else None
         super(Order, self).save(*args, **kw)
-
-        # if old.status != 3 and self.status == 3: # if field changed
-        #     subject, from_email, to = 'Order #{} Ready!'.format(self.id), settings.DEFAULT_FROM_EMAIL, self.ordered_by
-        #     text_content = 'Order #{} has been processed. See details'.format(self.id)
-        #     html_content = "<p>Order #{} has been processed. See your <a href='https://contextcustom.com/orders/order/'>order history.</a></p>".format(self.id)
-        #     msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-        #     msg.attach_alternative(html_content, "text/html")
-        #     msg.send()
+        #bu olmazsa urunu ilk olustururken hata veriyor
+        try:
+            if old.status != '3' and self.status == '3': # if field changed
+                subject, from_email, to = 'Order #{} Ready!'.format(self.id), settings.DEFAULT_FROM_EMAIL, self.ordered_by.seller.email
+                text_content = 'Order #{} has been fulfilled. Check details'.format(self.id)
+                html_content = "<p>Order #{} has been fulfilled. Check your <a href='https://contextcustom.com/orders/order/'>order history.</a></p>".format(self.id)
+                msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+        except:
+            pass
 
 
 
@@ -105,6 +108,7 @@ class OrderItem(models.Model):
     #bundle1 = models.ForeignKey(design_for_sale, on_delete=models.SET_NULL, blank=True, null=True, to_field='uuid')
     #is_digital_product1 = models.BooleanField(default=False)
     bundle2 = models.ForeignKey(design_for_sale, on_delete=models.SET_NULL, blank=True, null=True, to_field='uuid', related_name='items')
+    product_type = models.CharField(max_length=50, blank=True, null=True)
     is_digital_product2 = models.BooleanField(default=False)
     #downloadable_product = models.FileField(upload_to='sold_digital_products/', null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)

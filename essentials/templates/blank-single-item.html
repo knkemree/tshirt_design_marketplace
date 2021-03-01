@@ -4,10 +4,23 @@
 {% block title %}{{ variant }}{% endblock %}
 
 {% block javascript %}
+
 <script>
 $(document).ready(function(){
     $( ".cz-preview-item:first" ).addClass('active');
     $( ".cz-thumblist-item:first" ).addClass('active');
+
+    function get_preview_image(){
+      var node = document.getElementById('tshirt-div');
+
+      domtoimage.toPng(node).then(function (dataUrl) {
+          var img = new Image();
+          img.src = dataUrl;
+          $('#id_end_product_img').val(dataUrl)
+      }).catch(function (error) {
+          console.error('oops, something went wrong!', error);
+      });
+    };
 
     function apply_current_price(){
       $.ajax({
@@ -36,9 +49,6 @@ $(document).ready(function(){
 
     var variant_add_to_cart_url //set global variable otherwise undefined
 
-
-    
-
     function apply_placement_id(){
       var placement_id = $('.cz-thumblist-item.active').attr('id');
       $( "#id_placement" ).val(placement_id);
@@ -47,7 +57,6 @@ $(document).ready(function(){
     $('.cz-thumblist-item').on('click', function(event){
       var place_id = $('.cz-thumblist-item.active').attr('id');
       apply_placement_id();
-      ajax_dynamic_canvas();
     });
 
     setTimeout(apply_placement_id(),1000);
@@ -67,6 +76,8 @@ $(document).ready(function(){
         dataType: 'json',
         success: function(data){
           // console.log(data.price_all_included); 
+
+          
           $('#price').text("$"+data.price_all_included);
         }
       });
@@ -85,10 +96,7 @@ $(document).ready(function(){
 
     function change_image_color(){
       var codeOrTexture = $('input[name=hexOrTexture]', '#post-color').val();
-      console.log('code or texture?')
-      console.log(codeOrTexture)
       let texture = codeOrTexture.startsWith("/");
-      console.log(texture)
       if (texture) {
         document.getElementById("tshirt-div").style.backgroundImage = "url(" + codeOrTexture + ")";
         $(".thumbnail_image").css("background-image", "url(" + codeOrTexture + ")");
@@ -125,7 +133,6 @@ $(document).ready(function(){
 
             // apply color
             let texture = data.color_id.startsWith("/");
-            console.log(texture)
 
             if (texture) {
             document.getElementById("tshirt-div").style.backgroundImage = "url(" + data.color_id + ")";
@@ -165,10 +172,8 @@ $(document).ready(function(){
         },
         dataType: 'json',
         success:  function(data){
+            get_preview_image();
             let texture = data.color_id.startsWith("/");
-            console.log('calisan burasi')
-            console.log(data.color_id)  
-            console.log(texture)
             if (texture) {
             document.getElementById("tshirt-div").style.backgroundImage = "url(" + data.color_id + ")";
             $(".thumbnail_image").css("background-image", "url(" + data.color_id + ")");
@@ -183,13 +188,15 @@ $(document).ready(function(){
             };
 
             $('#price').text("$"+data.price_all_included);
+            // aplly add to cart
+            $('#addToCartAppend').html(data.variant_add_to_cart_url);
 
-            variant_add_to_cart_url = data.variant_add_to_cart_url
-            console.log(data);
         }
       });
     };
 
+    
+    get_preview_image();// bunu calistir acilista cunku end_product_image'a preview image dataurl olarak girilmesi gerekiyor
 
     $('input[name=colorid]', '#post-color').change(function(){
       setTimeout(ajax_change_color(),1000)
@@ -197,11 +204,7 @@ $(document).ready(function(){
     });
 
   })
-
-
-
-  
-  
+ 
 </script>
 {% endblock %}
 
@@ -266,15 +269,15 @@ $(document).ready(function(){
 
                     <!-- thumbnail'larin oldugu yer -->
                     <form id="post-placement" method="POST" action="{% url 'essentials:change_place' %}">{% csrf_token %}
-                    <input type="hidden" value="{{ place.id }}" name="place_id">
                     <div class="cz-thumblist order-sm-1">
                         {% for place in product.placements.all %}
+                        <input type="hidden" value="{{ place.id }}" name="place_id">
                         <a class="cz-thumblist-item" href="#place{{place.id}}" id="{{ place.id }}">
                           <img style="max-height: 80px; width: auto; margin: auto;" data-toggle="tooltip" data-placement="right" title="{{ place }}"  src="{{ place.image.url }}" alt="Product thumb" class="thumbnail_image">
                         </a>
                         {% endfor %}
                     </div>
-                  </form>
+                    </form>
                     <!-- END thumbnail'larin oldugu yer -->
                   </div>
                 </div>
@@ -326,6 +329,7 @@ $(document).ready(function(){
                       <form method="POST" id="post-technique">{% csrf_token %}
                         <label class="font-weight-medium" for="technique">Technique:</label>
                         <select class="form-control custom-select" name="technique" id="technique" required>
+                          <option value="none">------</option>
                           {% for technique in product.methods.all %}
                           <option value="{{ technique.id }}">{{ technique }}</option>
                           {% endfor %}
@@ -337,10 +341,15 @@ $(document).ready(function(){
 
 
                     <!-- qty ve add to cart butonunun oldugu yer -->
-                    <div class="form-group d-flex align-items-center">{% csrf_token %}
+                    <div id="addToCartAppend"></div>
+                    <form id='addtocartform-bp' action="{% url 'cart:cart_add_blank' variant.uuid %}" method="POST">
+                      <div class="form-group d-flex align-items-center">{% csrf_token %}
                         {{ cart_product_form }}
-                        <input id='addtocartButton' type="submit" class="btn btn-primary btn-block disabled" value="Add to Cart">
-                    </div>
+                        <input id='addtocartButton' type="submit" class="btn btn-primary btn-block" value="Add to Cartt">
+                      </div>
+                    </form>
+                   
+                    
                     <!-- END qty ve add to cart butonunun oldugu yer -->
 
 

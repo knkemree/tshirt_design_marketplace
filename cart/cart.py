@@ -29,7 +29,7 @@ class Cart(object):
         Add a product to the cart or update its quantity.
         """
 
-        art_id = str(art.id)
+        art_id = str(art.uuid)
 
         # burasi olmazsa update ederken hata veriyor
         try:
@@ -53,6 +53,7 @@ class Cart(object):
                                     'technique': str(method),
                                     'placement':str(placement),
                                     'digital_product':False,
+                                    'type':'custom',
                                     }
         if override_quantity:
             self.cart[art_id]['quantity'] = quantity
@@ -62,13 +63,35 @@ class Cart(object):
 
     def add_design(self, instance_pk, quantity,):
         instance = get_object_or_404(design_for_sale, pk = instance_pk)
-        if str(instance.pk) not in self.cart:
-            self.cart[str(instance.pk)] ={
+        if str(instance.uuid) not in self.cart:
+            self.cart[str(instance.uuid)] ={
                                         'title':str(instance.title),
                                         'price':str(instance.price),
                                         'quantity': 1,
                                         'digital_product':True,
+                                        'type':'digital'
                                     }
+        self.save()
+
+    def add_blank(self, uuid, end_product_img=None, quantity=1, override_quantity=False,):
+        variant = get_object_or_404(Variant, uuid=uuid)
+        print(override_quantity, 'false omasi lazim')
+        if str(variant.uuid) not in self.cart:
+            self.cart[str(variant.uuid)] = {
+                'title':str(variant),
+                'price':str(variant.price),
+                'quantity': 0,
+                'end_product_img': end_product_img,
+                'digital_product':False,
+                'type':'blank'
+            }
+
+        if override_quantity:
+            self.cart[str(variant.uuid)]['quantity'] = quantity
+            
+        else:
+            self.cart[str(variant.uuid)]['quantity'] += quantity
+            
         self.save()
 
     def save(self):
@@ -79,7 +102,7 @@ class Cart(object):
         """
         Remove a product from the cart.
         """
-        product_id = str(product.pk)
+        product_id = str(product.uuid)
         if product_id in self.cart:
             del self.cart[product_id]
             self.save()
@@ -94,15 +117,23 @@ class Cart(object):
         products = []
         for i in product_ids:
             try:
-                p = Design.objects.get(pk=i)
-                products.append(p)
+                try:
+                    p = Design.objects.get(uuid=i)
+                    products.append(p)
+                except:
+                    p = Variant.objects.get(uuid=i)
+                    products.append(p)
             except:
-                p = design_for_sale.objects.get(pk=i)
+                p = design_for_sale.objects.get(uuid=i)
                 products.append(p)
         #products = design_for_sale.objects.filter(uuid__in=product_ids)
         cart = self.cart.copy()
         for product in products:
-            cart[str(product.pk)]['product'] = product
+            try:
+                cart[str(product.uuid)]['product'] = product
+            except:
+                #design modelin pk'i uuid olmadigi icin bu exception'i kullanmak gerekiyor. Essentials'daki design modelinin primary key'i uuid olunca bu exception silinebilir
+                cart[str(product.uuid)]['product'] = product
         for item in cart.values():
             item['price'] = Decimal(item['price'])
             item['total_price'] = item['price'] * item['quantity']

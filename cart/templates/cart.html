@@ -70,7 +70,7 @@
         </div>
         <!-- Item-->
         {% for item in cart %}
-        {% if item.digital_product %}
+        {% if item.type == 'digital' %}
         {% with design=item.product %}
         <div class="d-sm-flex justify-content-between align-items-center my-4 pb-3 border-bottom">
           <div class="media media-ie-fix d-block d-sm-flex align-items-center text-center text-sm-left"><a class="d-inline-block mx-auto mr-sm-4" href="{{ design.get_absolute_url }}" style="width: 10rem;"><img src="{{ design.design_images.first.image.url }}" alt="{{ design.title }}"></a>
@@ -100,12 +100,12 @@
 
         {% endwith %}
         
-        {% else %}
+        {% elif item.type == 'custom' %}
           {% with design=item.product %}
           <div class="d-sm-flex justify-content-between align-items-center my-4 pb-3 border-bottom">
             <div class="media media-ie-fix d-block d-sm-flex align-items-center text-center text-sm-left"><img style="width: 10rem;" class="d-inline-block mx-auto mr-sm-4" src="{% if item.end_product_img %}{{ item.end_product_img }}{% else %}{{ design.variant.product.image.url }}{% endif %}" alt="product image">
               <div class="media-body pt-2">
-                <h3 class="product-title font-size-base mb-2">{{ item.variant }}</h3>
+                <h3 class="product-title font-size-base mb-2">{{ design.variant.product }}</h3>
                 <!-- <div class="font-size-sm"><span class="text-muted mr-2">Placement:</span>{{ item.placement}}</div> -->
                 <div class="font-size-sm"><span class="text-muted mr-2">Technique:</span>{{ item.technique}}</div>
                 <div class="font-size-sm"><span class="text-muted mr-2">Placement:</span>{{ item.placement}}</div>
@@ -114,25 +114,55 @@
                 <div class="font-size-lg text-accent pt-2">${{ item.price }}</div>
               </div>
             </div>
+            <form class="update_form"  action="{% url 'cart:cart_update' design.variant.id design.pk %}" method="post">
             <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
-              <form action="{% url 'cart:cart_update' design.variant.id design.pk %}" method="post">
                 {{ item.update_quantity_form.quantity }}
                 {{ item.update_quantity_form.override }}
-                <button class="btn btn-outline-accent btn-sm" type="submit"><i class="czi-loading font-size-base mr-2"></i>Update</button>
                 {% csrf_token %}
-              </form>
-              <!-- <div class="form-group mb-0">
-                <label class="font-weight-medium" for="quantity1">Quantity</label>
-                <input class="form-control" type="number" id="quantity1" value={{ item.quantity }}>
-              </div> -->
+            </div>
+            </form>
+            <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
+              <button onclick="$('.update_form').closest('form').submit();" class="btn btn-link px-0 text-accent" type="submit" data-toggle="tooltip" data-placement="bottom" title="Update"><i class="czi-loading mr-2"></i></button>
             </div>
             <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
-              <form action="{% url 'cart:cart_remove' design.id %}" method="post">
+              <form action="{% url 'cart:cart_remove' design.uuid %}" method="post">
                 {% csrf_token %}
                 <button class="btn btn-link px-0 text-danger" type="submit"><i class="czi-trash mr-2"></i></button>
               </form>
             </div>
             
+          </div>
+          {% endwith %}
+        {% else%}
+          {% with blank=item.product %}
+          <div class="d-sm-flex justify-content-between align-items-center my-4 pb-3 border-bottom">
+            <div class="media media-ie-fix d-block d-sm-flex align-items-center text-center text-sm-left">
+              <a href="{{ blank.product.get_absolute_url }}">
+                <img style="width: 10rem; {% if blank.color.texture %}background-image:url({{ blank.color.texture.url }}) {% else %} background-color:{{ blank.color.color_code }} {% endif %};" class="d-inline-block mx-auto mr-sm-4" src="{% if blank.product.placements.first.image %}{{ blank.product.placements.first.image.url }}{% endif %}" alt="{{ blank }}">
+              </a>
+              <div class="media-body pt-2">
+                <h3 class="product-title font-size-base mb-2"><a href="{{ blank.product.get_absolute_url }}">{{ blank.product.title }}</a></h3>
+                <div class="font-size-sm"><span class="text-muted mr-2">Size:</span>{{ blank.size}}</div>
+                <div class="font-size-sm"><span class="text-muted mr-2">Color:</span>{{ blank.color }}</div>
+                <div class="font-size-lg text-accent pt-2">${{ blank.price }}</div>
+              </div>
+            </div>
+            <form class="update_form" action="{% url 'cart:cart_add_blank' blank.uuid %}" method="post">
+            <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
+                {{ item.update_quantity_form.quantity }}
+                {{ item.update_quantity_form.override }}
+                {% csrf_token %}
+            </div>
+            </form>
+            <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
+              <button onclick="$('.update_form').closest('form').submit();" class="btn btn-link px-0 text-accent" type="submit" data-toggle="tooltip" data-placement="bottom" title="Update"><i class="czi-loading mr-2"></i></button>
+            </div>
+            <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
+              <form action="{% url 'cart:cart_remove' blank.uuid %}" method="post">
+                {% csrf_token %}
+                <button class="btn btn-link px-0 text-danger" type="submit" data-toggle="tooltip" data-placement="bottom" title="Remove"><i class="czi-trash mr-2"></i></button>
+              </form>
+            </div>
           </div>
           {% endwith %}
         {% endif %}
