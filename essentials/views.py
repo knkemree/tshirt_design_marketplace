@@ -121,6 +121,7 @@ def change_size(request):
         product_id = request.GET.get('product_id')
         size_id = request.GET.get('size')
         color_id = request.GET.get('color_id', None)
+        product_type =  request.GET.get('type', None)
         #variant, placement ve size price'i degistirmek icin gerekli
         #variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0]
         try:
@@ -136,19 +137,21 @@ def change_size(request):
 
         #color options
         colors = Variant.objects.filter(product_id=product_id, size_id=size_id).order_by('color_id')
-        method_id = request.GET.get('method_id', None)
-        if method_id != 'none':
+        context = {'size_id': size_id, 'colors': colors, 'variant':variant}
+        if product_type == 'blank':
+            place_id = request.GET.get('place_id', None)
+            placement = get_object_or_404(Placement, id=place_id)
+            data['price_all_included'] = variant.variant_price()+placement.placement_price()
+            data['rendered_table'] =  render_to_string('blank_page_color_list.html', context=context, request=request)
+        else:
+            method_id = request.GET.get('method_id', None)
             method = get_object_or_404(Method, id=method_id)
             place_id = request.GET.get('place_id', None)
             placement = get_object_or_404(Placement, id=place_id)
             data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price()
-        else:
-            data['price_all_included'] = variant.variant_price()
-        
-        context = {'size_id': size_id, 'colors': colors, 'variant':variant}
+            data['rendered_table'] =  render_to_string('color_list.html', context=context, request=request)
+            
         context2 = {'ajax_variant':variant,'form':form}
-        
-        data['rendered_table'] =  render_to_string('color_list.html', context=context, request=request)
         data['variant_add_to_cart_url'] = render_to_string('add_to_cart_form.html',context=context2, request=request)
         #"/cart/add/"+str(variant.id)+"/"
         
@@ -161,15 +164,18 @@ def change_place(request):
         product_id = request.GET.get('product_id', None)
         size_id = request.GET.get('size_id', None)
         color_id = request.GET.get('color_id', None)
+        product_type =  request.GET.get('type', None)
         variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0] #burda get  de kullanabilirdim ama olaki size id'si ve color id'si ayni olan variant olusturulursa ilki secilecek
-        method_id = request.GET.get('method_id', None)
-        if method_id != 'none':
+        if product_type == 'blank':
+            place_id = request.GET.get('place_id', None)
+            placement = get_object_or_404(Placement, id=place_id)
+            data['price_all_included'] = variant.variant_price()+placement.placement_price()
+        else:
+            method_id = request.GET.get('method_id', None)
             method = get_object_or_404(Method, id=method_id)
             place_id = request.GET.get('place_id', None)
             placement = get_object_or_404(Placement, id=place_id)
             data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price()
-        else:
-            data['price_all_included'] = variant.variant_price()
         data['ajax'] = 'true'
         return JsonResponse(data)
     data['ajax'] = 'false'
@@ -201,23 +207,27 @@ def change_color(request):
         product_id = request.GET.get('product_id', None)
         size_id = request.GET.get('size_id', None)
         color_id = request.GET.get('color_id', None)
+        product_type =  request.GET.get('type', None)
         #variant, placement ve size price'i degistirmek icin gerekli
         color = get_object_or_404(Color, id=color_id)
         if color.texture:
             data['color_id'] = color.texture.url
         else:
             data['color_id'] = color.color_code
-
+        print(product_id, color_id, size_id)
         variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0] #burda get  de kullanabilirdim ama olaki size id'si ve color id'si ayni olan variant olusturulursa ilki secilecek
-        method_id = request.GET.get('method_id', None)
-
-        if method_id != 'none':
+        
+        if product_type == 'blank':
+            place_id = request.GET.get('place_id', None)
+            placement = get_object_or_404(Placement, id=place_id)
+            data['price_all_included'] = variant.variant_price()+placement.placement_price()
+        else:
+            method_id = request.GET.get('method_id', None)
             method = get_object_or_404(Method, id=method_id)
             place_id = request.GET.get('place_id', None)
             placement = get_object_or_404(Placement, id=place_id)
             data['price_all_included'] = variant.variant_price()+placement.placement_price()+method.method_price()
-        else:
-            data['price_all_included'] = variant.variant_price()
+        
 
         context = {'ajax_variant':variant,'form':form}
         data['variant_add_to_cart_url'] = render_to_string('add_to_cart_form.html',context=context, request=request)

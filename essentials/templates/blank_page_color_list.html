@@ -1,0 +1,95 @@
+
+
+{% load static %}
+{% block javascript %}
+<script src="{% static 'js/theme.min.js' %}"></script>
+<script>
+$(document).ready(function() {  
+    
+
+    function get_preview_image(){
+      var node = document.getElementById('tshirt-div');
+
+      domtoimage.toPng(node).then(function (dataUrl) {
+          var img = new Image();
+          img.src = dataUrl;
+          $('#id_end_product_img').val(dataUrl)
+      }).catch(function (error) {
+          console.error('oops, something went wrong!', error);
+      });
+    };
+
+    function ajax_change_color(){
+        
+        $.ajax({ 
+        url: "{% url 'essentials:change_color' %}",
+        data: {
+            'product_id':$('#productid').val(),
+            'place_id': $('.cz-thumblist-item.active').attr('id'),
+            'type': 'blank',
+            'size_id': $('#size-selector').val(),
+            'color_id': $('input[name=colorid]:checked', '#post-color').val(),
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]', '#post-color').val(),
+        },
+        dataType: 'json',
+        success:  function(data){
+            get_preview_image();
+            let texture = data.color_id.startsWith("/");
+
+            if (texture) {
+            document.getElementById("tshirt-div").style.backgroundImage = "url(" + data.color_id + ")";
+            $(".thumbnail_image").css("background-image", "url(" + data.color_id + ")");
+            
+            } else {
+                if(document.getElementById("tshirt-div").style.backgroundImage){
+                    $("#tshirt-div").css('background-image', 'none');
+                    $(".thumbnail_image").css('background-image', 'none');
+                };
+                document.getElementById("tshirt-div").style.backgroundColor = data.color_id;
+                $(".thumbnail_image").css("background-color", data.color_id);
+            };
+
+            $('#price').text("$"+data.price_all_included);
+
+            $('#addToCartAppend').html(data.variant_add_to_cart_url);
+           
+            
+            
+        }
+        });
+    };
+
+    
+
+
+    $('input[name=colorid]', '#post-color').change(function(){
+        // $('#post-color').submit();
+        // dogru variant'i checked olarak gostrebilmek icin change_size calistirmak gerekiyor
+        setTimeout(ajax_change_color(),1000)   
+    });
+});
+</script>
+{% endblock %}
+
+
+
+{% for rs in colors %}
+
+    <div class="custom-control custom-option custom-control-inline mb-2">
+        <input type="radio" style="display: none;" name="hexOrTexture" value="{% if rs.color.texture %}{{ rs.color.texture.url }}{% else %}{{ rs.color.color_code }}{% endif %}" {% if variant.id == rs.id %} checked {% endif %}>
+        <input type="hidden" name="variantid" value="{{ rs.id }}" {% if variant.id == rs.id %} checked {% endif %}>
+        <input class="custom-control-input" data-label="colorOption" type="radio" name="colorid" id="{{ rs.color.id }}" value="{{ rs.color.id }}" {% if variant.id == rs.id %} checked {% endif %}>
+        <label data-toggle="tooltip" data-placement="bottom" title="{{ rs.color.name }}" class="custom-option-label rounded-circle" for="{{ rs.color.id }}"><span class="custom-option-color rounded-circle" style="{% if rs.color.texture %}background-image: url({{ rs.color.texture.url }}){% else %}background-color: {{ rs.color.color_code }}{% endif %}"></span></label>
+    </div>
+    <!-- {% if ajax_variant.id == rs.id %}
+    <script>
+        $(document).ready(function(e) { 
+            e.preventDefault();
+            $( "#post-color" ).submit();
+        })
+        
+    </script>
+    {% endif %} -->
+{% endfor %}
+
+
