@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}
-  Your shopping cart
+  My shopping cart | Context Custom
 {% endblock %}
 
 {% block javascript %}
@@ -56,7 +56,7 @@
         </nav>
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
-        <h1 class="h3 text-light mb-0">Your cart</h1>
+        <h1 class="h3 text-light mb-0">My cart</h1>
       </div>
     </div>
   </div>
@@ -69,6 +69,7 @@
           <h2 class="h6 text-light mb-0">Products</h2><a class="btn btn-outline-primary btn-sm pl-2" href="{% url 'essentials:product_list' %}"><i class="czi-arrow-left mr-2"></i>Continue shopping</a>
         </div>
         <!-- Item-->
+        {% if cart %}
         {% for item in cart %}
         {% if item.type == 'digital' %}
         {% with design=item.product %}
@@ -114,7 +115,7 @@
                 <div class="font-size-lg text-accent pt-2">${{ item.price }}</div>
               </div>
             </div>
-            <form class="update_form"  action="{% url 'cart:cart_update' design.variant.id design.pk %}" method="post">
+            <form id="{{ design.pk }}" class="update_form"  action="{% url 'cart:cart_update' design.variant.id design.pk %}" method="post">
             <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
                 {{ item.update_quantity_form.quantity }}
                 {{ item.update_quantity_form.override }}
@@ -122,7 +123,7 @@
             </div>
             </form>
             <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
-              <button onclick="$('.update_form').closest('form').submit();" class="btn btn-link px-0 text-accent" type="submit" data-toggle="tooltip" data-placement="bottom" title="Update"><i class="czi-loading mr-2"></i></button>
+              <button onclick="$('#{{ design.pk }}').submit();" class="btn btn-link px-0 text-accent" type="submit" data-toggle="tooltip" data-placement="bottom" title="Update"><i class="czi-loading mr-2"></i></button>
             </div>
             <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
               <form action="{% url 'cart:cart_remove' design.uuid %}" method="post">
@@ -147,7 +148,7 @@
                 <div class="font-size-lg text-accent pt-2">${{ blank.price }}</div>
               </div>
             </div>
-            <form class="update_form" action="{% url 'cart:cart_add_blank' blank.uuid %}" method="post">
+            <form id="{{ blank.uuid }}" class="update_form" action="{% url 'cart:cart_add_blank' blank.uuid %}" method="post">
             <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
                 {{ item.update_quantity_form.quantity }}
                 {{ item.update_quantity_form.override }}
@@ -155,8 +156,9 @@
             </div>
             </form>
             <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
-              <button onclick="$('.update_form').closest('form').submit();" class="btn btn-link px-0 text-accent" type="submit" data-toggle="tooltip" data-placement="bottom" title="Update"><i class="czi-loading mr-2"></i></button>
+              <button onclick="$('#{{ blank.uuid }}').submit();" class="btn btn-link px-0 text-accent" type="submit" data-toggle="tooltip" data-placement="bottom" title="Update"><i class="czi-loading mr-2"></i></button>
             </div>
+            <div></div>
             <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
               <form action="{% url 'cart:cart_remove' blank.uuid %}" method="post">
                 {% csrf_token %}
@@ -167,6 +169,9 @@
           {% endwith %}
         {% endif %}
         {% endfor %}
+        {% else%}
+        <h6 class="text-center mt-5">You don't have any items in your cart. <a href="{% url 'essentials:product_list' %}">Go Shopping!</a></h6>
+        {% endif %}
         
         <!-- <button class="btn btn-outline-accent btn-block" type="button"><i class="czi-loading font-size-base mr-2"></i>Update cart</button> -->
       </section>

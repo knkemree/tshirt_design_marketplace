@@ -30,14 +30,11 @@ class Cart(object):
         """
 
         art_id = str(art.uuid)
-
         # burasi olmazsa update ederken hata veriyor
         try:
             placement = get_object_or_404(Placement, id=placement)
             method = get_object_or_404(Method, id=technique)
-            print('placement burda')
         except:
-            print('placement bulunamiyor')
             pass
         if art_id not in self.cart:
             self.cart[art_id] = {'variant':str(variant),
@@ -86,9 +83,8 @@ class Cart(object):
                 'type':'blank'
             }
 
-        if override_quantity:
+        if override_quantity == True:
             self.cart[str(variant.uuid)]['quantity'] = quantity
-            
         else:
             self.cart[str(variant.uuid)]['quantity'] += quantity
             
