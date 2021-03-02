@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from essentials.models import Design, Product, Variant
@@ -53,6 +53,7 @@ def cart_add(request, variant_id, art_id=None):
 
 @require_POST
 def cart_add_blank(request, uuid):
+    url = request.META.get('HTTP_REFERER')
     data = {}
     cart = Cart(request)
     if request.method == 'POST':
@@ -67,10 +68,10 @@ def cart_add_blank(request, uuid):
                 end_product_img=cd['end_product_img'],
             )
             data['result'] = "succeded"
-            return redirect('cart:cart_detail')
+            return HttpResponseRedirect(url)
         else:
             data['result'] = form.errors
-            return render('cart:cart_detail')
+            return HttpResponseRedirect(url)
 
 @require_POST
 def cart_remove(request, uuid):

@@ -304,6 +304,42 @@ $(document).ready(function(){
                         <input id='addtocartButton' type="submit" class="btn btn-primary btn-block" value="Add to Cart">
                       </div>
                     </form>
+                    <!-- <script>
+                      function add_to_cart() {
+                        $( "#addtocartButton" ).prop('disabled',true);
+                        $(document.body).css({'cursor' : 'wait'});
+                        var add_to_cart_form = $('#addtocartform-bp');
+                        var action = add_to_cart_form.attr('action');
+                        var method = add_to_cart_form.attr('method');
+                        var cart_data = add_to_cart_form.serialize();
+                        $.ajax({
+                            url : action, // the endpoint
+                            type : method, // http method
+                            data : cart_data, // data sent with the post request
+                            // handle a successful response
+                            success : function(data) {
+                                console.log("success"); // another sanity check
+                                $(document.body).css({'cursor' : 'default'});
+                                $( "#addtocartButton" ).prop('disabled', false);
+                                
+                            },
+                            // handle a non-successful response
+                            error : function(xhr,errmsg,err) {
+                              $( "#addtocartButton" ).prop('disabled', false);
+                              $(document.body).css({'cursor' : 'default'});
+                                $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                                    " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+                                console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+                            }
+                        });
+                      };
+
+                      $('#addtocartform-bp').on('submit', function(event){
+                        event.preventDefault();
+                        add_to_cart();
+                      });
+                      
+                    </script> -->
                    
                     
                     <!-- END qty ve add to cart butonunun oldugu yer -->
