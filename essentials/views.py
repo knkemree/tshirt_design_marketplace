@@ -94,14 +94,18 @@ def product_list(request, category_slug=None):
 @login_required(login_url='/signup/')
 def product_detail(request, id, slug):
     query = request.GET.get('query', None)
-    print(query, 'query burda')
+    category_id = request.GET.get('category', None)
+    
     product = get_object_or_404(Product,id=id,slug=slug,active=True)
     #techniques = product.technique.all()
 
+    if category_id:
+        category = get_object_or_404(Category, id=category_id)
+    else:
+        category = None
     variants = Variant.objects.filter(product_id=id).order_by('size__row_no','color_id',)
     if query:
         variant = Variant.objects.get(uuid=query)
-        print(variant, 'variant burda')
     else:
         variant = Variant.objects.get(id=variants[0].id)
     sizes = Variant.objects.filter(product_id = product.id).order_by('size_id').distinct('size__id')
@@ -115,7 +119,7 @@ def product_detail(request, id, slug):
     others = random.sample(others, qty)
     
     cart_product_form = CartAddProductForm()
-    context = {'product': product,'cart_product_form': cart_product_form,'sizes':sizes, 'colors':colors,  'variant':variant, 'others':others}
+    context = {'product': product,'cart_product_form': cart_product_form,'sizes':sizes, 'colors':colors,  'variant':variant, 'others':others, 'category':category}
     return render(request,'detail2.html',context)
 
 def change_size(request):

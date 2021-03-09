@@ -312,10 +312,10 @@ $(document).ready(function(){
                     
                     <!-- END qty ve add to cart butonunun oldugu yer -->
 
-
                     <!-- start designing butonu burda -->
                     <form  id="startDesigning" action="{% url 'essentials:product_detail' product.id  product.slug %}" method="GET">
                       <input type="hidden" name="query" value="{{ variant.uuid }}">
+                      <input type="hidden" name="category" value="{{ category.id }}">
                       <div class="d-flex align-items-center pt-2 pb-4">
                         <input id='startDesigningButton' type="submit" class="btn btn-success btn-shadow btn-block" value="Start Designing">
                       </div>

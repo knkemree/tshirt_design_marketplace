@@ -310,11 +310,11 @@
           <nav class="mb-4" aria-label="breadcrumb">
             <ol class="breadcrumb flex-lg-nowrap">
               <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i>Home</a></li>
-              {% if product.category.first.parent %}<li class="breadcrumb-item text-nowrap"><a href="{{ product.category.first.parent.get_absolute_url }}">{{ product.category.first.parent.title|truncatewords:4 }}</a>{% endif %}
-              <li class="breadcrumb-item text-nowrap"><a href="{{ product.category.first.get_absolute_url }}">{{ product.category.first|truncatewords:4 }}</a>
+              {% if category.parent %}<li class="breadcrumb-item text-nowrap"><a href="{{ category.parent.get_absolute_url }}">{{ category.parent.title|truncatewords:4 }}</a>{% endif %}
+              <li class="breadcrumb-item text-nowrap"><a href="{{ category.get_absolute_url }}">{{ category.title|truncatewords:4 }}</a>
               </li>
-              <li class="breadcrumb-item text-nowrap" aria-current="page"><a href="{{ product.get_absolute_url }}"> {{ product.title|truncatewords:4 }}</a></li>
-              <li class="breadcrumb-item text-nowrap active" aria-current="page">Designing...</li>
+              <li class="breadcrumb-item text-nowrap active" aria-current="page"><a href="{{ product.get_absolute_url }}"> {{ product.title|truncatewords:4 }}</a></li>
+              
             </ol>
           </nav>
           <!-- Content-->
@@ -413,7 +413,7 @@
                 </div>
                 </form>
                 <!-- END size seceneklerinin oldugu yer -->
-
+                
                 <!-- color seceneklerinin oldugu yer -->
                 <div class="font-size-sm mb-3"><span class="text-heading font-weight-medium mr-1">Color:</span></div>
                 <div class="position-relative mr-n4 mb-3">
