@@ -500,10 +500,7 @@ $(document).ready(function(){
   // end of document ready
 
     // <!-- product ayarlari buranin asagisindan -->
-      console.log('product js html calisti ')
       wd = $('#tshirt-div').width()
-      console.log(wd, 'genislik')
-      console.log($('#tshirt-div').height(), 'yukseklik')
       $( ".cz-preview-item:first" ).addClass('active');
       $( ".cz-thumblist-item:first" ).addClass('active');
   
@@ -620,7 +617,6 @@ $(document).ready(function(){
       function change_image_color(){
         var codeOrTexture = $('input[name=hexOrTexture]', '#post-color').val();
         let texture = codeOrTexture.startsWith("/");
-        console.log(texture)
         if (texture) {
           document.getElementById("tshirt-div").style.backgroundImage = "url(" + codeOrTexture + ")";
           $(".thumbnail_image").css("background-image", "url(" + codeOrTexture + ")");
@@ -688,6 +684,7 @@ $(document).ready(function(){
   
       function ajax_change_color(){
         $( "#addtocartButton" ).addClass('disabled');
+        console.log('ajax change color calistirildi')
         $.ajax({ 
           url: "{% url 'essentials:change_color' %}",
           data: {
@@ -726,8 +723,10 @@ $(document).ready(function(){
           }
         });
       };
-  
-  
+      
+      // start desinginde basildiktan sonra bu sayfa aciiyor ve bir onceki sayfa secilen rengin apply edilmesi ici bu kodu calistimak gerekiyor
+      ajax_change_color();
+
       $('input[name=colorid]', '#post-color').change(function(){
         
         setTimeout(ajax_change_color(),1000)

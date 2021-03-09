@@ -271,6 +271,7 @@ $(document).ready(function(){
                         {% csrf_token %}
                         <div id="appendHere">
                           {% for rs in colors %}
+                          
                               <div class="custom-control custom-option custom-control-inline mb-2">
                                   <input type="text" style="display: none;" name="hexOrTexture" value="{% if rs.color.texture %}{{ rs.color.texture.url }}{% else %}{{ rs.color.color_code }}{% endif %}" {% if variant.id == rs.id %} checked {% endif %}>
                                   <input type="hidden" name="variantid" value="{{ rs.id }}" {% if variant.id == rs.id %} checked {% endif %}>
@@ -314,7 +315,7 @@ $(document).ready(function(){
 
                     <!-- start designing butonu burda -->
                     <form  id="startDesigning" action="{% url 'essentials:product_detail' product.id  product.slug %}" method="GET">
-                      <!-- <input type="text" name="query" value="{{ variant.uuid }}"> -->
+                      <input type="hidden" name="query" value="{{ variant.uuid }}">
                       <div class="d-flex align-items-center pt-2 pb-4">
                         <input id='startDesigningButton' type="submit" class="btn btn-success btn-shadow btn-block" value="Start Designing">
                       </div>

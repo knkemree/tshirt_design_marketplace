@@ -93,15 +93,19 @@ def product_list(request, category_slug=None):
 
 @login_required(login_url='/signup/')
 def product_detail(request, id, slug):
-    query = request.GET.get('query')
+    query = request.GET.get('query', None)
     print(query, 'query burda')
     product = get_object_or_404(Product,id=id,slug=slug,active=True)
     #techniques = product.technique.all()
 
     variants = Variant.objects.filter(product_id=id).order_by('size__row_no','color_id',)
-    variant = Variant.objects.get(id=variants[0].id)
+    if query:
+        variant = Variant.objects.get(uuid=query)
+        print(variant, 'variant burda')
+    else:
+        variant = Variant.objects.get(id=variants[0].id)
     sizes = Variant.objects.filter(product_id = product.id).order_by('size_id').distinct('size__id')
-    colors = Variant.objects.filter(product_id=id,size_id=variants[0].size_id ).order_by('color_id').distinct('color__id')
+    colors = Variant.objects.filter(product_id=id,size_id=variant.size_id ).order_by('color_id').distinct('color__id')
 
     others = list(Product.objects.all())
     if len(others) > 7:
@@ -313,7 +317,7 @@ def blank_single_item(request, id, slug, parent_category=None, subcategory=None)
     variant = Variant.published.get(id=variants[0].id)
     sizes = Variant.published.filter(product_id = product.id).order_by('size_id').distinct('size__id')
     #sizes = product.szs.all()
-    colors = Variant.published.filter(product_id=id,size_id=variants[0].size_id ).order_by('color_id').distinct('color__id')
+    colors = Variant.published.filter(product_id=id,size_id=variant.size_id ).order_by('color_id').distinct('color__id')
     
     cart_product_form = CartAddProductForm()
     context = {'product': product,'cart_product_form': cart_product_form,'sizes':sizes, 'colors':colors,  'variant':variant, 'parent':parent,'category':category, 'others':others}
