@@ -5,6 +5,8 @@ $(document).ready(function(){
 
   var add_to_cart_form = $('#addtocartform');
   var action = add_to_cart_form.attr('action', "{% url 'cart:cart_add' ajax_variant.id %}");
+  
+  $("#startDesigning input[name=query]").val('{{ ajax_variant.uuid }}');
 })
  
 </script>

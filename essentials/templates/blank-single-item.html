@@ -99,9 +99,8 @@ $(document).ready(function(){
 
             // aplly add to cart
             variant_add_to_cart_url = data.variant_add_to_cart_url
-            $('#addToCartAppend1').html(data.variant_add_to_cart_url);
-            console.log(data.variant_add_to_cart_url, 'ad to cart url print')
-
+            $('#addToCartAppend').html(data.variant_add_to_cart_url);
+           
             // apply color
             let texture = data.color_id.startsWith("/");
 
@@ -159,8 +158,10 @@ $(document).ready(function(){
             };
 
             $('#price').text("$"+data.price_all_included);
+            
             // aplly add to cart
-            $('#addToCartAppend1').html(data.variant_add_to_cart_url);
+            variant_add_to_cart_url = data.variant_add_to_cart_url
+            $('#addToCartAppend').html(data.variant_add_to_cart_url);
 
         }
       });
@@ -299,7 +300,7 @@ $(document).ready(function(){
                     <!-- END size seceneklerinin oldugu yer -->
 
                     <!-- qty ve add to cart butonunun oldugu yer -->
-                    <div id="addToCartAppend1"></div>
+                    <div id="addToCartAppend"></div>
                     <form id='addtocartform-bp' action="{% url 'cart:cart_add_blank' variant.uuid %}" method="POST">
                       <div class="form-group d-flex align-items-center">{% csrf_token %}
                         {{ cart_product_form }}
@@ -312,8 +313,8 @@ $(document).ready(function(){
 
 
                     <!-- start designing butonu burda -->
-                    <form action="{% url 'essentials:product_detail' product.id  product.slug %}" method="GET">
-                      <!-- <input type="text" name="q" id=""> -->
+                    <form  id="startDesigning" action="{% url 'essentials:product_detail' product.id  product.slug %}" method="GET">
+                      <!-- <input type="text" name="query" value="{{ variant.uuid }}"> -->
                       <div class="d-flex align-items-center pt-2 pb-4">
                         <input id='startDesigningButton' type="submit" class="btn btn-success btn-shadow btn-block" value="Start Designing">
                       </div>

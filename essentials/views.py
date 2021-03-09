@@ -93,7 +93,7 @@ def product_list(request, category_slug=None):
 
 @login_required(login_url='/signup/')
 def product_detail(request, id, slug):
-    query = request.GET.get('q')
+    query = request.GET.get('query')
     print(query, 'query burda')
     product = get_object_or_404(Product,id=id,slug=slug,active=True)
     #techniques = product.technique.all()
