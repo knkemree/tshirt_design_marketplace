@@ -260,7 +260,7 @@ $(document).ready(function(){
                       <div class="spinner-border" role="status"></div>
                     </div>
                     <!-- END price'in oldugu yer -->
-
+                    
                     <!-- color seceneklerinin oldugu yer -->
                     <div class="font-size-sm mb-3"><span class="text-heading font-weight-medium mr-1">Color:</span></div>
                     <div class="position-relative mr-n4 mb-3">
@@ -279,7 +279,7 @@ $(document).ready(function(){
                       </form>
                     </div>
                     <!-- END color seceneklerinin oldugu yer -->
-
+                    
                     <!-- size seceneklerinin oldugu yer -->
                     <div class="form-group">
                       <form class="mr-6" method="POST" id="post-size">{% csrf_token %}
@@ -288,8 +288,8 @@ $(document).ready(function(){
                         <label for="size" class="font-weight-medium" for="product-size">Size:</label>
                       </div>
                       <select class="custom-select" name="size" required id="size-selector">
-                        {% for rs in sizes %}
-                        <option {% if variant.size_id == rs.size_id %} selected {% endif %} value="{{ rs.size_id }}">{{ rs.size }}</option>
+                        {% for size in sizes %}
+                        <option {% if variant.size_id == size.sz.id %} selected {% endif %} value="{{ size.sz.id }}">{{ size }}</option>
                         {% endfor %}
                       </select>
                       </form>

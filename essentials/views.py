@@ -308,9 +308,10 @@ def blank_single_item(request, id, slug, parent_category=None, subcategory=None)
         qty = len(others)
     others = random.sample(others, qty)
 
-    variants = Variant.published.filter(product_id=id).order_by('size','color')
+    variants = Variant.published.filter(product_id=id).order_by('size__row_no','color__created_at')
     variant = Variant.published.get(id=variants[0].id)
-    sizes = Variant.published.filter(product_id = product.id).order_by('size_id').distinct('size__id')
+    # sizes = Variant.published.filter(product_id = product.id).order_by('size_id').distinct('size__id')
+    sizes = product.szs.all()
     colors = Variant.published.filter(product_id=id,size_id=variants[0].size_id ).order_by('color_id').distinct('color__id')
     
     cart_product_form = CartAddProductForm()

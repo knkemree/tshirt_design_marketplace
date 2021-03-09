@@ -310,7 +310,7 @@ class Variant(models.Model):
     published = VariantPublishedManager()  # Our custom manager.
 
     class Meta:
-        ordering = ['color','size']
+        ordering = ['color','size__row_no']
 
     def __str__(self):
         return '{} / {} / {}'.format(self.product, self.size, self.color)
