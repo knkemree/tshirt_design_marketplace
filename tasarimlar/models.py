@@ -81,9 +81,9 @@ class Design(models.Model):
         return "{}".format(self.title)
 
     def preview(self):
-        img = self.design_images.first()
+        img = self.image
         if img is not None:
-                return mark_safe('<img src="{}" height="150" />'.format(img.image.url,))
+                return mark_safe('<img src="{}" height="150" />'.format(img.url,))
 
     def get_absolute_url(self):
         return reverse('designs:design-detail',args=[self.slug])

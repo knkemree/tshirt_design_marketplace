@@ -46,28 +46,45 @@ class CategoryAdmin(DraggableMPTTAdmin):
 
 class VariantInline(admin.TabularInline):
     model = Variant
-    #fields = ['render_image',]
-    #readonly_fields = ('image_tag',)
     extra = 0
     show_change_link = True
     save_as =True
     ordering = ["color","size",]
+    fields = ['color_tag','color','size','quantity','cost','price','sale_price','is_published']
+    readonly_fields = ['color_tag','cost','price','color','size']
 
-    # def render_image(self, obj):
-    #     images = Mockup.objects.filter(item_color_id=obj.color.id)
-    #     img = images[0]
-    #     if img is not None:
-    #         return mark_safe("""<img src="/images/%s.jpg" />""" % obj.image)
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def color_tag(self, obj):
+        #return mark_safe("""<img src="/images/%s.jpg" />""" % obj.end_product_img)
+        if obj.color.texture:
+            return mark_safe('<div style="background-image:url({}); height:50px; width:50px;"></div>'.format(obj.color.texture.url,))
+        else:
+            color = obj.color.color_code
+            if color is not None:
+                return mark_safe('<div style="background-color:{}; height:50px; width:50px;"></div>'.format(color,))
 
 class SzInline(admin.TabularInline):
     model = Sz
-    extra = 0
+    extra = 1
     show_change_link = True
 
 class ClrInline(admin.TabularInline):
     model = Clr
-    extra = 0
+    extra = 1
     show_change_link = True
+    fields = ['color_tag','clr','price','row_no']
+    readonly_fields = ['color_tag',]
+
+    def color_tag(self, obj):
+        #return mark_safe("""<img src="/images/%s.jpg" />""" % obj.end_product_img)
+        if obj.clr.texture:
+            return mark_safe('<div style="background-image:url({}); height:50px; width:50px;"></div>'.format(obj.clr.texture.url,))
+        else:
+            color = obj.clr.color_code
+            if color is not None:
+                return mark_safe('<div style="background-color:{}; height:50px; width:50px;"></div>'.format(color,))
 
 class MethodInline(admin.TabularInline):
     model = Method
@@ -78,6 +95,14 @@ class PlacementInline(admin.TabularInline):
     model = Placement
     extra = 0
     show_change_link = True
+    fields = ['preview','placement','row_no','price','image','width','height','top','left']
+    readonly_fields = ('preview',)
+
+    def preview(self, obj):
+        #return mark_safe("""<img src="/images/%s.jpg" />""" % obj.end_product_img)
+        img = obj.image
+        if img is not None:
+            return mark_safe('<img src="{}" height="150" />'.format(img.url,))
 
 @admin_thumbnails.thumbnail('image')
 class ProductAdmin(admin.ModelAdmin):
@@ -91,11 +116,12 @@ class ProductAdmin(admin.ModelAdmin):
         'active']
     search_fields = ['title','brand','id']
     #readonly_fields = ('image_tag',)
-    inlines = [VariantInline, 
+    inlines = [ 
     MethodInline, 
     PlacementInline,
     SzInline,
     ClrInline,
+    VariantInline,
     ]
     prepopulated_fields = {'slug': ('title',)}
 
@@ -127,11 +153,11 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Color, ColorAdmin)
 admin.site.register(Size, SizeAdmin)
-admin.site.register(Variant, VariantAdmin)
+# admin.site.register(Variant, VariantAdmin)
 #admin.site.register(Method)
 #admin.site.register(Placement)
-#admin.site.register(Sz)
-#admin.site.register(Clr)
+# admin.site.register(Sz)
+# admin.site.register(Clr)
 #admin.site.register(ClrBase)
 #admin.site.register(SzBase)
 admin.site.register(TechniqueBase)

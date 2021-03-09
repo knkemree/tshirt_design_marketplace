@@ -10,7 +10,7 @@ class HomeView(TemplateView):
     template_name = 'home_page.html'
 
 def home_page(request):
-    latest_products = Product.objects.filter(active=True)[:4]
+    latest_products = Product.objects.filter(active=True).order_by('-created_at')[:4]
     context = {
         'latest_products':latest_products
     }

@@ -100,14 +100,14 @@ class OrderItem(models.Model):
                               )
     variant = models.ForeignKey(Variant,
                                 related_name='order_items',
-                                on_delete=models.SET_NULL, null=True, blank=True)
+                                on_delete=models.PROTECT, null=True, blank=True)
     technique = models.CharField(max_length=100, blank=True, null=True)
     placement = models.CharField(max_length=100, blank=True, null=True)
     end_product_img = models.ImageField(upload_to='end_product_imgs/', null=True, blank=True)
     image = models.ImageField(upload_to='designs/', null=True, blank=True)
     #bundle1 = models.ForeignKey(design_for_sale, on_delete=models.SET_NULL, blank=True, null=True, to_field='uuid')
     #is_digital_product1 = models.BooleanField(default=False)
-    bundle2 = models.ForeignKey(design_for_sale, on_delete=models.SET_NULL, blank=True, null=True, to_field='uuid', related_name='items')
+    bundle2 = models.ForeignKey(design_for_sale, on_delete=models.PROTECT, blank=True, null=True, to_field='uuid', related_name='items')
     product_type = models.CharField(max_length=50, blank=True, null=True)
     is_digital_product2 = models.BooleanField(default=False)
     #downloadable_product = models.FileField(upload_to='sold_digital_products/', null=True, blank=True)

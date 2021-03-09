@@ -59,7 +59,7 @@ class OrderItemInline(admin.TabularInline):
     fields = ['preview','variant','bundle2','product_type','is_digital_product2','technique','placement','price','quantity','ready_to_ship','log_entry','details']
     #exclude = ['json_data','cost','end_product_img','image']
     raw_id_fields = ['variant','bundle2']
-    readonly_fields = ('preview','technique','placement','price','quantity','details','is_digital_product2','product_type',)
+    readonly_fields = ('preview','technique','placement','price','quantity','details','is_digital_product2','product_type','variant')
     list_editable = ('ready_to_ship',)
     
 

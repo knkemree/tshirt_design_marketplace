@@ -4,7 +4,7 @@ from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from taggit.managers import TaggableManager
 from phonenumber_field.modelfields import PhoneNumberField
-
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.db import models
 from django.conf import settings
@@ -15,6 +15,7 @@ from django.utils.safestring import mark_safe
 from django.core.mail import send_mail
 from django.contrib.auth.models import Group, Permission, PermissionsMixin
 from django.db.models.aggregates import Min
+from django.utils.translation import gettext_lazy as _
 
 
 
@@ -58,12 +59,12 @@ class Product(models.Model):
         ('Size-Color', 'Size-Color'),
 
     )
-    category = models.ManyToManyField(Category, related_name='products', blank=True, null=True)
+    category = models.ManyToManyField(Category, related_name='products', blank=False, null=True)
     #category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True) #many to one relation with Category
     #clr = models.ForeignKey(Clr, on_delete=models.CASCADE, related_name='products', blank=True, null=True)
     #sz = models.ForeignKey(Sz, on_delete=models.CASCADE, related_name='products', blank=True, null=True)
-    title = models.CharField(max_length=150)
-    slug = models.SlugField(null=False, unique=True)
+    title = models.CharField(max_length=150, blank=False, null=True)
+    slug = models.SlugField(blank=False,null=False, unique=True)
     tags = TaggableManager()
     variant_type = models.CharField(max_length=10,choices=VARIANTS, default='None')
     brand = models.CharField(max_length=150, blank=True, null=True)
@@ -75,6 +76,8 @@ class Product(models.Model):
 
     class Meta:
         unique_together = [['slug', 'title']]
+
+    
 
     def __str__(self):
         return str(self.title)
@@ -160,8 +163,8 @@ class Color(models.Model):
 
 class Sz(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='szs', blank=True, null=True)
-    sz = models.ForeignKey(Size, on_delete=models.SET_NULL, blank=True, null=True)
-    price = models.DecimalField(max_digits=12, decimal_places=2,default=0, help_text="price for this printing method")
+    sz = models.ForeignKey(Size, on_delete=models.SET_NULL, blank=False, null=True)
+    price = models.DecimalField(max_digits=12, decimal_places=2, blank=False, null=True, help_text="price for this size")
     row_no = models.IntegerField(default=0, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -191,8 +194,8 @@ class Sz(models.Model):
 
 class Clr(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='clrs', blank=True, null=True)
-    clr = models.ForeignKey(Color, on_delete=models.SET_NULL, blank=True, null=True)
-
+    clr = models.ForeignKey(Color, on_delete=models.SET_NULL, blank=False, null=True)
+    price = models.DecimalField(max_digits=12, decimal_places=2, default=0, help_text="price for this color")
     row_no = models.IntegerField(default=0, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -201,8 +204,16 @@ class Clr(models.Model):
     def __str__(self):
         return self.clr.name
 
+    # def clean(self):
+    #     # Don't allow duplicate a color.
+    #     for clr in self.product.clrs.all():
+    #         color = Clr.objects.filter(clr_id=clr.clr.id)
+    #         print(len(color),'kac tane ayni renkten var')
+    #         if len(color) > 1:
+    #             raise ValidationError(_('{} duplicated. Use only one.'.format(clr)))
+
     class Meta:
-        ordering = ['row_no']
+        ordering = ['row_no','created_at']
 
 
 class Font(models.Model):
@@ -224,10 +235,11 @@ class TechniqueBase(models.Model):
         verbose_name_plural = "Techniques"
 
 
+
 class Method(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='methods', blank=True, null=True)
     technique = models.ForeignKey(TechniqueBase, on_delete=models.SET_NULL, blank=True, null=True)
-    price = models.DecimalField(max_digits=12, decimal_places=2,default=0, help_text="price for this printing method")
+    price = models.DecimalField(max_digits=12, decimal_places=2,default=5.75, help_text="price for this printing method")
     row_no = models.IntegerField(default=0, blank=True, null=True)
 
     def __str__(self):
@@ -250,18 +262,21 @@ class PlacementBase(models.Model):
         verbose_name = "Placement"
         verbose_name_plural = "Placements"
 
+
 class Placement(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='placements', blank=True, null=True,)
     placement = models.ForeignKey(PlacementBase, on_delete=models.SET_NULL, related_name='placements', blank=True, null=True, default=1) 
     row_no = models.IntegerField(default=0, blank=True, null=True)
     price = models.DecimalField(max_digits=12, decimal_places=2,default=0, help_text="price for this placement")
     image = models.ImageField(upload_to='background_transparent_images/')
-    width = models.CharField(max_length=10, blank=True, null=True, default='200px')
-    height = models.CharField(max_length=10, blank=True, null=True, default='300px')
-    top = models.CharField(max_length=10, blank=True, null=True, default='75px')
-    left = models.CharField(max_length=10, blank=True, null=True, default='150px')
+    width = models.CharField(max_length=10, blank=True, null=True, default='30')
+    height = models.CharField(max_length=10, blank=True, null=True, default='30')
+    top = models.CharField(max_length=10, blank=True, null=True, default='30%')
+    left = models.CharField(max_length=10, blank=True, null=True, default='30%')
     class Meta:
         ordering = ['row_no']
+
+    
 
 
     def __str__(self):
@@ -271,27 +286,34 @@ class Placement(models.Model):
         return self.price
 
 
-
+class VariantPublishedManager(models.Manager):
+    def get_queryset(self):
+        return super(VariantPublishedManager, self).get_queryset().filter(is_published=True)
 
 
 class Variant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants")
     uuid = models.UUIDField(default=uuid.uuid4, null=True, unique=False, editable=False)
-    size = models.ForeignKey(Size, on_delete=models.SET_NULL,blank=True,null=True)
-    color = models.ForeignKey(Color, on_delete=models.SET_NULL,blank=True,null=True)
+    size = models.ForeignKey(Size, on_delete=models.PROTECT,blank=False,null=True)
+    color = models.ForeignKey(Color, on_delete=models.PROTECT,blank=False,null=True)
     #technique = models.ForeignKey(Technique, on_delete=models.CASCADE,blank=True,null=True)
     quantity = models.IntegerField(default=1)
     cost = models.DecimalField(max_digits=12, decimal_places=2,default=0)
-    price = models.DecimalField(max_digits=12, decimal_places=2,default=0)
+    price = models.DecimalField(max_digits=12, decimal_places=2,blank=False,null=True)
     sale_price = models.DecimalField(max_digits=12, decimal_places=2,default=0)
+    is_published = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    # Model managers
+    objects = models.Manager()  # The default manager.
+    published = VariantPublishedManager()  # Our custom manager.
+
     class Meta:
-        ordering = ['size','color']
+        ordering = ['color','size']
 
     def __str__(self):
-        return '{} / {} / {}'.format(self.product.title, self.size.name, self.color.name)
+        return '{} / {} / {}'.format(self.product, self.size, self.color)
     # def __str__(self):
     #     return str(self.product.title)
 

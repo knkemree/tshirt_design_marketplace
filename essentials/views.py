@@ -125,10 +125,10 @@ def change_size(request):
         #variant, placement ve size price'i degistirmek icin gerekli
         #variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0]
         try:
-            variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0] #burda get  de kullanabilirdim ama olaki size id'si ve color id'si ayni olan variant olusturulursa ilki secilecek
+            variant = Variant.published.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0] #burda get  de kullanabilirdim ama olaki size id'si ve color id'si ayni olan variant olusturulursa ilki secilecek
         except:
             # eger size degistirildiginde secili renk o size'da yoksa ilk rengi sec
-            variant = Variant.objects.filter(product_id=product_id, size_id=size_id, color__texture__isnull=False).order_by('color_id')[0]
+            variant = Variant.published.filter(product_id=product_id, size_id=size_id, color__texture__isnull=False).order_by('color_id')[0]
 
         if variant.color.texture:
             data['color_id'] = variant.color.texture.url
@@ -136,7 +136,7 @@ def change_size(request):
             data['color_id'] = variant.color.color_code 
 
         #color options
-        colors = Variant.objects.filter(product_id=product_id, size_id=size_id).order_by('color_id')
+        colors = Variant.published.filter(product_id=product_id, size_id=size_id).order_by('color_id')
         context = {'size_id': size_id, 'colors': colors, 'variant':variant}
         if product_type == 'blank':
             place_id = request.GET.get('place_id', None)
@@ -308,10 +308,10 @@ def blank_single_item(request, id, slug, parent_category=None, subcategory=None)
         qty = len(others)
     others = random.sample(others, qty)
 
-    variants = Variant.objects.filter(product_id=id).order_by('color_id')
-    variant = Variant.objects.get(id=variants[0].id)
-    sizes = Variant.objects.filter(product_id = product.id).order_by('size_id').distinct('size__id')
-    colors = Variant.objects.filter(product_id=id,size_id=variants[0].size_id ).order_by('color_id').distinct('color__id')
+    variants = Variant.published.filter(product_id=id).order_by('size','color')
+    variant = Variant.published.get(id=variants[0].id)
+    sizes = Variant.published.filter(product_id = product.id).order_by('size_id').distinct('size__id')
+    colors = Variant.published.filter(product_id=id,size_id=variants[0].size_id ).order_by('color_id').distinct('color__id')
     
     cart_product_form = CartAddProductForm()
     context = {'product': product,'cart_product_form': cart_product_form,'sizes':sizes, 'colors':colors,  'variant':variant, 'parent':parent,'category':category, 'others':others}
