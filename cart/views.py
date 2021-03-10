@@ -60,7 +60,7 @@ def cart_add_blank(request, uuid):
         form = CartAddProductForm(request.POST, request.FILES)
         if form.is_valid():
             cd = form.cleaned_data
-            print(cd['quantity'], cd['override'], 'override')
+            
             cart.add_blank(
                 uuid=uuid,
                 quantity=cd['quantity'],

@@ -72,7 +72,7 @@ class Cart(object):
 
     def add_blank(self, uuid, end_product_img=None, quantity=1, override_quantity=False,):
         variant = get_object_or_404(Variant, uuid=uuid)
-        print(override_quantity, 'false omasi lazim')
+
         if str(variant.uuid) not in self.cart:
             self.cart[str(variant.uuid)] = {
                 'title':str(variant),
