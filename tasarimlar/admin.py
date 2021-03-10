@@ -30,6 +30,7 @@ class DesignAdmin(admin.ModelAdmin):
     list_filter = ['active']
     search_fields = ['title']
     inlines = [DesignImageInline]
+    filter_horizontal = ('departments',)
     prepopulated_fields = {'slug': ('title',)}
 
 # Register your models here.
