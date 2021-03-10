@@ -102,7 +102,8 @@ def product_detail(request, id, slug):
     if category_id:
         category = get_object_or_404(Category, id=category_id)
     else:
-        category = None
+        category = product.category.first()
+        
     variants = Variant.objects.filter(product_id=id).order_by('size__row_no','color_id',)
     if query:
         variant = Variant.objects.get(uuid=query)
@@ -153,7 +154,7 @@ def change_size(request):
             data['price_all_included'] = variant.variant_price()+placement.placement_price()
             data['rendered_table'] =  render_to_string('blank_page_color_list.html', context=context, request=request)
             #data['variant_add_to_cart_url'] = render_to_string('blank_page_add_to_cart_form.html',context=context2, request=request)
-            print('product_type blank')
+            
         else:
             method_id = request.GET.get('method_id', None)
             method = get_object_or_404(Method, id=method_id)
@@ -223,7 +224,7 @@ def change_color(request):
             data['color_id'] = color.texture.url
         else:
             data['color_id'] = color.color_code
-        print(product_id, color_id, size_id)
+        
         variant = Variant.objects.filter(product_id=product_id, color_id=color_id, size_id=size_id)[0] #burda get  de kullanabilirdim ama olaki size id'si ve color id'si ayni olan variant olusturulursa ilki secilecek
         
         if product_type == 'blank':

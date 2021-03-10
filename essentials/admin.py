@@ -115,6 +115,7 @@ class ProductAdmin(admin.ModelAdmin):
         'brand',
         'active']
     search_fields = ['title','brand','id']
+    filter_horizontal = ('category',)
     #readonly_fields = ('image_tag',)
     inlines = [ 
     MethodInline, 
