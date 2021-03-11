@@ -12,8 +12,8 @@
         <h2 class="h4 pb-3">{{ message }}</h2>
         {% endfor %}
         {% endif %}
-        <p class="font-size-sm">Please try again. Otherwise your order will not be processed.</p>
-        <a class="btn btn-secondary mt-3 mr-3" href="{% url 'essentials:product_list' %}">Go back shopping</a><a class="btn btn-primary mt-3" href="{% url 'payment:pay_order'  order_id %}"><i class="czi-announcement"></i>&nbsp;Try Again</a>
+        <p class="font-size-sm">Please try again.</p>
+        <a class="btn btn-secondary mt-3 mr-3" href="{% url 'essentials:product_list' %}">Go back shopping</a><a class="btn btn-primary mt-3" href="{% url 'payment:pay_for_credit' %}"><i class="czi-announcement"></i>&nbsp;Try Again</a>
       </div>
     </div>
   </div>
