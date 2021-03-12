@@ -56,6 +56,30 @@
       <!-- Product-->
     </div>
     <!-- More button-->
+    {% if is_paginated %}
+    
+    <ul class="pagination">
+      {% if mockups.has_previous %}
+        <li><a href="?page={{ mockups.previous_page_number }}">&laquo;</a></li>
+      {% else %}
+        <li class="disabled"><span>&laquo;</span></li>
+      {% endif %}
+      {% for i in paginator.page_range %}
+        {% if mockups.number == i %}
+          <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+          <li><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if mockups.has_next %}
+        <li><a href="?page={{ mockups.next_page_number }}">&raquo;</a></li>
+      {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+      {% endif %}
+    </ul>
+  {% endif %}
     <!-- <div class="text-center"><a class="btn btn-outline-accent" href="marketplace-category.html">View more products<i class="czi-arrow-right font-size-ms ml-1"></i></a></div> -->
   </section>
+
+
 {% endblock %}
