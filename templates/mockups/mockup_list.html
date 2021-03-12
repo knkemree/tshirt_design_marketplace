@@ -56,6 +56,7 @@
       <!-- Product-->
     </div>
     {% if is_paginated %}
+    hi
     <hr class="my-3">
     <!-- Pagination-->
     <nav class="d-flex justify-content-between pt-2" aria-label="Page navigation">
@@ -66,19 +67,24 @@
       </ul>
       <ul class="pagination">
         <li class="page-item d-sm-none"><span class="page-link page-link-static">1 / 5</span></li>
-        <li class="page-item active d-none d-sm-block" aria-current="page"><span class="page-link">1<span class="sr-only">(current)</span></span></li>
-        <li class="page-item d-none d-sm-block"><a class="page-link" href="#">2</a></li>
-        <li class="page-item d-none d-sm-block"><a class="page-link" href="#">3</a></li>
-        <li class="page-item d-none d-sm-block"><a class="page-link" href="#">4</a></li>
-        <li class="page-item d-none d-sm-block"><a class="page-link" href="#">5</a></li>
+        {% for i in mockups.paginator.page_range %}
+        {% if mockups.number == i %}
+        <li class="page-item active d-none d-sm-block" aria-current="page"><span class="page-link">{{ i }}<span class="sr-only">(current)</span></span></li>
+        {% else %}
+        <li class="page-item d-none d-sm-block"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
       </ul>
       <ul class="pagination">
-        <li class="page-item"><a class="page-link" href="#" aria-label="Next">Next<i class="czi-arrow-right ml-2"></i></a></li>
+        {% if mockups.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ mockups.next_page_number }}" aria-label="Next">Next<i class="czi-arrow-right ml-2"></i></a></li>
+        {% endif %}
       </ul>
     </nav>
     {% endif %}
 
     {% if is_paginated %}
+    hi
     <ul class="pagination">
       {% if mockups.has_previous %}
         <li><a href="?page={{ mockups.previous_page_number }}">&laquo;</a></li>
