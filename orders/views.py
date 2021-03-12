@@ -78,88 +78,90 @@ def get_image_from_data_url(data_url, resize=True, base_width=1200):
 
 def order_create(request):
     cart = Cart(request)
-    
-    if request.method == 'POST':
-        form = OrderCreateForm(request.POST, request.FILES)
-        if form.is_valid():
-            order = form.save(commit=False)
-            email = Seller.objects.get(seller=request.user)
-            order.ordered_by = email 
-            order.total = cart.get_total_price()
-            order = form.save(commit=False)
-            # if cart.coupon:
-            #     order.coupon = cart.coupon
-            #     order.discount = cart.coupon.discount
-            order.save()
-            print(len(cart), 'cart uzunlugu')
-            for item in cart:
-                
-                #eger digital product ise
-                if item['type'] == 'digital':
-                    print('if oldu')
-                    # file = open(item['path'])
-                    # downloadable_product = File(file)
-                    # #pdfImage.myfile.save('new', djangofile)
-                    # file.close()
-                    # with open(item['path'], 'rb') as fo:
-                    #     same_file = File(fo, item['filename'])
-                    OrderItem.objects.create(order=order,
-                                            price=item['price'],
-                                            quantity=item['quantity'],
-                                            bundle2 = item['product'],
-                                            is_digital_product2=True,
-                                            end_product_img = item['product'].design_images.first().image,
-                                            product_type = item['type']
-                                            )   
-                elif item['type'] == 'blank':
-                    print('urun blank')
-                    try:
-                        end_product_img = get_image_from_data_url(item['end_product_img'])[0]
-                    except:
-                        end_product_img = None
-                    OrderItem.objects.create(order=order,
-                                            price=item['price'],
-                                            quantity=item['quantity'],
-                                            variant = item['product'],
-                                            end_product_img=end_product_img,
-                                            product_type = item['type']
-                                            ) 
-                else: 
-                    print('else oldu')
-                    try:
-                        end_product_img = get_image_from_data_url(item['end_product_img'])[0]
-                    except:
-                        end_product_img = None
-                    design = get_image_from_data_url(item['design'])[0]
-                    OrderItem.objects.create(order=order,
-                                            variant_id=item['variant_id'],
-                                            price=item['price'],
-                                            end_product_img=end_product_img,
-                                            image = design,
-                                            quantity=item['quantity'],
-                                            technique=item['technique'],
-                                            placement = item['placement'],
-                                            json_data = item['json_data'],
-                                            product_type = item['type']
-                                            )
+    if len(cart) > 0:
+        if request.method == 'POST':
+            form = OrderCreateForm(request.POST, request.FILES)
+            if form.is_valid():
+                order = form.save(commit=False)
+                email = Seller.objects.get(seller=request.user)
+                order.ordered_by = email 
+                order.total = cart.get_total_price()
+                order = form.save(commit=False)
+                # if cart.coupon:
+                #     order.coupon = cart.coupon
+                #     order.discount = cart.coupon.discount
+                order.save()
+                print(len(cart), 'cart uzunlugu')
+                for item in cart:
                     
+                    #eger digital product ise
+                    if item['type'] == 'digital':
+                        print('if oldu')
+                        # file = open(item['path'])
+                        # downloadable_product = File(file)
+                        # #pdfImage.myfile.save('new', djangofile)
+                        # file.close()
+                        # with open(item['path'], 'rb') as fo:
+                        #     same_file = File(fo, item['filename'])
+                        OrderItem.objects.create(order=order,
+                                                price=item['price'],
+                                                quantity=item['quantity'],
+                                                bundle2 = item['product'],
+                                                is_digital_product2=True,
+                                                end_product_img = item['product'].design_images.first().image,
+                                                product_type = item['type']
+                                                )   
+                    elif item['type'] == 'blank':
+                        print('urun blank')
+                        try:
+                            end_product_img = get_image_from_data_url(item['end_product_img'])[0]
+                        except:
+                            end_product_img = None
+                        OrderItem.objects.create(order=order,
+                                                price=item['price'],
+                                                quantity=item['quantity'],
+                                                variant = item['product'],
+                                                end_product_img=end_product_img,
+                                                product_type = item['type']
+                                                ) 
+                    else: 
+                        print('else oldu')
+                        try:
+                            end_product_img = get_image_from_data_url(item['end_product_img'])[0]
+                        except:
+                            end_product_img = None
+                        design = get_image_from_data_url(item['design'])[0]
+                        OrderItem.objects.create(order=order,
+                                                variant_id=item['variant_id'],
+                                                price=item['price'],
+                                                end_product_img=end_product_img,
+                                                image = design,
+                                                quantity=item['quantity'],
+                                                technique=item['technique'],
+                                                placement = item['placement'],
+                                                json_data = item['json_data'],
+                                                product_type = item['type']
+                                                )
+                        
 
-            # clear the cart
-            cart.clear()
-            # launch asynchronous task
-            try:
-              order_created.delay(order.id)
-            except:
-              pass
-            # set the order in the session
-            request.session['order_id'] = order.id
-            # redirect for payment
-            return redirect(reverse('payment:process'))
+                # clear the cart
+                cart.clear()
+                # launch asynchronous task
+                try:
+                    order_created.delay(order.id)
+                except:
+                    pass
+                # set the order in the session
+                request.session['order_id'] = order.id
+                # redirect for payment
+                return redirect(reverse('payment:process'))
+        else:
+            form = OrderCreateForm()
+        return render(request,
+                    'create.html',
+                    {'cart': cart, 'form': form})
     else:
-        form = OrderCreateForm()
-    return render(request,
-                  'create.html',
-                  {'cart': cart, 'form': form})
+        return redirect('payment:canceled')
 
 @staff_member_required
 def admin_order_detail(request, order_id):
