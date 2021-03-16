@@ -411,9 +411,9 @@ $(document).ready(function(){
                 iTextSample.fontSize *=  250 / ( iTextSample.width + 1);
                 iTextSample.width =  250;
         };
+        //remove text if empty to prevent adding cart without empty text box
         if (iTextSample.text.length === 0){
-          canvas.remove(iTextSample)
-          
+          canvas.remove(iTextSample)  
         }      
     });
           
