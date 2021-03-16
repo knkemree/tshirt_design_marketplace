@@ -411,8 +411,10 @@ $(document).ready(function(){
                 iTextSample.fontSize *=  250 / ( iTextSample.width + 1);
                 iTextSample.width =  250;
         };
-            
-
+        if (iTextSample.text.length === 0){
+          canvas.remove(iTextSample)
+          
+        }      
     });
           
     canvas.add(iTextSample).setActiveObject(iTextSample);
