@@ -1,3 +1,10 @@
+{% with total_items=cart|length %}
+{% if total_items > 0 %}
+    <div class="navbar-tool dropdown ml-3"><a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="{% url 'cart:cart_detail' %}"><span class="navbar-tool-label">{{ total_items }}</span><i class="navbar-tool-icon czi-cart"></i></a><a class="navbar-tool-text" href="{% url 'cart:cart_detail' %}"><small>My Cart</small>${{ cart.get_total_price }}</a>
+{% else %}
+    <div class="navbar-tool ml-3"><a class="navbar-tool-icon-box bg-secondary dropdown-toggle"><span class="navbar-tool-label">0</span><i class="navbar-tool-icon czi-cart"></i></a><a class="navbar-tool-text" ><small>My Cart</small>$0.00</a>
+{% endif %}
+{% endwith %}
 {% if cart %}
 <div class="dropdown-menu dropdown-menu-right" style="width: 20rem;">
     <div class="widget widget-cart px-3 pt-2 pb-3">
@@ -36,6 +43,7 @@
             </div>
             {% endwith %}
         {% endif %}
+        
         {% endfor %}
 
     </div>

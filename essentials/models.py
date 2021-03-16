@@ -134,6 +134,7 @@ class Color(models.Model):
     #color_tag = models.ImageField(upload_to='color_tags/', blank=True, null=True)
     color_code = models.CharField(max_length=40, blank=True ,null=True, help_text='texture has priorty on color code. either color code or texture will be color option to customers')
     texture = models.ImageField(upload_to='textures/', blank=True, null=True, help_text='texture has priorty on color code. either color code or texture will be color option to customers')
+    row_no = models.IntegerField(default=0, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -141,7 +142,7 @@ class Color(models.Model):
         return str(self.group)
 
     class Meta:
-        ordering = ['name']
+        ordering = ['row_no','name']
 
     # def image_tag(self):
     #     img = self.color_tag
@@ -310,7 +311,7 @@ class Variant(models.Model):
     published = VariantPublishedManager()  # Our custom manager.
 
     class Meta:
-        ordering = ['color','size__row_no']
+        ordering = ['size','color',]
 
     def __str__(self):
         return '{} / {} / {}'.format(self.product, self.size, self.color)

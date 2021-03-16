@@ -1,8 +1,8 @@
-from django.shortcuts import render
-
 # Create your views here.
+import json
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 from essentials.models import Design, Product, Variant
 from tasarimlar.models import Design as design_for_sale
@@ -68,10 +68,16 @@ def cart_add_blank(request, uuid):
                 end_product_img=cd['end_product_img'],
             )
             data['result'] = "succeded"
-            return HttpResponseRedirect(url)
+            data['redirect'] = url
+            #context = {'hey': 'hey'}
+            #data['sepet'] = render_to_string('cart_dropdown.html',context=context, request=request)
+            if cd['override'] == False:
+                return JsonResponse(data)
+            else:
+                return redirect('cart:cart_detail')
         else:
             data['result'] = form.errors
-            return HttpResponseRedirect(url)
+            return JsonResponse(data)
 
 @require_POST
 def cart_remove(request, uuid):

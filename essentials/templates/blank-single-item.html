@@ -7,6 +7,12 @@
 
 <script>
 $(document).ready(function(){
+      $('#addtocartform-bp').on('submit', function(e){
+        e.preventDefault();
+        add_to_cart();
+        console.log('hey')
+      });
+    
     $( ".cz-preview-item:first" ).addClass('active');
     $( ".cz-thumblist-item:first" ).addClass('active');
 
@@ -42,11 +48,10 @@ $(document).ready(function(){
     };
     apply_current_price();
 
-    $('#post-placement').on('click', function(event){
-      console.log('palcement post edildi')
-      event.preventDefault(); 
-      apply_current_price();
-    });
+    // $('#post-placement').on('click', function(event){
+    //   event.preventDefault(); 
+    //   apply_current_price();
+    // });
 
 
     var variant_add_to_cart_url //set global variable otherwise undefined
@@ -175,7 +180,37 @@ $(document).ready(function(){
       // ajax_change_color();
     });
 
-  })
+  });
+
+  function add_to_cart() {
+    $(document.body).css({'cursor' : 'wait'});
+    $( "#addtocartButton" ).addClass('disabled');
+    var add_to_cart_form = $('#addtocartform-bp');
+    var action = add_to_cart_form.attr('action');
+    var method = add_to_cart_form.attr('method');
+    var cart_data = add_to_cart_form.serialize();
+    $.ajax({
+        url : action, // the endpoint
+        type : method, // http method
+        data : cart_data, // data sent with the post request
+        // handle a successful response
+        success : function(data) {
+            $('#appendCartDropdown').load(" #appendCartDropdown"); // space olmadan calismiyor. cart dropdown'ni guncelliyor 
+            $(document.body).css({'cursor' : 'default'});
+            $( "#addtocartButton" ).removeClass('disabled');
+            $('#cart-toast').toast('show');
+            
+        },
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+          $(document.body).css({'cursor' : 'default'});
+          $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+          console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        }
+    });
+  };
+
  
 </script>
 {% endblock %}
@@ -645,6 +680,17 @@ $(document).ready(function(){
         </div>
       </div>
     </div>
+    <!-- Toast: Added to Cart-->
+    <div class="toast-container toast-bottom-center">
+      <div class="toast mb-3" id="cart-toast" data-delay="5000" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-success text-white"><i class="czi-check-circle mr-2"></i>
+          <h6 class="font-size-sm text-white mb-0 mr-auto">Added to cart!</h6>
+          <button class="close text-white ml-2 mb-1" type="button" data-dismiss="toast" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="toast-body">This item has been added to your cart.</div>
+      </div>
+    </div>
+
     <!-- Product description-->
     
     <div class="container pt-lg-3 pb-4 pb-sm-5">

@@ -1,6 +1,5 @@
 import json
 import random
-from django.shortcuts import render
 from django.db.models import Q, Avg, Count
 from django.views.generic.list import ListView
 from django.shortcuts import render, get_object_or_404
@@ -15,7 +14,7 @@ from django.core import serializers
 from essentials.models import Color
 from essentials.forms import SearchForm 
 from cart.forms import CartAddProductForm
-from .models import Category, Product, Variant, Design, Placement, Method
+from .models import Category, Clr, Product, Variant, Design, Placement, Method
 from account.mixins import SellerAccountMixin
 from tasarimlar.models import Design as design_for_sale
 from itertools import chain
@@ -318,10 +317,18 @@ def blank_single_item(request, id, slug, parent_category=None, subcategory=None)
         qty = len(others)
     others = random.sample(others, qty)
 
-    variants = Variant.published.filter(product_id=id).order_by('size__row_no','color_id',)
+    variants = Variant.published.filter(product_id=id).order_by('size_id','color_id',)
     variant = Variant.published.get(id=variants[0].id)
     sizes = Variant.published.filter(product_id = product.id).order_by('size_id').distinct('size__id')
-    #sizes = product.szs.all()
+    # sizes = product.szs.all()
+    # clr_options = Clr.objects.filter(product=product)
+    # color_options = []
+    # for clr in clr_options:
+    #     color_options.append(clr.clr) 
+    
+    # colors = Variant.published.filter(product=product, color__in = color_options)
+    
+   
     colors = Variant.published.filter(product_id=id,size_id=variant.size_id ).order_by('color_id').distinct('color__id')
     
     cart_product_form = CartAddProductForm()

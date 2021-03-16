@@ -129,10 +129,10 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 class ColorAdmin(admin.ModelAdmin):
-    list_display = ['id','group','name','color_code','created_at','updated_at',]
+    list_display = ['id','group','name','color_code','row_no','created_at','updated_at',]
     list_display_links = ['id']
     list_filter = ['name','created_at','updated_at',]
-    list_editable = ['name','group','color_code']
+    list_editable = ['name','group','color_code','row_no']
     search_fields = ['name',]
 
 class SizeAdmin(admin.ModelAdmin):

@@ -57,43 +57,13 @@
             </a> -->
             
               <!-- My Account Dropdown-->
-              {% if request.user.is_authenticated %}
-<div class="navbar-tool dropdown ml-2">
-    <a href="{% url 'orders:order_list' %}"><i class="navbar-tool-icon czi-user"></i></a>
-    <a class="navbar-tool-text ml-n1" href="{% url 'orders:order_list' %}"><small>My Account</small>{{ request.user.first_name }}</a>
-    <div class="dropdown-menu dropdown-menu-right" style="min-width: 14rem;">
-    <h6 class="dropdown-header">Account</h6>
-    {% if request.user.is_staff %}<a class="dropdown-item d-flex align-items-center" href="/admin/"><i class="czi-settings opacity-60 mr-2"></i>Control Panel</a>{% endif %}
-    <!-- <a class="dropdown-item d-flex align-items-center" href="#"><i class="czi-settings opacity-60 mr-2"></i>Settings</a> -->
-    {% if request.user.seller %}<a class="dropdown-item d-flex align-items-center" href="{% url 'orders:order_list' %}"><i class="czi-basket opacity-60 mr-2"></i>Order History</a>{% endif %}
-    {% if request.user.seller %}<a class="dropdown-item d-flex align-items-center" href="{% url 'orders:downloads-list' %}"><i class="czi-download opacity-60 mr-2"></i>Downloads</a>{% endif %}
-    {% if request.user.seller %}<a class="dropdown-item d-flex align-items-center" href="{% url 'account:create_credit' %}"><i class="czi-dollar opacity-60 mr-2"></i>Credits ${{ credit_amount }}</a>{% endif %}
-    <!-- <a class="dropdown-item d-flex align-items-center" href="#"><i class="czi-heart opacity-60 mr-2"></i>Favorites<span class="font-size-xs text-muted ml-auto">4</span></a> -->
-    <!-- {% if request.user.seller %}
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header">Seller Dashboard</h6><a class="dropdown-item d-flex align-items-center" href="#"><i class="czi-dollar opacity-60 mr-2"></i>Sales<span class="font-size-xs text-muted ml-auto">$0</span></a><a class="dropdown-item d-flex align-items-center" href="#
-    "><i class="czi-package opacity-60 mr-2"></i>Products<span class="font-size-xs text-muted ml-auto">5</span></a><a class="dropdown-item d-flex align-items-center" href="#"><i class="czi-cloud-upload opacity-60 mr-2"></i>Add New Product</a><a class="dropdown-item d-flex align-items-center" href="#"><i class="czi-currency-exchange opacity-60 mr-2"></i>Payouts</a>
-    {% endif %} -->
-    <div class="dropdown-divider"></div><a class="dropdown-item d-flex align-items-center" href="{% url 'logout' %}"><i class="czi-sign-out opacity-60 mr-2"></i>Sign Out</a>
-    </div>
-</div>
-{% else %}
-    <a class="navbar-tool ml-1 ml-lg-0 mr-n1 mr-lg-2" href="{% url 'signup' %}">
-      <div class="navbar-tool-icon-box"><i class="navbar-tool-icon czi-user"></i></div>
-      <div class="navbar-tool-text ml-n3"><small>Hello, Sign in</small>My Account</div>
-    </a>
-{% endif %}
+              {% include 'my_account_dropdown.html' %}
 
-
-{% with total_items=cart|length %}
-{% if total_items > 0 %}
-<div class="navbar-tool dropdown ml-3"><a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="{% url 'cart:cart_detail' %}"><span class="navbar-tool-label">{{ total_items }}</span><i class="navbar-tool-icon czi-cart"></i></a><a class="navbar-tool-text" href="{% url 'cart:cart_detail' %}"><small>My Cart</small>${{ cart.get_total_price }}</a>
-{% else %}
-<div class="navbar-tool ml-3"><a class="navbar-tool-icon-box bg-secondary dropdown-toggle"><span class="navbar-tool-label">0</span><i class="navbar-tool-icon czi-cart"></i></a><a class="navbar-tool-text" ><small>My Cart</small>$0.00</a>
-{% endif %}
-{% endwith %}  
               <!-- Cart dropdown-->
-              {% include 'cart_dropdown.html' %}
+              <div id=appendCartDropdown>
+                {% include 'cart_dropdown.html' %}
+              </div>
+              
 
           </div>
         </div>
